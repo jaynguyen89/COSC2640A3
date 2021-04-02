@@ -102,3 +102,9 @@ dist
 
 # TernJS port file
 .tern-port
+AmazonLibrary/bin/
+AmazonLibrary/obj/
+COSC2640A3/.vs/
+COSC2640A3/obj/
+Helper/bin/
+Helper/obj/

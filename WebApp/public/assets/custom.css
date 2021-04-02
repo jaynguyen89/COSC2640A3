@@ -1,0 +1,139 @@
+@font-face {
+    font-family: KoHo;
+    src: url("Koho-Regular.ttf") format("truetype");
+}
+
+header {
+    background-color: #a68426;
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 80px;
+    z-index: 9999999999;
+}
+
+footer {
+    background-color: #a68426;
+    width: 100%;
+    height: 40px;
+    color: white;
+    position: fixed;
+    bottom: 0;
+}
+
+.container {
+    font-family: KoHo, sans-serif;
+    font-size: 20px;
+}
+
+.login-area {
+    width: 30em;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10em;
+}
+
+.main-content {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5em;
+}
+
+.error {
+    font-size: 0.75em;
+    color: #a6266a;
+}
+
+.alert-error {
+    background-color: #a6266a;
+    color: #f3e5f5;
+}
+
+.alert-success {
+    background-color: #6aa626;
+    color: #e8f5e9 ;
+}
+
+.page-header {
+    margin-top: 2em;
+    color: #009688;
+}
+
+hr {
+    background-color: #a68426;
+    width: 35%;
+    min-width: 15%;
+    margin-bottom: 2em;
+    border-width: 0.075em;
+}
+
+.profile {
+    background-color: white;
+    text-align-last: center;
+}
+
+.border {
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+    border-left: #009688 solid 1px;
+    border-right: #009688 solid 1px;
+    border-bottom: #009688 solid 4px;
+    border-top: #009688 solid 2px;
+    border-radius: 0.2em;
+}
+
+.profile-img {
+    border-radius: 50%;
+    margin: 0;
+}
+
+.profile-name {
+    margin: 0;
+    font-weight: bold;
+}
+
+.messaging-area {
+    margin: 0;
+    width: 100%;
+    border: #009688 solid 1px;
+    border-radius: 0.2em;
+}
+
+.messages-display {
+    margin: 0;
+    width: 100%;
+    max-height: 40em;
+    border: #009688 solid 3px;
+    border-radius: 0.5em;
+    overflow-y: scroll;
+}
+
+.message-box {
+    border: solid 1px;
+    border-radius: 0.2em;
+    margin: 0.5em;
+    padding: 0.25em 0.5em;
+}
+
+.mine {
+    border-color: #ffb74d;
+    background-color: #fff3e0;
+}
+
+.others {
+    border-color: #6aa626;
+    background-color: #e8f5e9;
+}
+
+.small-text {
+    font-size: 0.65em;
+    font-weight: bold;
+}
+
+.corner {
+    position: absolute;
+    right: 5px;
+    bottom: -55px;
+}
