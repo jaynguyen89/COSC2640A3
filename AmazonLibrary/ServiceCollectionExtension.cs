@@ -1,12 +1,16 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using AmazonLibrary.Contexts;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AmazonLibrary {
 
     public static class ServiceCollectionExtension {
 
-        public static void RegisterAmazonLibrary(this IServiceCollection services) {
-            
-            
+        public static void RegisterAmazonLibrary(this IServiceCollection services, IConfiguration configuration) {
+
+            services.Configure<AmazonOptions>(configuration.GetSection(nameof(AmazonLibrary)));
+            services.AddSingleton<DynamoDbContext>();
+            services.AddSingleton<AmazonS3Context>();
         }
     }
 }

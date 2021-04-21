@@ -1,0 +1,32 @@
+﻿using COSC2640A3.DbContexts;
+using COSC2640A3.Services.Interfaces;
+using COSC2640A3.Services.Services;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+namespace COSC2640A3.Services {
+
+    public static class ServiceCollectionExtension {
+
+        public static void RegisterCoreServices(this IServiceCollection services, IConfiguration configuration) {
+
+            services.AddScoped<MainDbContext>();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            var isDevelopment = configuration.GetSection($"{nameof(COSC2640A3)}Environment").Value.Equals("Development");
+            
+            services.AddStackExchangeRedisCache(options => {
+                options.Configuration = configuration.GetValue<string>(
+                    isDevelopment ? nameof(COSC2640A3Options.DevelopmentCacheEndpoint)
+                                  : nameof(COSC2640A3Options.ProductionCacheEndpoint)
+                );
+                
+                options.InstanceName = configuration.GetValue<string>(nameof(COSC2640A3Options.CacheStoreName));
+            });
+
+            services.AddScoped<IRedisCacheService, RedisCacheService>();
+        }
+    }
+}
