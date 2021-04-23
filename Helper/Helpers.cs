@@ -3,6 +3,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+using Helper.Shared;
 using Newtonsoft.Json;
 
 namespace Helper {
@@ -19,8 +21,12 @@ namespace Helper {
             return JsonConvert.DeserializeObject<T>(plainData);
         }
         
-        public static bool IsProperString([AllowNull] this string any) {
+        public static bool IsProperString([AllowNull] string any) {
             return !string.IsNullOrEmpty(any) && !string.IsNullOrWhiteSpace(any);
+        }
+        
+        public static string RemoveAllSpaces(this string any) {
+            return Regex.Replace(any, SharedConstants.MultiSpace, string.Empty);
         }
         
         public static string GenerateSha256Hash([NotNull] this string plainText) {

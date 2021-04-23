@@ -10,7 +10,7 @@ namespace AssistantLibrary {
 
         public static void RegisterAssistantLibrary(this IServiceCollection services, IConfiguration configuration) {
 
-            services.Configure<AssistantOptions>(configuration.GetSection(nameof(AssistantLibrary)));
+            services.Configure<AssistantOptions>(configuration.GetSection(nameof(AssistantOptions)));
 
             services.AddScoped<IGoogleService, GoogleService>();
         }

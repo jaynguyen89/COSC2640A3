@@ -8,7 +8,7 @@ namespace AmazonLibrary {
 
         public static void RegisterAmazonLibrary(this IServiceCollection services, IConfiguration configuration) {
 
-            services.Configure<AmazonOptions>(configuration.GetSection(nameof(AmazonLibrary)));
+            services.Configure<AmazonOptions>(configuration.GetSection(nameof(AmazonOptions)));
             services.AddSingleton<DynamoDbContext>();
             services.AddSingleton<AmazonS3Context>();
         }

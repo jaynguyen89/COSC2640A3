@@ -21,7 +21,7 @@ namespace COSC2640A3.Services.Services {
 
         public RedisCacheService(
             IDistributedCache redisCache,
-            IOptions<COSC2640A3Options> options
+            IOptions<MainOptions> options
         ) {
             _redisCache = redisCache;
 
@@ -48,11 +48,16 @@ namespace COSC2640A3.Services.Services {
 
             try {
                 var cachedData = await _redisCache.GetAsync(entryKey);
-                return cachedData.Length == 0 ? default : cachedData.DecodeUtf8<T>();
+                return cachedData.DecodeUtf8<T>();
             }
             catch (Exception) {
                 return default;
             }
+        }
+
+        public async Task RemoveCacheEntry(string entryKey) {
+            if (!_cacheSettings.IsEnabled) return;
+            await _redisCache.RemoveAsync(entryKey);
         }
     }
 }

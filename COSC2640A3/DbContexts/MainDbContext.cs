@@ -41,13 +41,7 @@ namespace COSC2640A3.DbContexts
                     .IsRequired()
                     .HasMaxLength(50);
 
-                entity.Property(e => e.PasswordHash)
-                    .IsRequired()
-                    .HasMaxLength(200);
-
-                entity.Property(e => e.PasswordSalt)
-                    .IsRequired()
-                    .HasMaxLength(50);
+                entity.Property(e => e.PreferredName).HasMaxLength(100);
 
                 entity.Property(e => e.PhoneNumber).HasMaxLength(20);
 

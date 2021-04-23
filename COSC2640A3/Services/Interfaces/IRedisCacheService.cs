@@ -9,5 +9,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task InsertRedisCacheEntry([NotNull] CacheEntry entry);
 
         Task<T> GetRedisCacheEntry<T>([NotNull] string entryKey);
+        
+        Task RemoveCacheEntry(string entryKey);
     }
 }

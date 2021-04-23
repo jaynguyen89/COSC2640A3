@@ -19,14 +19,17 @@ namespace COSC2640A3.Services {
             
             services.AddStackExchangeRedisCache(options => {
                 options.Configuration = configuration.GetValue<string>(
-                    isDevelopment ? nameof(COSC2640A3Options.DevelopmentCacheEndpoint)
-                                  : nameof(COSC2640A3Options.ProductionCacheEndpoint)
+                    isDevelopment ? $"{ nameof(MainOptions) }:{ nameof(MainOptions.DevelopmentCacheEndpoint) }"
+                                  : $"{ nameof(MainOptions) }:{ nameof(MainOptions.ProductionCacheEndpoint) }"
                 );
                 
-                options.InstanceName = configuration.GetValue<string>(nameof(COSC2640A3Options.CacheStoreName));
+                options.InstanceName = configuration.GetValue<string>(nameof(MainOptions.CacheStoreName));
             });
 
             services.AddScoped<IRedisCacheService, RedisCacheService>();
+
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAccountService, AccountService>();
         }
     }
 }

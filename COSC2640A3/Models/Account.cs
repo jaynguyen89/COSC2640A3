@@ -16,9 +16,8 @@ namespace COSC2640A3.Models
         public bool PhoneNumberConfirmed { get; set; }
         public bool TwoFactorEnabled { get; set; }
         public string TwoFaSecretKey { get; set; }
-        public string PasswordHash { get; set; }
-        public string PasswordSalt { get; set; }
         public string RecoveryToken { get; set; }
         public DateTime? TokenSetOn { get; set; }
+        public string PreferredName { get; set; }
     }
 }

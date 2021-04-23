@@ -1,12 +1,17 @@
+using System;
 using AmazonLibrary;
 using AssistantLibrary;
 using COSC2640A3.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace COSC2640A3 {
 
@@ -23,14 +28,37 @@ namespace COSC2640A3 {
 
             services.AddCors();
             services.AddControllers();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options => {
+                        options.Audience = Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.UserPoolAppClientId)}");
+                        options.Authority = Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.PoolIdentityProviderUrl)}");
+                    });
+
+            services.AddAuthorization(options => {
+                var defaultAuthorizationPolicyBuilder = new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme);
+                options.DefaultPolicy = defaultAuthorizationPolicyBuilder.RequireAuthenticatedUser().Build();
+            });
             
             services.AddMvc(options => options.EnableEndpointRouting = false)
                     .AddSessionStateTempDataProvider()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
-
+            
+            services.AddSession(options => {
+                options.Cookie = new CookieBuilder {
+                    Domain = nameof(COSC2640A3),
+                    Expiration = TimeSpan.FromDays(7),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Name = nameof(COSC2640A3),
+                    SameSite = SameSiteMode.None,
+                    Path = "/",
+                    MaxAge = TimeSpan.FromDays(7)
+                };
+            });
             services.AddHttpContextAccessor();
             
-            services.Configure<COSC2640A3Options>(Configuration.GetSection(nameof(COSC2640A3)));
+            services.Configure<MainOptions>(Configuration.GetSection(nameof(MainOptions)));
 
             services.RegisterAssistantLibrary(Configuration);
             services.RegisterAmazonLibrary(Configuration);
@@ -38,13 +66,18 @@ namespace COSC2640A3 {
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env) {
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory) {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            var loggerConfig = Configuration.GetAWSLoggingConfigSection();
+            _ = loggerFactory.AddAWSProvider(loggerConfig);
+            
             app.UseHttpsRedirection();
             app.UseRouting();
-
+            
+            app.UseAuthentication();
             app.UseAuthorization();
+            app.UseSession();
 
             app.UseEndpoints(endpoints => {
                 endpoints.MapControllers();

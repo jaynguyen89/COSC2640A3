@@ -6,11 +6,11 @@ namespace COSC2640A3.DbContexts {
 
     public partial class MainDbContext {
 
-        private readonly IOptions<COSC2640A3Options> _options;
+        private readonly IOptions<MainOptions> _options;
         private readonly IConfiguration _configuration;
 
         public MainDbContext(
-            IOptions<COSC2640A3Options> options,
+            IOptions<MainOptions> options,
             IConfiguration configuration
         ) {
             _options = options;
