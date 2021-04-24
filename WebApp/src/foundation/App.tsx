@@ -2,11 +2,8 @@ import React from 'react';
 import { BrowserRouter,  Route,  Switch } from 'react-router-dom';
 
 import HeaderBar from "./HeaderBar";
-import Login from "../authentication/Login";
-import Registration from "../authentication/Registration";
-import Account from "../account/Account";
-import Forum from '../forum/Forum';
-import BigQuery from "../bigquery/BigQuery";
+import Login from "../features/authentication/Login";
+import Registration from "../features/authentication/Registration";
 
 function App() {
     return (
@@ -14,7 +11,8 @@ function App() {
             <HeaderBar />
             <BrowserRouter>
                 <Switch>
-                    
+                    <Route path='/' exact={ true } component={ Login } />
+                    <Route path='/register' component={ Registration } />
                 </Switch>
             </BrowserRouter>
         </>

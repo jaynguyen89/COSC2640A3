@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { IAuthUser } from "../authentication/redux/interfaces";
+import { IAuthUser } from "../features/authentication/redux/interfaces";
 
 //axios.defaults.withCredentials = true; //include all cookies
 

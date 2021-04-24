@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose } from 'redux';
 import thunk from 'redux-thunk';
 import reducers from '../providers/reducerIndex';
-import * as authenticationConstants from '../authentication/redux/constants';
+import * as authenticationConstants from '../features/authentication/redux/constants';
 
 const composeEnhancers = (
     window && (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
