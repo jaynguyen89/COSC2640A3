@@ -47,13 +47,13 @@ namespace COSC2640A3 {
             services.AddSession(options => {
                 options.Cookie = new CookieBuilder {
                     Domain = nameof(COSC2640A3),
-                    Expiration = TimeSpan.FromDays(7),
-                    HttpOnly = true,
-                    IsEssential = true,
+                    Expiration = TimeSpan.FromDays(int.Parse(Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookieAgeTimespan)}"))),
+                    HttpOnly = bool.Parse(Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookieHttpOnly)}")),
+                    IsEssential = bool.Parse(Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookieEssential)}")),
                     Name = nameof(COSC2640A3),
                     SameSite = SameSiteMode.None,
-                    Path = "/",
-                    MaxAge = TimeSpan.FromDays(7)
+                    Path = Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookiePath)}"),
+                    MaxAge = TimeSpan.FromDays(int.Parse(Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookieAgeTimespan)}")))
                 };
             });
             services.AddHttpContextAccessor();

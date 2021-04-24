@@ -28,5 +28,14 @@
         public string UserPoolAppClientId { get; set; }
         
         public string PoolIdentityProviderUrl { get; set; }
+        
+        // For cookie setup
+        public string CookieAgeTimespan { get; set; }
+        
+        public string CookieHttpOnly { get; set; }
+        
+        public string CookieEssential { get; set; }
+        
+        public string CookiePath { get; set; }
     }
 }
