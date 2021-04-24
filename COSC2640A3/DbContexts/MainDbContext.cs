@@ -18,7 +18,11 @@ namespace COSC2640A3.DbContexts
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountRole> AccountRoles { get; set; }
+        public virtual DbSet<Assessment> Assessments { get; set; }
+        public virtual DbSet<Classroom> Classrooms { get; set; }
+        public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<Student> Students { get; set; }
+        public virtual DbSet<StudentMark> StudentMarks { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -77,6 +81,92 @@ namespace COSC2640A3.DbContexts
                     .HasForeignKey(d => d.AccountId);
             });
 
+            modelBuilder.Entity<Assessment>(entity =>
+            {
+                entity.ToTable("Assessment");
+
+                entity.HasIndex(e => e.Id, "UQ__Assessme__3214EC066794ECAF")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.AssessmentName).HasMaxLength(100);
+
+                entity.Property(e => e.ClassroomId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Description).HasMaxLength(2000);
+
+                entity.Property(e => e.ReleasedOn).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.TotalMark).HasDefaultValueSql("((100))");
+
+                entity.HasOne(d => d.Classroom)
+                    .WithMany(p => p.Assessments)
+                    .HasForeignKey(d => d.ClassroomId);
+            });
+
+            modelBuilder.Entity<Classroom>(entity =>
+            {
+                entity.ToTable("Classroom");
+
+                entity.HasIndex(e => e.Id, "UQ__Classroo__3214EC06E8F750E7")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Capacity).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.ClassName).HasMaxLength(70);
+
+                entity.Property(e => e.CreatedOn).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.Duration).HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.Price)
+                    .HasColumnType("decimal(6, 2)")
+                    .HasDefaultValueSql("((1))");
+
+                entity.Property(e => e.TeacherId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Teacher)
+                    .WithMany(p => p.Classrooms)
+                    .HasForeignKey(d => d.TeacherId);
+            });
+
+            modelBuilder.Entity<Enrolment>(entity =>
+            {
+                entity.ToTable("Enrolment");
+
+                entity.HasIndex(e => e.Id, "UQ__Enrolmen__3214EC065B986451")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.ClassroomId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.EnrolledOn).HasDefaultValueSql("(getdate())");
+
+                entity.Property(e => e.StudentId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.HasOne(d => d.Student)
+                    .WithMany(p => p.Enrolments)
+                    .HasForeignKey(d => d.StudentId);
+            });
+
             modelBuilder.Entity<Student>(entity =>
             {
                 entity.ToTable("Student");
@@ -101,6 +191,39 @@ namespace COSC2640A3.DbContexts
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Students)
                     .HasForeignKey(d => d.AccountId);
+            });
+
+            modelBuilder.Entity<StudentMark>(entity =>
+            {
+                entity.ToTable("StudentMark");
+
+                entity.HasIndex(e => e.Id, "UQ__StudentM__3214EC0655766BEC")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.AssessmentId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Comment).HasMaxLength(250);
+
+                entity.Property(e => e.EnrolmentId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.MarkedOn).HasDefaultValueSql("(getdate())");
+
+                entity.HasOne(d => d.Assessment)
+                    .WithMany(p => p.StudentMarks)
+                    .HasForeignKey(d => d.AssessmentId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Enrolment)
+                    .WithMany(p => p.StudentMarks)
+                    .HasForeignKey(d => d.EnrolmentId);
             });
 
             modelBuilder.Entity<Teacher>(entity =>

@@ -1,0 +1,11 @@
+﻿CREATE TABLE [dbo].[Assessment]
+(
+	[Id] NVARCHAR(50) UNIQUE NOT NULL DEFAULT (NEWID()),
+	[ClassroomId] NVARCHAR(50) NOT NULL,
+	[AssessmentName] NVARCHAR(100) DEFAULT NULL,
+	[Description] NVARCHAR(2000) DEFAULT NULL,
+	[TotalMark] TINYINT NOT NULL DEFAULT 100,
+	[ReleasedOn] DATETIME2(7) NOT NULL DEFAULT (GETDATE()),
+	CONSTRAINT [PK_Assesment_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_Assessment_Classroom_ClassroomId] FOREIGN KEY ([ClassroomId]) REFERENCES [dbo].[Classroom] ([Id]) ON DELETE CASCADE
+)

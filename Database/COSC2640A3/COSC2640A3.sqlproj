@@ -62,6 +62,10 @@
     <Build Include="schema\AccountRole.sql" />
     <Build Include="schema\Student.sql" />
     <Build Include="schema\Teacher.sql" />
+    <Build Include="schema\Classroom.sql" />
+    <Build Include="schema\Enrolment.sql" />
+    <Build Include="schema\Assessment.sql" />
+    <Build Include="schema\StudentMark.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="publish\COSC2640A3.local.publish.xml" />
