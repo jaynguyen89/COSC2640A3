@@ -27,9 +27,11 @@ namespace COSC2640A3.Services {
             });
 
             services.AddScoped<IRedisCacheService, RedisCacheService>();
-
+            services.AddScoped<IContextService, ContextService>();
+            
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccountService, AccountService>();
+            services.AddScoped<IRoleService, RoleService>();
         }
     }
 }

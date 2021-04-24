@@ -6,7 +6,6 @@ using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
 using Helper;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Logging;
 using static Helper.Shared.SharedEnums;
 
@@ -17,24 +16,30 @@ namespace COSC2640A3.Controllers {
     public sealed class AuthenticationController : ControllerBase {
 
         private readonly ILogger<AuthenticationController> _logger;
+        private readonly IContextService _contextService;
         private readonly IAuthenticationService _authenticationService;
         private readonly IAccountService _accountService;
+        private readonly IRoleService _roleService;
         private readonly IRedisCacheService _redisCache;
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
+            IContextService contextService,
             IAuthenticationService authenticationService,
             IAccountService accountService,
+            IRoleService roleService,
             IRedisCacheService redisCache
         ) {
             _logger = logger;
+            _contextService = contextService;
             _authenticationService = authenticationService;
             _accountService = accountService;
+            _roleService = roleService;
             _redisCache = redisCache;
         }
 
         [HttpPost("register")]
-        public async Task<JsonResult> Register(RegistrationVM registration) {
+        public async Task<JsonResult> Register(Registration registration) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Register) }: service starts.");
             
             var errors = registration.VerifyRegistrationDetails();
@@ -57,7 +62,7 @@ namespace COSC2640A3.Controllers {
         }
 
         [HttpPost("confirm-registration")]
-        public async Task<JsonResult> ConfirmRegistration(ConfirmRegistrationVM confirmation) {
+        public async Task<JsonResult> ConfirmRegistration(ConfirmRegistration confirmation) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(ConfirmRegistration) }: service starts.");
             
             var errors = confirmation.VerifyConfirmation();
@@ -65,17 +70,28 @@ namespace COSC2640A3.Controllers {
 
             var account = await _accountService.GetAccountByEmailOrUsername(confirmation.Email, confirmation.Username, false);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
-            
+
             var (isConfirmed, message) = await _authenticationService.ConfirmUserInPool(account.Username, confirmation.ConfirmCode);
             if (!isConfirmed.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isConfirmed.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { message } });
 
             account.EmailConfirmed = true;
-            isConfirmed = await _accountService.Update(account);
+            await _contextService.StartTransaction();
+            
+            isConfirmed = await _accountService.UpdateAccount(account);
+            if (!isConfirmed.HasValue || !isConfirmed.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
 
-            return !isConfirmed.HasValue || !isConfirmed.Value
-                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse {  Result = RequestResult.Success });
+            var isSuccess = await _roleService.CreateRolesForAccountById(account.Id);
+            if (!isSuccess.HasValue || !isSuccess.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+
+            await _contextService.ConfirmTransaction();
+            return new JsonResult(new JsonResponse {  Result = RequestResult.Success });
         }
 
         [HttpPost("authenticate")]
@@ -92,23 +108,40 @@ namespace COSC2640A3.Controllers {
             if (!isSuccess.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isSuccess.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { authTokenOrMessage } });
 
-            var authUser = new AuthenticatedUser { AuthToken = authTokenOrMessage, AccountId = account.Id };
+            var authenticatedUser = new AuthenticatedUser {
+                AuthToken = authTokenOrMessage,
+                AccountId = account.Id,
+                Role = Role.Student
+            };
 
-            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = nameof(AuthenticatedUser.AuthToken), Data = authUser.AuthToken });
-            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = nameof(AuthenticatedUser.AccountId), Data = authUser.AccountId });
+            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ nameof(AuthenticatedUser) }_{ authenticatedUser.AccountId }", Data = authenticatedUser });
             
             HttpContext.Response.Cookies.Append(nameof(AuthenticatedUser.AuthToken), authTokenOrMessage);
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authUser });
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authenticatedUser });
         }
 
         [MainAuthorize]
         [HttpGet("unauthenticate")]
-        public async Task<JsonResult> Unauthenticate() {
-            await _redisCache.RemoveCacheEntry(nameof(AuthenticatedUser.AuthToken));
-            await _redisCache.RemoveCacheEntry(nameof(AuthenticatedUser.AccountId));
+        public async Task<JsonResult> Unauthenticate([FromHeader] string accountId) {
+            _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Unauthenticate) }: service starts.");
+            await _redisCache.RemoveCacheEntry($"{ nameof(AuthenticatedUser) }_{ accountId }");
             
             HttpContext.Response.Cookies.Delete("AuthToken");
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+        }
+
+        [MainAuthorize]
+        [HttpGet("switch-role")]
+        public async Task<JsonResult> SwitchRoleForAuthenticatedUser([FromHeader] string accountId) {
+            _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(SwitchRoleForAuthenticatedUser) }: service starts.");
+            
+            var authenticatedUser = await _redisCache.GetRedisCacheEntry<AuthenticatedUser>($"{ nameof(AuthenticatedUser) }_{ accountId }");
+            if (authenticatedUser is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            authenticatedUser.Role = authenticatedUser.Role == Role.Student ? Role.Teacher : Role.Student;
+            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ nameof(AuthenticatedUser) }_{ accountId }", Data = authenticatedUser });
+
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authenticatedUser.Role });
         }
     }
 }

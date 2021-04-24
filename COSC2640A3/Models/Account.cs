@@ -7,6 +7,13 @@ namespace COSC2640A3.Models
 {
     public partial class Account
     {
+        public Account()
+        {
+            AccountRoles = new HashSet<AccountRole>();
+            Students = new HashSet<Student>();
+            Teachers = new HashSet<Teacher>();
+        }
+
         public string Id { get; set; }
         public string EmailAddress { get; set; }
         public bool EmailConfirmed { get; set; }
@@ -19,5 +26,9 @@ namespace COSC2640A3.Models
         public string RecoveryToken { get; set; }
         public DateTime? TokenSetOn { get; set; }
         public string PreferredName { get; set; }
+
+        public virtual ICollection<AccountRole> AccountRoles { get; set; }
+        public virtual ICollection<Student> Students { get; set; }
+        public virtual ICollection<Teacher> Teachers { get; set; }
     }
 }

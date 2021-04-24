@@ -1,4 +1,5 @@
-﻿CREATE TABLE [dbo].[Account] (
+﻿CREATE TABLE [dbo].[Account]
+(
 	[Id] NVARCHAR(50) UNIQUE NOT NULL DEFAULT (NEWID()),
 	[EmailAddress] NVARCHAR(100) NOT NULL,
 	[EmailConfirmed] BIT NOT NULL DEFAULT 0,

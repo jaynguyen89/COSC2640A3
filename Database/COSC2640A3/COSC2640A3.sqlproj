@@ -59,8 +59,11 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="schema\Account.sql" />
+    <Build Include="schema\AccountRole.sql" />
+    <Build Include="schema\Student.sql" />
+    <Build Include="schema\Teacher.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="publish\COSC2640A3.publish.local.xml" />
+    <None Include="publish\COSC2640A3.local.publish.xml" />
   </ItemGroup>
 </Project>

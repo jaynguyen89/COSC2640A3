@@ -35,13 +35,13 @@ namespace COSC2640A3.Services.Services {
             _dbContext = dbContext;
         }
 
-        public async Task<string> InsertToUserPool(RegistrationVM registration) {
+        public async Task<string> InsertToUserPool(Registration registration) {
             var signUpRequest = new SignUpRequest {
                 ClientId = _clientId,
                 Username = registration.Username,
                 Password = registration.Password,
                 UserAttributes = new List<AttributeType> {
-                    new() { Name = nameof(RegistrationVM.Email).ToLower(), Value = registration.Email }
+                    new() { Name = nameof(Registration.Email).ToLower(), Value = registration.Email }
                 }
             };
 

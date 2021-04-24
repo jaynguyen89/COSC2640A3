@@ -1,0 +1,10 @@
+﻿CREATE TABLE [dbo].[Teacher]
+(
+	[Id] NVARCHAR(50) UNIQUE NOT NULL DEFAULT (NEWID()),
+	[AccountId] NVARCHAR(50) NOT NULL,
+	[Company] NVARCHAR(50) DEFAULT NULL,
+	[JobTitle] NVARCHAR(20) DEFAULT NULL,
+	[PersonalWebsite] NVARCHAR(100) DEFAULT NULL,
+	CONSTRAINT [PK_Teacher_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_Teacher_Account_AccountId] FOREIGN KEY ([AccountId]) REFERENCES [dbo].[Account] ([Id]) ON DELETE CASCADE
+)

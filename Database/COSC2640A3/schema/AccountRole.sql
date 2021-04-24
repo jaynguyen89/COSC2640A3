@@ -1,0 +1,8 @@
+﻿CREATE TABLE [dbo].[AccountRole]
+(
+	[Id] NVARCHAR(50) UNIQUE NOT NULL DEFAULT (NEWID()),
+	[AccountId] NVARCHAR(50) NOT NULL,
+	[Role] TINYINT NOT NULL,
+	CONSTRAINT [PK_AccountRole_Id] PRIMARY KEY ([Id] ASC),
+	CONSTRAINT [FK_AccountRole_Account_AccountId] FOREIGN KEY ([AccountId]) REFERENCES [dbo].[Account] ([Id]) ON DELETE CASCADE
+)

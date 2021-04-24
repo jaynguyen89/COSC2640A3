@@ -4,7 +4,7 @@ namespace COSC2640A3.Models {
 
     public partial class Account {
 
-        public static implicit operator Account(RegistrationVM registration) {
+        public static implicit operator Account(Registration registration) {
             return new() {
                 EmailAddress = registration.Email,
                 Username = registration.Username,

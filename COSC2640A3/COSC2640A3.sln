@@ -16,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AmazonLibrary", "..\AmazonL
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper", "..\Helper\Helper.csproj", "{8802255F-FFA3-49FE-8300-6D2605988499}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssistantLibrary", "..\AssistantLibrary\AssistantLibrary.csproj", "{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssistantLibrary", "..\AssistantLibrary\AssistantLibrary.csproj", "{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

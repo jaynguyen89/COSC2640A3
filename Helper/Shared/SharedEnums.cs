@@ -6,5 +6,10 @@
             Failed,
             Success
         }
+
+        public enum Role {
+            Student,
+            Teacher
+        }
     }
 }

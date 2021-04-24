@@ -11,7 +11,7 @@ namespace COSC2640A3.Services.Interfaces {
         /// <summary>
         /// Key == null: error, Key == true: available, Key == false: unavailable then Value == nameof(registration.Email) | nameof(registration.Username)
         /// </summary>
-        Task<KeyValuePair<bool?, string>> IsUsernameAndEmailAvailable(RegistrationVM registration);
+        Task<KeyValuePair<bool?, string>> IsUsernameAndEmailAvailable(Registration registration);
 
         /// <summary>
         /// Params `email` and `username` must not be null at once.
@@ -27,6 +27,16 @@ namespace COSC2640A3.Services.Interfaces {
         /// <summary>
         /// Returns null if error, true if success, false if failed.
         /// </summary>
-        Task<bool?> Update(Account account);
+        Task<bool?> UpdateAccount(Account account);
+
+        /// <summary>
+        /// Returns null if error, true if success, false if failed.
+        /// </summary>
+        Task<bool?> UpdateStudent(Student student);
+        
+        /// <summary>
+        /// Returns null if error, true if success, false if failed.
+        /// </summary>
+        Task<bool?> UpdateTeacher(Teacher teacher);
     }
 }

@@ -24,16 +24,16 @@ namespace COSC2640A3.Services.Services {
             _dbContext = dbContext;
         }
 
-        public async Task<KeyValuePair<bool?, string>> IsUsernameAndEmailAvailable(RegistrationVM registration) {
+        public async Task<KeyValuePair<bool?, string>> IsUsernameAndEmailAvailable(Registration registration) {
             try {
                 _logger.LogInformation($"{ nameof(AuthenticationService) }.{ nameof(IsUsernameAndEmailAvailable) }: Check registration data against { nameof(MainDbContext) }.");
                 
                 var isEmailTaken = await _dbContext.Accounts.AnyAsync(account => account.EmailAddress.Equals(registration.Email));
-                if (isEmailTaken) return new KeyValuePair<bool?, string>(false, nameof(RegistrationVM.Email));
+                if (isEmailTaken) return new KeyValuePair<bool?, string>(false, nameof(Registration.Email));
 
                 var isUsernameTaken = await _dbContext.Accounts.AnyAsync(account => account.NormalizedUsername.Equals(registration.Username.ToUpper()));
                 return isUsernameTaken
-                    ? new KeyValuePair<bool?, string>(false, nameof(RegistrationVM.Username))
+                    ? new KeyValuePair<bool?, string>(false, nameof(Registration.Username))
                     : new KeyValuePair<bool?, string>(true, default);
             }
             catch (ArgumentNullException e) {
@@ -71,7 +71,7 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<bool?> Update(Account account) {
+        public async Task<bool?> UpdateAccount(Account account) {
             _dbContext.Accounts.Update(account);
 
             try {
@@ -79,7 +79,33 @@ namespace COSC2640A3.Services.Services {
                 return result != 0;
             }
             catch (DbUpdateException e) {
-                _logger.LogError($"{ nameof(AccountService) }.{ nameof(Update) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(UpdateAccount) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<bool?> UpdateStudent(Student student) {
+            _dbContext.Students.Update(student);
+
+            try {
+                var result = await _dbContext.SaveChangesAsync();
+                return result != 0;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(UpdateStudent) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<bool?> UpdateTeacher(Teacher teacher) {
+            _dbContext.Teachers.Update(teacher);
+
+            try {
+                var result = await _dbContext.SaveChangesAsync();
+                return result != 0;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(UpdateTeacher) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }

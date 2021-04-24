@@ -11,7 +11,7 @@ namespace COSC2640A3.Services.Interfaces {
         /// <summary>
         /// Returns null if error, otherwise returns the ID of the inserted account.
         /// </summary>
-        Task<string> InsertToUserPool(RegistrationVM registration);
+        Task<string> InsertToUserPool(Registration registration);
 
         /// <summary>
         /// Key == null if error, Key == false if request to AWS failed then Value holds the reason, Key == true then Value holds the authToken.
