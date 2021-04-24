@@ -1,6 +1,8 @@
 ﻿namespace AssistantLibrary.Models {
 
     public class AssistantOptions {
+        
+        public string GoogleRecaptchaEnabled { get; set; }
 
         public string GoogleRecaptchaEndpoint { get; set; }
         

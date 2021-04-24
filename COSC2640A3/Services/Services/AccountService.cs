@@ -109,5 +109,47 @@ namespace COSC2640A3.Services.Services {
                 return default;
             }
         }
+
+        public async Task<Student> GetStudentByAccountId(string accountId) {
+            try {
+                return await _dbContext.Students.SingleOrDefaultAsync(student => student.AccountId.Equals(accountId) && student.Account.EmailConfirmed);
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetStudentByAccountId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (InvalidOperationException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetStudentByAccountId) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<Teacher> GetTeacherByAccountId(string accountId) {
+            try {
+                return await _dbContext.Teachers.SingleOrDefaultAsync(teacher => teacher.AccountId.Equals(accountId) && teacher.Account.EmailConfirmed);
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetTeacherByAccountId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (InvalidOperationException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetTeacherByAccountId) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<Account> GetAccountById(string accountId, bool emailConfirmed = true) {
+            try {
+                return await _dbContext.Accounts.SingleOrDefaultAsync(account => account.Id.Equals(accountId) && account.EmailConfirmed == emailConfirmed);
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetAccountById) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (InvalidOperationException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetAccountById) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
     }
 }

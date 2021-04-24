@@ -38,5 +38,11 @@ namespace COSC2640A3.Services.Interfaces {
         /// Returns null if error, true if success, false if failed.
         /// </summary>
         Task<bool?> UpdateTeacher(Teacher teacher);
+        
+        Task<Student> GetStudentByAccountId(string accountId);
+        
+        Task<Teacher> GetTeacherByAccountId(string accountId);
+        
+        Task<Account> GetAccountById(string accountId, bool emailConfirmed = true);
     }
 }

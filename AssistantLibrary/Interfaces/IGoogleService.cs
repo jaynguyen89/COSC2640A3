@@ -9,11 +9,15 @@ namespace AssistantLibrary.Interfaces {
         
         Task<GoogleRecaptchaResponse> IsHumanRegistration([AllowNull] string recaptchaToken = null);
         
-        TwoFa GetTwoFactorAuthSetup(
-            [NotNull] string email,
-            [NotNull] int imageSize,
-            [NotNull] string projectName = SharedConstants.ProjectName
-        );
+        /// <summary>
+        /// When user is enabling (or renewing) TFA, generate new TFA QR data for them.
+        /// </summary>
+        TwoFa ProduceTwoFactorAuthSetup([NotNull] string email);
+
+        /// <summary>
+        /// When user already have TFA enabled, get their current TFA QR data for them.
+        /// </summary>
+        TwoFa ReproduceTwoFaAuth([NotNull] string secretKey,[NotNull] string email);
 
         bool VerifyTwoFactorAuth([NotNull] string secretKey,[NotNull] string pin);
     }

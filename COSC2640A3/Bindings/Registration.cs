@@ -20,6 +20,8 @@ namespace COSC2640A3.Bindings {
         public string PhoneNumber { get; set; }
         
         public string PreferredName { get; set; }
+        
+        public string RecaptchaToken { get; set; }
 
         public string[] VerifyRegistrationDetails() {
             var errors = new List<string>();

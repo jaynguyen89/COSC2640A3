@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
@@ -21,6 +22,7 @@ namespace COSC2640A3.Controllers {
         private readonly IAccountService _accountService;
         private readonly IRoleService _roleService;
         private readonly IRedisCacheService _redisCache;
+        private readonly IGoogleService _googleService;
 
         public AuthenticationController(
             ILogger<AuthenticationController> logger,
@@ -28,7 +30,8 @@ namespace COSC2640A3.Controllers {
             IAuthenticationService authenticationService,
             IAccountService accountService,
             IRoleService roleService,
-            IRedisCacheService redisCache
+            IRedisCacheService redisCache,
+            IGoogleService googleService
         ) {
             _logger = logger;
             _contextService = contextService;
@@ -36,11 +39,15 @@ namespace COSC2640A3.Controllers {
             _accountService = accountService;
             _roleService = roleService;
             _redisCache = redisCache;
+            _googleService = googleService;
         }
 
         [HttpPost("register")]
         public async Task<JsonResult> Register(Registration registration) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Register) }: service starts.");
+
+            var isHuman = await _googleService.IsHumanRegistration(registration.RecaptchaToken);
+            if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
             
             var errors = registration.VerifyRegistrationDetails();
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
@@ -61,9 +68,12 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
-        [HttpPost("confirm-registration")]
+        [HttpPut("confirm-registration")]
         public async Task<JsonResult> ConfirmRegistration(ConfirmRegistration confirmation) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(ConfirmRegistration) }: service starts.");
+            
+            var isHuman = await _googleService.IsHumanRegistration(confirmation.RecaptchaToken);
+            if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
             
             var errors = confirmation.VerifyConfirmation();
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
@@ -97,6 +107,9 @@ namespace COSC2640A3.Controllers {
         [HttpPost("authenticate")]
         public async Task<JsonResult> Authenticate(LoginCredentials credentials) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Authenticate) }: service starts.");
+            
+            var isHuman = await _googleService.IsHumanRegistration(credentials.RecaptchaToken);
+            if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
 
             var errors = credentials.VerifyCredentials();
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });

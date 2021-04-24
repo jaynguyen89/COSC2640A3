@@ -11,6 +11,8 @@ namespace COSC2640A3.Bindings {
         public string Username { get; set; }
         
         public string ConfirmCode { get; set; }
+        
+        public string RecaptchaToken { get; set; }
 
         public string[] VerifyConfirmation() {
             var errors = new List<string>();
