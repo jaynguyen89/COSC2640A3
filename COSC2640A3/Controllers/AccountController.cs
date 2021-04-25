@@ -1,10 +1,13 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
 using COSC2640A3.ViewModels.Account;
+using Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static Helper.Shared.SharedEnums;
@@ -17,17 +20,23 @@ namespace COSC2640A3.Controllers {
     public sealed class AccountController {
         
         private readonly ILogger<AuthenticationController> _logger;
+        private readonly IContextService _contextService;
         private readonly IAccountService _accountService;
         private readonly IGoogleService _googleService;
+        private readonly ISmsService _smsService;
 
         public AccountController(
             ILogger<AuthenticationController> logger,
+            IContextService contextService,
             IAccountService accountService,
-            IGoogleService googleService
+            IGoogleService googleService,
+            ISmsService smsService
         ) {
             _logger = logger;
+            _contextService = contextService;
             _accountService = accountService;
             _googleService = googleService;
+            _smsService = smsService;
         }
 
         [RoleAuthorize(Role.Student)]
@@ -125,6 +134,39 @@ namespace COSC2640A3.Controllers {
             return !updateAccountResult.HasValue || !updateAccountResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+        }
+
+        [HttpPut("set-phone-number/{phoneNumber}")]
+        public async Task<JsonResult> UpdatePhoneNumber([FromHeader] string accountId,[FromRoute] string phoneNumber) {
+            _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdatePhoneNumber) }: Service starts.");
+            
+            if (!Helpers.IsProperString(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Phone number is missing." } });
+            
+            phoneNumber = phoneNumber.Trim().RemoveAllSpaces();
+            if (!new Regex(@"^[0-9]{10,15}$").IsMatch(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Phone number is invalid." } });
+            
+            var account = await _accountService.GetAccountById(accountId);
+            if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var confirmationToken = Helpers.GenerateRandomString();
+            account.RecoveryToken = confirmationToken;
+            account.TokenSetOn = DateTime.UtcNow;
+
+            await _contextService.StartTransaction();
+            var updateAccountResult = await _accountService.UpdateAccount(account);
+            if (!updateAccountResult.HasValue || !updateAccountResult.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+            
+            var sendSmsResult = await _smsService.SendSmsWithContent($"Your confirmation code: { confirmationToken }");
+            if (!sendSmsResult.HasValue || !sendSmsResult.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Failed to send SMS confirmation token. Please try again." } });
+            }
+
+            await _contextService.ConfirmTransaction();
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
     }
 }

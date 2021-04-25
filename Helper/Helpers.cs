@@ -41,7 +41,7 @@ namespace Helper {
             return random.Next(min, max + 1);
         }
         
-        public static string GenerateRandomString([NotNull] int length,[NotNull] bool caseSensitive = false,[NotNull] bool includeSpecialChars = false) {
+        public static string GenerateRandomString([NotNull] int length = 8,[NotNull] bool caseSensitive = false,[NotNull] bool includeSpecialChars = false) {
             const string sChars = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890!@#$%&_+.";
             const string nChars = "QWERTYUIOPASDFGHJKKLZXCVBNMqwertyuiopasdfghjklzxcvbnmn1234567890";
             const string scChars = "QWERTYUIOPASDFGHJKKLZXCVBNM1234567890!@#$%&_+.";

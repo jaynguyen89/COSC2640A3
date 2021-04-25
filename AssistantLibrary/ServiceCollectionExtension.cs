@@ -13,6 +13,7 @@ namespace AssistantLibrary {
             services.Configure<AssistantOptions>(configuration.GetSection(nameof(AssistantOptions)));
 
             services.AddScoped<IGoogleService, GoogleService>();
+            services.AddScoped<ISmsService, SmsService>();
         }
     }
 }
