@@ -1,4 +1,5 @@
-﻿using COSC2640A3.Attributes;
+﻿using System.Threading.Tasks;
+using COSC2640A3.Attributes;
 using COSC2640A3.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -19,6 +20,22 @@ namespace COSC2640A3.Controllers {
         ) {
             _logger = logger;
             _enrolmentService = enrolmentService;
+        }
+
+        public async Task<JsonResult> EnrolIntoClassroom() {
+            
+        }
+        
+        public async Task<JsonResult> GetEnrolmentsByStudent() {
+            
+        }
+        
+        public async Task<JsonResult> UnenrolToClassroom() {
+            
+        }
+        
+        public async Task<JsonResult> GetAllInvoices() {
+            
         }
     }
 }

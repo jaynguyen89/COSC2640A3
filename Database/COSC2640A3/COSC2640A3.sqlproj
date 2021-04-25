@@ -64,8 +64,8 @@
     <Build Include="schema\Teacher.sql" />
     <Build Include="schema\Classroom.sql" />
     <Build Include="schema\Enrolment.sql" />
-    <Build Include="schema\Assessment.sql" />
     <Build Include="schema\StudentMark.sql" />
+    <Build Include="schema\Invoice.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="publish\COSC2640A3.local.publish.xml" />

@@ -9,6 +9,7 @@ namespace COSC2640A3.Models
     {
         public Enrolment()
         {
+            Invoices = new HashSet<Invoice>();
             StudentMarks = new HashSet<StudentMark>();
         }
 
@@ -20,6 +21,7 @@ namespace COSC2640A3.Models
         public bool IsPassed { get; set; }
 
         public virtual Student Student { get; set; }
+        public virtual ICollection<Invoice> Invoices { get; set; }
         public virtual ICollection<StudentMark> StudentMarks { get; set; }
     }
 }

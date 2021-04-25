@@ -174,5 +174,11 @@ namespace COSC2640A3.Controllers {
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });
         }
+
+        [RoleAuthorize(Role.Teacher)]
+        [HttpGet("enrolments/{classroomId}")]
+        public async Task<JsonResult> GetEnrolmentsByClassroom([FromHeader] string accountId,[FromRoute] string classroomId) {
+            
+        }
     }
 }

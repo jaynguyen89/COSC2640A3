@@ -18,7 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper", "..\Helper\Helper.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssistantLibrary", "..\AssistantLibrary\AssistantLibrary.csproj", "{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DatabaseLibrary", "..\DatabaseLibrary\DatabaseLibrary.csproj", "{F7838A21-44F4-4EC3-8786-6914730BF33A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseLibrary", "..\DatabaseLibrary\DatabaseLibrary.csproj", "{F7838A21-44F4-4EC3-8786-6914730BF33A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
