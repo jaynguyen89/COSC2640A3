@@ -11,5 +11,25 @@
             Student,
             Teacher
         }
+
+        public enum DurationUnit {
+            Hours,
+            Days,
+            Weeks,
+            Months,
+            Years
+        }
+
+        public enum ScheduleStatus {
+            Awaiting,
+            Processing,
+            Completed
+        }
+        
+        public enum ImportType {
+            Classroom,
+            Students,
+            Both
+        }
     }
 }

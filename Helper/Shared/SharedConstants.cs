@@ -21,5 +21,7 @@ namespace Helper.Shared {
         public static readonly List<string> InvalidEnds = new() { ".", "-", "_" };
         
         public static readonly List<string> SpecialChars = new() { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "{", "[", "}", "]", ":", ";", "<", ",", ">", ".", "?", "|", "~" };
+
+        public static readonly List<string> ExpectedClassroomAndStudentImportFileTypes = new() { "json", "csv" };
     }
 }
