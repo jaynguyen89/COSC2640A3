@@ -22,7 +22,6 @@ namespace COSC2640A3.DbContexts
         public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<StudentMark> StudentMarks { get; set; }
         public virtual DbSet<Teacher> Teachers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -117,7 +116,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Enrolment");
 
-                entity.HasIndex(e => e.Id, "UQ__tmp_ms_x__3214EC06D0BF3D2C")
+                entity.HasIndex(e => e.Id, "UQ__tmp_ms_x__3214EC06790D331D")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -199,28 +198,6 @@ namespace COSC2640A3.DbContexts
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.Students)
                     .HasForeignKey(d => d.AccountId);
-            });
-
-            modelBuilder.Entity<StudentMark>(entity =>
-            {
-                entity.ToTable("StudentMark");
-
-                entity.HasIndex(e => e.Id, "UQ__tmp_ms_x__3214EC066E07ACB2")
-                    .IsUnique();
-
-                entity.Property(e => e.Id)
-                    .HasMaxLength(50)
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Comment).HasMaxLength(250);
-
-                entity.Property(e => e.EnrolmentId)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
-                entity.HasOne(d => d.Enrolment)
-                    .WithMany(p => p.StudentMarks)
-                    .HasForeignKey(d => d.EnrolmentId);
             });
 
             modelBuilder.Entity<Teacher>(entity =>

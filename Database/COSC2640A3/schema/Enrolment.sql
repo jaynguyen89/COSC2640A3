@@ -5,8 +5,9 @@
 	[ClassroomId] NVARCHAR(50) NOT NULL,
 	[InvoiceId] NVARCHAR(50) DEFAULT NULL,
 	[EnrolledOn] DATETIME2(7) NOT NULL DEFAULT (GETDATE()),
-	[OverallMark] TINYINT NOT NULL DEFAULT 0,
-	[IsPassed] BIT NOT NULL DEFAULT 0,
+	[OverallMark] TINYINT DEFAULT NULL,
+	[MarkBreakdowns] NVARCHAR(MAX) DEFAULT NULL, --Save JSON: {Assessments: [{TaskName, TotalMarks, StudentMarks, MarkedOn, Comment}], Note}
+	[IsPassed] BIT DEFAULT NULL,
 	CONSTRAINT [PK_Enrolment_Id] PRIMARY KEY ([Id] ASC),
 	CONSTRAINT [FK_Enrolment_Student_StudentId] FOREIGN KEY ([StudentId]) REFERENCES [dbo].[Student] ([Id]) ON DELETE CASCADE,
 	CONSTRAINT [FK_Enrolment_Invoice_InvoiceId] FOREIGN KEY ([InvoiceId]) REFERENCES [dbo].[Invoice] ([Id]) ON DELETE CASCADE,
