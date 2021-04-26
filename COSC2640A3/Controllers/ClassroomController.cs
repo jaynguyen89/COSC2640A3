@@ -10,6 +10,7 @@ using COSC2640A3.ViewModels;
 using Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using static Helper.Shared.SharedEnums;
 
 namespace COSC2640A3.Controllers {
@@ -20,23 +21,32 @@ namespace COSC2640A3.Controllers {
     public sealed class ClassroomController {
         
         private readonly ILogger<ClassroomController> _logger;
+        private readonly IOptions<MainOptions> _options;
+        private readonly IContextService _contextService;
         private readonly IClassroomService _classroomService;
         private readonly IAccountService _accountService;
+        private readonly IEnrolmentService _enrolmentService;
         private readonly IRedisCacheService _redisCache;
         private readonly IS3Service _s3Service;
         private readonly IDynamoService _dynamoService;
 
         public ClassroomController(
             ILogger<ClassroomController> logger,
+            IOptions<MainOptions> options,
+            IContextService contextService,
             IClassroomService classroomService,
             IAccountService accountService,
+            IEnrolmentService enrolmentService,
             IRedisCacheService redisCache,
             IS3Service s3Service,
             IDynamoService dynamoService
         ) {
             _logger = logger;
+            _options = options;
+            _contextService = contextService;
             _classroomService = classroomService;
             _accountService = accountService;
+            _enrolmentService = enrolmentService;
             _redisCache = redisCache;
             _s3Service = s3Service;
             _dynamoService = dynamoService;
@@ -152,16 +162,34 @@ namespace COSC2640A3.Controllers {
             var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
-            
+
+            var enrolments = await _classroomService.GetEnrolmentsByClassroomId(classroomId);
+            if (enrolments is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            foreach (var enrolment in enrolments) enrolment.IsPassed = enrolment.OverallMark >= byte.Parse(_options.Value.StudentPassMark);
+
+            await _contextService.StartTransaction();
+            var updateMultipleEnrolmentResult = await _enrolmentService.UpdateMultipleEnrolments(enrolments);
+            if (!updateMultipleEnrolmentResult.HasValue || !updateMultipleEnrolmentResult.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+
             var classroom = await _classroomService.GetClassroomById(classroomId);
-            if (classroom is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (classroom is null) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
 
             classroom.IsActive = false;
             var updateResult = await _classroomService.UpdateClassroom(classroom);
-            
-            return !updateResult.HasValue || !updateResult.Value
-                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            if (!updateResult.HasValue || !updateResult.Value) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+
+            await _contextService.ConfirmTransaction();
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
         [RoleAuthorize(Role.Student)]
@@ -184,7 +212,7 @@ namespace COSC2640A3.Controllers {
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
-            var students = await _accountService.GetStudentsEnrolledIntoClassroom(classroomId);
+            var students = await _classroomService.GetStudentEnrolmentsByClassroomId(classroomId);
             return students is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = students });

@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
-using COSC2640A3.ViewModels.Account;
 
 namespace COSC2640A3.Services.Interfaces {
 
@@ -45,7 +44,5 @@ namespace COSC2640A3.Services.Interfaces {
         Task<Teacher> GetTeacherByAccountId(string accountId);
         
         Task<Account> GetAccountById(string accountId, bool emailConfirmed = true);
-        
-        Task<StudentVM[]> GetStudentsEnrolledIntoClassroom(string classroomId);
     }
 }

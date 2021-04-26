@@ -1,6 +1,8 @@
 ﻿namespace COSC2640A3 {
 
     public sealed class MainOptions {
+        
+        public string StudentPassMark { get; set; }
 
         // Database connection strings
         public string DevelopmentConnectionString { get; set; }

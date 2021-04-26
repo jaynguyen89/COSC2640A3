@@ -41,5 +41,12 @@ namespace COSC2640A3.Services.Interfaces {
         /// Returns null if error, returns false if failed, returns true if success.
         /// </summary>
         Task<bool?> UpdateEnrolment(Enrolment enrolment);
+
+        /// <summary>
+        /// Returns null if error, returns false if not associated, returns true if associated.
+        /// </summary>
+        Task<bool?> DoesEnrolmentRelateToAClassroomOfThisTeacher(string enrolmentId, string teacherId);
+
+        Task<bool?> UpdateMultipleEnrolments(Enrolment[] enrolments);
     }
 }

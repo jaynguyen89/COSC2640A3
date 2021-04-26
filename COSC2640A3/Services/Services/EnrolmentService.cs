@@ -126,5 +126,31 @@ namespace COSC2640A3.Services.Services {
                 return default;
             }
         }
+
+        public async Task<bool?> DoesEnrolmentRelateToAClassroomOfThisTeacher(string enrolmentId, string teacherId) {
+            try {
+                return await _dbContext.Enrolments
+                                       .Where(enrolment => enrolment.Id.Equals(enrolmentId))
+                                       .Select(enrolment => enrolment.Classroom)
+                                       .AnyAsync(classroom => classroom.TeacherId.Equals(teacherId));
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(DoesEnrolmentRelateToAClassroomOfThisTeacher) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+        }
+
+        public async Task<bool?> UpdateMultipleEnrolments(Enrolment[] enrolments) {
+            _dbContext.Enrolments.UpdateRange(enrolments);
+
+            try {
+                var result = await _dbContext.SaveChangesAsync();
+                return result != 0;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(EnrolmentService) }.{ nameof(UpdateMultipleEnrolments) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
     }
 }

@@ -94,7 +94,9 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<ClassroomVM[]> GetAllClassrooms() {
             try {
-                return await _dbContext.Classrooms.Select(classroom => (ClassroomVM) classroom).ToArrayAsync();
+                return await _dbContext.Classrooms
+                                       .Select(classroom => (ClassroomVM) classroom)
+                                       .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassrooms) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
@@ -113,6 +115,39 @@ namespace COSC2640A3.Services.Services {
             
             //TODO: set additional classroom contents like files, audio, videos... attached by the teacher
             return classroomDetail;
+        }
+
+        public async Task<EnrolmentVM[]> GetStudentEnrolmentsByClassroomId(string classroomId) {
+            try {
+                var enrolmentData = await _dbContext.Enrolments
+                                                    .Where(enrolment => enrolment.ClassroomId.Equals(classroomId))
+                                                    .Select(enrolment => new { envolmentVm = (EnrolmentVM) enrolment, invoice = enrolment.Invoice })
+                                                    .ToArrayAsync();
+
+                return enrolmentData
+                       .Select(pair => {
+                           var enrolment = pair.envolmentVm;
+                           if (pair.invoice.IsPaid) enrolment.Invoice.PaymentDetail = pair.invoice;
+                           return enrolment;
+                       })
+                       .ToArray();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetStudentEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+        }
+
+        public async Task<Enrolment[]> GetEnrolmentsByClassroomId(string classroomId) {
+            try {
+                return await _dbContext.Enrolments
+                                       .Where(enrolment => enrolment.ClassroomId.Equals(classroomId))
+                                       .ToArrayAsync();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
         }
     }
 }
