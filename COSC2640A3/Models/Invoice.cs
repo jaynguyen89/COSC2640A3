@@ -7,8 +7,12 @@ namespace COSC2640A3.Models
 {
     public partial class Invoice
     {
+        public Invoice()
+        {
+            Enrolments = new HashSet<Enrolment>();
+        }
+
         public string Id { get; set; }
-        public string EnrolmentId { get; set; }
         public decimal DueAmount { get; set; }
         public bool IsPaid { get; set; }
         public string PaymentMethod { get; set; }
@@ -18,6 +22,6 @@ namespace COSC2640A3.Models
         public string PaymentStatus { get; set; }
         public DateTime? PaidOn { get; set; }
 
-        public virtual Enrolment Enrolment { get; set; }
+        public virtual ICollection<Enrolment> Enrolments { get; set; }
     }
 }

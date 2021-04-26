@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
-using COSC2640A3.ViewModels;
+using COSC2640A3.ViewModels.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -100,6 +100,19 @@ namespace COSC2640A3.Services.Services {
                 _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassrooms) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
+        }
+
+        public async Task<ClassroomVM> GetClassroomDetailsFor(string classroomId, bool forStudent = true) {
+            _logger.LogInformation($"{ nameof(ClassroomService) }.{ nameof(GetClassroomDetailsFor) }: { nameof(classroomId) }={ classroomId }, { nameof(forStudent) }={ forStudent }.");
+
+            var classroom = await _dbContext.Classrooms.FindAsync(classroomId);
+            var classroomDetail = (ClassroomVM) classroom;
+            classroomDetail.SetClassroomDetail(classroom);
+                
+            if (forStudent) return classroomDetail;
+            
+            //TODO: set additional classroom contents like files, audio, videos... attached by the teacher
+            return classroomDetail;
         }
     }
 }

@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.Account;
 using Helper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -148,6 +150,20 @@ namespace COSC2640A3.Services.Services {
             }
             catch (InvalidOperationException e) {
                 _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetAccountById) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<StudentVM[]> GetStudentsEnrolledIntoClassroom(string classroomId) {
+            try {
+                return await _dbContext.Enrolments
+                                       .Where(enrolment => enrolment.ClassroomId.Equals(classroomId))
+                                       .Select(enrolment => enrolment.Student)
+                                       .Select(student => (StudentVM) student)
+                                       .ToArrayAsync();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetStudentsEnrolledIntoClassroom) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }

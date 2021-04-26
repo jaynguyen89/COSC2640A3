@@ -178,7 +178,28 @@ namespace COSC2640A3.Controllers {
         [RoleAuthorize(Role.Teacher)]
         [HttpGet("enrolments/{classroomId}")]
         public async Task<JsonResult> GetEnrolmentsByClassroom([FromHeader] string accountId,[FromRoute] string classroomId) {
+            _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassrooms) }: Service starts.");
             
+            var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
+            if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
+
+            var students = await _accountService.GetStudentsEnrolledIntoClassroom(classroomId);
+            return students is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = students });
+        }
+
+        [HttpGet("details/{classroomId}")]
+        public async Task<JsonResult> GetClassroomDetails([FromHeader] string accountId,[FromRoute] string classroomId) {
+            _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetClassroomDetails) }: Service starts.");
+
+            var authenticatedUser = await _redisCache.GetRedisCacheEntry<AuthenticatedUser>($"{nameof(AuthenticatedUser)}_{accountId}");
+            var classroomDetail = await _classroomService.GetClassroomDetailsFor(classroomId, authenticatedUser.Role == Role.Student);
+            
+            return classroomDetail is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomDetail });
         }
     }
 }

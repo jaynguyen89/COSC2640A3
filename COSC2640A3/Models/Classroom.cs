@@ -7,6 +7,11 @@ namespace COSC2640A3.Models
 {
     public partial class Classroom
     {
+        public Classroom()
+        {
+            Enrolments = new HashSet<Enrolment>();
+        }
+
         public string Id { get; set; }
         public string TeacherId { get; set; }
         public string ClassName { get; set; }
@@ -19,5 +24,6 @@ namespace COSC2640A3.Models
         public DateTime CreatedOn { get; set; }
 
         public virtual Teacher Teacher { get; set; }
+        public virtual ICollection<Enrolment> Enrolments { get; set; }
     }
 }

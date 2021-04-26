@@ -117,7 +117,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Enrolment");
 
-                entity.HasIndex(e => e.Id, "UQ__Enrolmen__3214EC065B986451")
+                entity.HasIndex(e => e.Id, "UQ__tmp_ms_x__3214EC06D0BF3D2C")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -130,9 +130,21 @@ namespace COSC2640A3.DbContexts
 
                 entity.Property(e => e.EnrolledOn).HasDefaultValueSql("(getdate())");
 
+                entity.Property(e => e.InvoiceId).HasMaxLength(50);
+
                 entity.Property(e => e.StudentId)
                     .IsRequired()
                     .HasMaxLength(50);
+
+                entity.HasOne(d => d.Classroom)
+                    .WithMany(p => p.Enrolments)
+                    .HasForeignKey(d => d.ClassroomId)
+                    .OnDelete(DeleteBehavior.ClientSetNull);
+
+                entity.HasOne(d => d.Invoice)
+                    .WithMany(p => p.Enrolments)
+                    .HasForeignKey(d => d.InvoiceId)
+                    .OnDelete(DeleteBehavior.Cascade);
 
                 entity.HasOne(d => d.Student)
                     .WithMany(p => p.Enrolments)
@@ -154,10 +166,6 @@ namespace COSC2640A3.DbContexts
 
                 entity.Property(e => e.DueAmount).HasColumnType("decimal(10, 2)");
 
-                entity.Property(e => e.EnrolmentId)
-                    .IsRequired()
-                    .HasMaxLength(50);
-
                 entity.Property(e => e.PaymentId).HasMaxLength(50);
 
                 entity.Property(e => e.PaymentMethod).HasMaxLength(50);
@@ -165,10 +173,6 @@ namespace COSC2640A3.DbContexts
                 entity.Property(e => e.PaymentStatus).HasMaxLength(50);
 
                 entity.Property(e => e.TransactionId).HasMaxLength(50);
-
-                entity.HasOne(d => d.Enrolment)
-                    .WithMany(p => p.Invoices)
-                    .HasForeignKey(d => d.EnrolmentId);
             });
 
             modelBuilder.Entity<Student>(entity =>
