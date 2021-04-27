@@ -16,6 +16,7 @@ namespace AmazonLibrary {
 
             services.AddScoped<IS3Service, S3Service>();
             services.AddScoped<IDynamoService, DynamoService>();
+            services.AddScoped<IAmazonMailService, AmazonMailService>();
         }
     }
 }

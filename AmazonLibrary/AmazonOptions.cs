@@ -24,5 +24,8 @@
         public string StudentImportSchedulesTableName { get; set; }
         
         public string ClassroomAndStudentImportScheduleTableName { get; set; }
+        
+        //For AWS Simple Mail Service
+        public string MailSentFromAddress { get; set; }
     }
 }

@@ -13,10 +13,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Templates" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Helper\Helper.csproj" />
     </ItemGroup>
 

@@ -8,11 +8,13 @@
     <Folder Include="Models\" />
     <Folder Include="Interfaces\" />
     <Folder Include="Services\" />
+    <Folder Include="Templates" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="AWSSDK.DynamoDBv2" Version="3.7.0.14" />
     <PackageReference Include="AWSSDK.S3" Version="3.7.0.15" />
+    <PackageReference Include="AWSSDK.SimpleEmail" Version="3.7.0.14" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
