@@ -11,6 +11,7 @@ Install the following tools and apps:
 * Postman
 * Visual Studio Code (or JetBrains WebStorm)
 * Redis (by downloading the installation file)
+* Another Redis Desktop Manager
 * Node.js
 * Git client (eg. SourceTree)
 
@@ -35,9 +36,10 @@ First thing first, fetch and pull everything from git to local machine.
 ***Set up the React app***
 * Launch Visual Studio Code, open the React project from `~\WebApp`
 * Open the `Command Prompt` in VS Code run:
-> npm install -g yarn
-> yarn install
-> yarn run (or) npm run
+> $ npm install -g yarn <br/>
+> $ yarn install <br /><br />
+> $ yarn run <br/> or <br />
+> $ npm run
 * Voila! start coding.
 
 ***Set up the .NET API***
