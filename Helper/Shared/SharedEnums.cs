@@ -31,5 +31,13 @@
             Students,
             Both
         }
+        
+        public enum EmailType {
+            AccountActivation,
+            AccountActivationConfirmation,
+            PasswordRecovery,
+            TwoFaPin,
+            TwoFaDisabledNotification
+        }
     }
 }

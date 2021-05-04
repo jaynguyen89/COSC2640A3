@@ -19,6 +19,11 @@ namespace AssistantLibrary.Interfaces {
         /// </summary>
         TwoFa ReproduceTwoFaAuth([NotNull] string secretKey,[NotNull] string email);
 
+        /// <summary>
+        /// Get Two FA 6-digit PIN to send to user via SMS and Email.
+        /// </summary>
+        string GetTwoFaPin([NotNull] string secretKey);
+
         bool VerifyTwoFactorAuth([NotNull] string secretKey,[NotNull] string pin);
     }
 }

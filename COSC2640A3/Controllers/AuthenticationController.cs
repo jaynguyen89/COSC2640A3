@@ -6,6 +6,7 @@ using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
 using Helper;
+using Helper.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using static Helper.Shared.SharedEnums;
@@ -124,10 +125,11 @@ namespace COSC2640A3.Controllers {
             var authenticatedUser = new AuthenticatedUser {
                 AuthToken = authTokenOrMessage,
                 AccountId = account.Id,
-                Role = Role.Student
+                Role = credentials.AsStudent ? Role.Student : Role.Teacher
             };
 
             await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ nameof(AuthenticatedUser) }_{ authenticatedUser.AccountId }", Data = authenticatedUser });
+            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ SharedConstants.TwoFaCacheName }_{ authenticatedUser.AccountId }", Data = !account.TwoFactorEnabled });
             
             HttpContext.Response.Cookies.Append(nameof(AuthenticatedUser.AuthToken), authTokenOrMessage);
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authenticatedUser });
@@ -138,6 +140,7 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> Unauthenticate([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Unauthenticate) }: service starts.");
             await _redisCache.RemoveCacheEntry($"{ nameof(AuthenticatedUser) }_{ accountId }");
+            await _redisCache.RemoveCacheEntry($"{ SharedConstants.TwoFaCacheName }_{ accountId }");
             
             HttpContext.Response.Cookies.Delete("AuthToken");
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });

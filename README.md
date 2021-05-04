@@ -30,7 +30,7 @@ First thing first, fetch and pull everything from git to local machine.
 * Create a database name `COSC2640A3`
 * Launch Visual Studio, open the database project from `~\Database\COSC2640A3.sln`
 * Double click the `.publish` file, Generate script then click execute button (top left)
-* Do not modify schema directly in SQL Server Management Studio
+* **DON'T** modify schema directly in SQL Server Management Studio
 * Make changes in the database project then publish it instead
 
 ***Set up the React app***

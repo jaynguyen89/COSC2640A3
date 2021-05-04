@@ -13,6 +13,7 @@ namespace COSC2640A3.Controllers {
 
     [ApiController]
     [MainAuthorize]
+    [TwoFaAuthorize]
     [RoleAuthorize(Role.Student)]
     [Route("student")]
     public sealed class StudentController {

@@ -16,6 +16,7 @@ namespace COSC2640A3.Controllers {
 
     [ApiController]
     [MainAuthorize]
+    [TwoFaAuthorize]
     [Route("account")]
     public sealed class AccountController {
         

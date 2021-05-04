@@ -12,6 +12,8 @@ namespace COSC2640A3.Bindings {
         public string Password { get; set; }
         
         public string RecaptchaToken { get; set; }
+        
+        public bool AsStudent { get; set; }
 
         public string[] VerifyCredentials() {
             if ((!Helpers.IsProperString(Email) && !Helpers.IsProperString(Username)) || !Helpers.IsProperString(Password))

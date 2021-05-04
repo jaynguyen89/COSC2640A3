@@ -76,6 +76,10 @@ namespace AssistantLibrary.Services {
             };
         }
 
+        public string GetTwoFaPin(string secretKey) {
+            return _authenticator.GetCurrentPIN(secretKey);
+        }
+
         public bool VerifyTwoFactorAuth(string secretKey, string pin) {
             return _authenticator.ValidateTwoFactorPIN(
                 secretKey, pin,

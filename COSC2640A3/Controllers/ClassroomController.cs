@@ -17,6 +17,7 @@ namespace COSC2640A3.Controllers {
 
     [ApiController]
     [MainAuthorize]
+    [TwoFaAuthorize]
     [Route("classroom")]
     public sealed class ClassroomController {
         
