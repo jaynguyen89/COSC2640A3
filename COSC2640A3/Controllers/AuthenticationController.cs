@@ -1,4 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using AmazonLibrary.Interfaces;
+using AmazonLibrary.Models;
 using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
@@ -15,14 +18,11 @@ namespace COSC2640A3.Controllers {
 
     [ApiController]
     [Route("authentication")]
-    public sealed class AuthenticationController : ControllerBase {
+    public sealed class AuthenticationController : AppController {
 
         private readonly ILogger<AuthenticationController> _logger;
-        private readonly IContextService _contextService;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IAccountService _accountService;
         private readonly IRoleService _roleService;
-        private readonly IRedisCacheService _redisCache;
         private readonly IGoogleService _googleService;
 
         public AuthenticationController(
@@ -32,14 +32,14 @@ namespace COSC2640A3.Controllers {
             IAccountService accountService,
             IRoleService roleService,
             IRedisCacheService redisCache,
-            IGoogleService googleService
+            IGoogleService googleService,
+            IAmazonMailService mailService
+        ) : base(
+            contextService, accountService, redisCache, null, mailService
         ) {
             _logger = logger;
-            _contextService = contextService;
             _authenticationService = authenticationService;
-            _accountService = accountService;
             _roleService = roleService;
-            _redisCache = redisCache;
             _googleService = googleService;
         }
 
@@ -47,7 +47,7 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> Register(Registration registration) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Register) }: service starts.");
 
-            var isHuman = await _googleService.IsHumanRegistration(registration.RecaptchaToken);
+            var isHuman = await _googleService.IsHumanInteraction(registration.RecaptchaToken);
             if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
             
             var errors = registration.VerifyRegistrationDetails();
@@ -73,7 +73,7 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> ConfirmRegistration(ConfirmRegistration confirmation) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(ConfirmRegistration) }: service starts.");
             
-            var isHuman = await _googleService.IsHumanRegistration(confirmation.RecaptchaToken);
+            var isHuman = await _googleService.IsHumanInteraction(confirmation.RecaptchaToken);
             if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
             
             var errors = confirmation.VerifyConfirmation();
@@ -102,6 +102,16 @@ namespace COSC2640A3.Controllers {
             }
 
             await _contextService.ConfirmTransaction();
+            _ = await SendEmail(new EmailComposer {
+                ReceiverEmail = account.EmailAddress,
+                Subject = $"{ nameof(COSC2640A3) } - Account activated",
+                EmailType = EmailType.AccountActivationConfirmation,
+                Contents = new Dictionary<string, string> {
+                    { "USER_NAME_PLACEHOLDER", account.Username },
+                    { "WEBSITE_URL_PLACEHOLDER", "http://localhost:3000" }
+                }
+            });
+            
             return new JsonResult(new JsonResponse {  Result = RequestResult.Success });
         }
 
@@ -109,7 +119,7 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> Authenticate(LoginCredentials credentials) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Authenticate) }: service starts.");
             
-            var isHuman = await _googleService.IsHumanRegistration(credentials.RecaptchaToken);
+            var isHuman = await _googleService.IsHumanInteraction(credentials.RecaptchaToken);
             if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
 
             var errors = credentials.VerifyCredentials();
@@ -139,10 +149,8 @@ namespace COSC2640A3.Controllers {
         [HttpGet("unauthenticate")]
         public async Task<JsonResult> Unauthenticate([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Unauthenticate) }: service starts.");
-            await _redisCache.RemoveCacheEntry($"{ nameof(AuthenticatedUser) }_{ accountId }");
-            await _redisCache.RemoveCacheEntry($"{ SharedConstants.TwoFaCacheName }_{ accountId }");
+            await  RemoveAuthenticationFor(accountId);
             
-            HttpContext.Response.Cookies.Delete("AuthToken");
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 

@@ -7,7 +7,7 @@ namespace AssistantLibrary.Interfaces {
 
     public interface IGoogleService {
         
-        Task<GoogleRecaptchaResponse> IsHumanRegistration([AllowNull] string recaptchaToken = null);
+        Task<GoogleRecaptchaResponse> IsHumanInteraction([AllowNull] string recaptchaToken = null);
         
         /// <summary>
         /// When user is enabling (or renewing) TFA, generate new TFA QR data for them.

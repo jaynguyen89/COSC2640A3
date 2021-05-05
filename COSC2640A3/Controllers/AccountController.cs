@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using AmazonLibrary.Interfaces;
+using AmazonLibrary.Models;
 using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Models;
@@ -18,26 +21,23 @@ namespace COSC2640A3.Controllers {
     [MainAuthorize]
     [TwoFaAuthorize]
     [Route("account")]
-    public sealed class AccountController {
+    public sealed class AccountController : AppController {
         
         private readonly ILogger<AuthenticationController> _logger;
-        private readonly IContextService _contextService;
-        private readonly IAccountService _accountService;
         private readonly IGoogleService _googleService;
-        private readonly ISmsService _smsService;
 
         public AccountController(
             ILogger<AuthenticationController> logger,
             IContextService contextService,
             IAccountService accountService,
             IGoogleService googleService,
-            ISmsService smsService
+            ISmsService smsService,
+            IAmazonMailService mailService
+        ): base(
+            contextService, accountService, null, smsService, mailService
         ) {
             _logger = logger;
-            _contextService = contextService;
-            _accountService = accountService;
             _googleService = googleService;
-            _smsService = smsService;
         }
 
         [RoleAuthorize(Role.Student)]
@@ -123,7 +123,7 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> DisableTwoFa([FromHeader] string accountId,[FromRoute] string recaptchaToken) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(DisableTwoFa) }: Service starts.");
             
-            var isHuman = await _googleService.IsHumanRegistration(recaptchaToken);
+            var isHuman = await _googleService.IsHumanInteraction(recaptchaToken);
             if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
             
             var account = await _accountService.GetAccountById(accountId);
@@ -131,6 +131,16 @@ namespace COSC2640A3.Controllers {
 
             account.TwoFaSecretKey = default;
             var updateAccountResult = await _accountService.UpdateAccount(account);
+
+            await SendEmail(new EmailComposer {
+                ReceiverEmail = account.EmailAddress,
+                EmailType = EmailType.TwoFaDisabledNotification,
+                Subject = $"{ nameof(COSC2640A3) } - Two FA Disabled",
+                Contents = new Dictionary<string, string> {
+                    { "USER_NAME_PLACEHOLDER", account.Username },
+                    { "WEBSITE_URL_PLACEHOLDER", "http://localhost:3000" }
+                }
+            });
 
             return !updateAccountResult.HasValue || !updateAccountResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
@@ -149,25 +159,23 @@ namespace COSC2640A3.Controllers {
             var account = await _accountService.GetAccountById(accountId);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
-            var confirmationToken = Helpers.GenerateRandomString();
-            account.RecoveryToken = confirmationToken;
-            account.TokenSetOn = DateTime.UtcNow;
+            return await GenerateNewAccountTokenFor(account, NotificationType.Sms);
+        }
 
-            await _contextService.StartTransaction();
-            var updateAccountResult = await _accountService.UpdateAccount(account);
-            if (!updateAccountResult.HasValue || !updateAccountResult.Value) {
-                await _contextService.RevertTransaction();
-                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
-            }
+        [HttpPut("remove-phone-number")]
+        public async Task<JsonResult> RemovePhoneNumber([FromHeader] string accountId) {
+            _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(RemovePhoneNumber) }: Service starts.");
             
-            var sendSmsResult = await _smsService.SendSmsWithContent($"Your confirmation code: { confirmationToken }");
-            if (!sendSmsResult.HasValue || !sendSmsResult.Value) {
-                await _contextService.RevertTransaction();
-                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Failed to send SMS confirmation token. Please try again." } });
-            }
+            var account = await _accountService.GetAccountById(accountId);
+            if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
-            await _contextService.ConfirmTransaction();
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            account.PhoneNumber = null;
+            account.PhoneNumberConfirmed = false;
+            var updateAccountResult = await _accountService.UpdateAccount(account);
+            
+            return !updateAccountResult.HasValue || !updateAccountResult.Value
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
     }
 }

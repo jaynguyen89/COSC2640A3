@@ -33,11 +33,16 @@
         }
         
         public enum EmailType {
-            AccountActivation,
             AccountActivationConfirmation,
             PasswordRecovery,
             TwoFaPin,
             TwoFaDisabledNotification
+        }
+
+        public enum NotificationType {
+            Email,
+            Sms,
+            Both
         }
     }
 }

@@ -3,15 +3,9 @@ using Helper;
 
 namespace COSC2640A3.Bindings {
 
-    public sealed class LoginCredentials {
-        
-        public string Email { get; set; }
-        
-        public string Username { get; set; }
+    public sealed class LoginCredentials : Identity {
         
         public string Password { get; set; }
-        
-        public string RecaptchaToken { get; set; }
         
         public bool AsStudent { get; set; }
 

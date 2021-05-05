@@ -30,7 +30,7 @@ namespace AssistantLibrary.Services {
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         }
 
-        public async Task<GoogleRecaptchaResponse> IsHumanRegistration(string recaptchaToken = null) {
+        public async Task<GoogleRecaptchaResponse> IsHumanInteraction(string recaptchaToken = null) {
             if (!bool.Parse(_options.Value.GoogleRecaptchaEnabled)) return new GoogleRecaptchaResponse { Result = true };
             if (recaptchaToken == null) return new GoogleRecaptchaResponse { Result = false };
 

@@ -70,7 +70,6 @@ namespace AmazonLibrary.Services {
 
         private string GetEmailTemplateAccordingTo(EmailType emailType) {
             return emailType switch {
-                EmailType.AccountActivation => $"{ SharedConstants.EmailTemplateFolderPath }AccountActivationEmail.html",
                 EmailType.AccountActivationConfirmation => $"{ SharedConstants.EmailTemplateFolderPath }AccountActivationConfirmationEmail.html",
                 EmailType.PasswordRecovery => $"{ SharedConstants.EmailTemplateFolderPath }RecoverPasswordEmail.html",
                 EmailType.TwoFaPin => $"{ SharedConstants.EmailTemplateFolderPath }TwoFaCodeEmail.html",

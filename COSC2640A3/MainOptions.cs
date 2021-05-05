@@ -39,5 +39,8 @@
         public string CookieEssential { get; set; }
         
         public string CookiePath { get; set; }
+        
+        // For account recovery and confirmation
+        public string TokenValidityDuration { get; set; } // Hours
     }
 }

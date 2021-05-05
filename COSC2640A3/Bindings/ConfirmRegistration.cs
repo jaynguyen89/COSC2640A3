@@ -4,15 +4,9 @@ using Helper;
 
 namespace COSC2640A3.Bindings {
 
-    public sealed class ConfirmRegistration {
-        
-        public string Email { get; set; }
-        
-        public string Username { get; set; }
+    public sealed class ConfirmRegistration : Identity {
         
         public string ConfirmCode { get; set; }
-        
-        public string RecaptchaToken { get; set; }
 
         public string[] VerifyConfirmation() {
             var errors = new List<string>();
