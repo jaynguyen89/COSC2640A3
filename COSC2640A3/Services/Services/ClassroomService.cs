@@ -104,16 +104,13 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<ClassroomVM> GetClassroomDetailsFor(string classroomId, bool forStudent = true) {
-            _logger.LogInformation($"{ nameof(ClassroomService) }.{ nameof(GetClassroomDetailsFor) }: { nameof(classroomId) }={ classroomId }, { nameof(forStudent) }={ forStudent }.");
+        public async Task<ClassroomVM> GetClassroomDetailsFor(string classroomId) {
+            _logger.LogInformation($"{ nameof(ClassroomService) }.{ nameof(GetClassroomDetailsFor) }: { nameof(classroomId) }={ classroomId }");
 
             var classroom = await _dbContext.Classrooms.FindAsync(classroomId);
             var classroomDetail = (ClassroomVM) classroom;
             classroomDetail.SetClassroomDetail(classroom);
                 
-            if (forStudent) return classroomDetail;
-            
-            //TODO: set additional classroom contents like files, audio, videos... attached by the teacher
             return classroomDetail;
         }
 

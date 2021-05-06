@@ -1,7 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using AmazonLibrary.Contexts;
 using AmazonLibrary.Interfaces;
@@ -50,6 +52,54 @@ namespace AmazonLibrary.Services {
                 await uploader.AbortMultipartUploadsAsync(bucketNameToSave, DateTime.UtcNow);
                 return default;
             }
+        }
+
+        public async Task<bool> CreateBucketWithNameIfNeeded(string bucketName) {
+            _logger.LogInformation($"{ nameof(S3Service) }.{ nameof(CreateBucketWithNameIfNeeded) }: Service starts.");
+            
+            if (await _s3Context.DoesS3BucketExistAsync(bucketName))
+                return true;
+            
+            var createBucketRequest = new PutBucketRequest {
+                BucketName = bucketName,
+                UseClientRegion = true,
+                ObjectLockEnabledForBucket = false,
+                CannedACL = S3CannedACL.NoACL
+            };
+
+            var response = await _s3Context.PutBucketAsync(createBucketRequest);
+            return response.HttpStatusCode == HttpStatusCode.OK &&
+                   !string.IsNullOrEmpty(response.ResponseMetadata.RequestId);
+        }
+
+        public async Task<string> UploadFileToBucket(string bucketName, Stream fileStream) {
+            _logger.LogInformation($"{ nameof(S3Service) }.{ nameof(UploadFileToBucket) }: Service starts.");
+            
+            var uploader = new TransferUtility(_s3Context);
+            
+            try {
+                var fileKey = Guid.NewGuid().ToString();
+                await uploader.UploadAsync(fileStream, bucketName, fileKey);
+                await _s3Context.MakeObjectPublicAsync(bucketName, fileKey, true);
+                
+                return fileKey;
+            }
+            catch (Exception e) {
+                _logger.LogError($"{ nameof(S3Service) }.{ nameof(UploadFileToBucket) } - { nameof(Exception) }: { e.StackTrace }");
+
+                await uploader.AbortMultipartUploadsAsync(bucketName, DateTime.UtcNow);
+                return default;
+            }
+        }
+
+        public async Task<bool> DeleteFileInS3Bucket(string bucketName, string fileId) {
+            var deleteFileRequest = new DeleteObjectRequest {
+                BucketName = bucketName,
+                Key = fileId
+            };
+
+            var response = await _s3Context.DeleteObjectAsync(deleteFileRequest);
+            return !string.IsNullOrEmpty(response.ResponseMetadata.RequestId);
         }
     }
 }

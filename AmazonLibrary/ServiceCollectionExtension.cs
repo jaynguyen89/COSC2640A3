@@ -13,10 +13,12 @@ namespace AmazonLibrary {
             services.Configure<AmazonOptions>(configuration.GetSection(nameof(AmazonOptions)));
             services.AddSingleton<DynamoDbContext>();
             services.AddSingleton<AmazonS3Context>();
+            services.AddSingleton<AmazonTextractContext>();
 
             services.AddScoped<IS3Service, S3Service>();
             services.AddScoped<IDynamoService, DynamoService>();
             services.AddScoped<IAmazonMailService, AmazonMailService>();
+            services.AddScoped<ITextractService, TextractService>();
         }
     }
 }

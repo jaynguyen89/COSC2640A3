@@ -28,14 +28,15 @@ namespace Helper {
         public static string RemoveAllSpaces(this string any) {
             return Regex.Replace(any, SharedConstants.MultiSpace, string.Empty);
         }
-        
-        public static string GenerateSha256Hash([NotNull] this string plainText) {
-            using var sha256 = new SHA256Managed();
-            var hashedBytes = sha256.ComputeHash(EncodeDataUtf8(plainText));
 
-            return Convert.ToBase64String(hashedBytes);
+        // Splits a Camel-Case string at capital letters and returns spaced string.
+        public static string ToHumanStyled(this string any) {
+            return string.Join(
+                SharedConstants.MonoSpace,
+                Regex.Split(any, @"(?<!^)(?=[A-Z])")
+            );
         }
-        
+
         public static int GetRandomNumberInRangeInclusive([NotNull] int max,[NotNull] int min = 0) {
             var random = new Random();
             return random.Next(min, max + 1);

@@ -151,10 +151,10 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> UpdatePhoneNumber([FromHeader] string accountId,[FromRoute] string phoneNumber) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdatePhoneNumber) }: Service starts.");
             
-            if (!Helpers.IsProperString(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Phone number is missing." } });
+            if (!Helpers.IsProperString(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { $"{ nameof(Account.PhoneNumber).ToHumanStyled() } is missing." } });
             
             phoneNumber = phoneNumber.Trim().RemoveAllSpaces();
-            if (!new Regex(@"^[0-9]{10,15}$").IsMatch(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Phone number is invalid." } });
+            if (!new Regex(@"^[0-9]{10,15}$").IsMatch(phoneNumber)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { $"{ nameof(Account.PhoneNumber).ToHumanStyled() } is invalid." } });
             
             var account = await _accountService.GetAccountById(accountId);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });

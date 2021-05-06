@@ -9,6 +9,7 @@ namespace COSC2640A3.Models
     {
         public Classroom()
         {
+            ClassContents = new HashSet<ClassContent>();
             Enrolments = new HashSet<Enrolment>();
         }
 
@@ -24,6 +25,7 @@ namespace COSC2640A3.Models
         public DateTime CreatedOn { get; set; }
 
         public virtual Teacher Teacher { get; set; }
+        public virtual ICollection<ClassContent> ClassContents { get; set; }
         public virtual ICollection<Enrolment> Enrolments { get; set; }
     }
 }

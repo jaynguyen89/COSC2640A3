@@ -44,5 +44,12 @@
             Sms,
             Both
         }
+
+        public enum FileType {
+            video,
+            audio,
+            photo,
+            other // must always be at bottom
+        }
     }
 }

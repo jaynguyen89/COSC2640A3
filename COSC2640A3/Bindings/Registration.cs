@@ -29,7 +29,7 @@ namespace COSC2640A3.Bindings {
             if (!Helpers.IsProperString(Email)) errors.Add($"{ nameof(Email) } is required.");
             if (!Helpers.IsProperString(Username)) errors.Add($"{ nameof(Username) } is required.");
             if (!Helpers.IsProperString(Password)) errors.Add($"{ nameof(Password) } is required.");
-            if (!Helpers.IsProperString(PasswordConfirm)) errors.Add($"{ nameof(PasswordConfirm) } is required.");
+            if (!Helpers.IsProperString(PasswordConfirm)) errors.Add($"{ nameof(PasswordConfirm).ToHumanStyled() } is required.");
 
             if (errors.Count != 0) return errors.ToArray();
 
@@ -69,7 +69,7 @@ namespace COSC2640A3.Bindings {
                 if (!SharedConstants.SpecialChars.Any(Password.Contains)) errors.Add($"{ nameof(Password) } should contains at least 1 special character EXCEPT `single-quote`, `double-quote`, `slashes`, `acute`.");
             }
 
-            if (!Password.Equals(PasswordConfirm)) errors.Add($"{ nameof(Password) } and { nameof(PasswordConfirm) } do not match.");
+            if (!Password.Equals(PasswordConfirm)) errors.Add($"{ nameof(Password) } and { nameof(PasswordConfirm).ToHumanStyled() } do not match.");
 
             if (errors.Count != 0) return errors.ToArray();
             

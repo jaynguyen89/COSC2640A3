@@ -18,6 +18,7 @@ namespace COSC2640A3.DbContexts
 
         public virtual DbSet<Account> Accounts { get; set; }
         public virtual DbSet<AccountRole> AccountRoles { get; set; }
+        public virtual DbSet<ClassContent> ClassContents { get; set; }
         public virtual DbSet<Classroom> Classrooms { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
@@ -78,6 +79,34 @@ namespace COSC2640A3.DbContexts
                 entity.HasOne(d => d.Account)
                     .WithMany(p => p.AccountRoles)
                     .HasForeignKey(d => d.AccountId);
+            });
+
+            modelBuilder.Entity<ClassContent>(entity =>
+            {
+                entity.ToTable("ClassContent");
+
+                entity.HasIndex(e => e.Id, "UQ__ClassCon__3214EC06CEE34AD8")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.Attachments).HasMaxLength(4000);
+
+                entity.Property(e => e.Audios).HasMaxLength(4000);
+
+                entity.Property(e => e.ClassroomId)
+                    .IsRequired()
+                    .HasMaxLength(50);
+
+                entity.Property(e => e.Photos).HasMaxLength(4000);
+
+                entity.Property(e => e.Videos).HasMaxLength(4000);
+
+                entity.HasOne(d => d.Classroom)
+                    .WithMany(p => p.ClassContents)
+                    .HasForeignKey(d => d.ClassroomId);
             });
 
             modelBuilder.Entity<Classroom>(entity =>

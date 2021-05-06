@@ -220,12 +220,10 @@ namespace COSC2640A3.Controllers {
         }
 
         [HttpGet("details/{classroomId}")]
-        public async Task<JsonResult> GetClassroomDetails([FromHeader] string accountId,[FromRoute] string classroomId) {
+        public async Task<JsonResult> GetClassroomDetails([FromRoute] string classroomId) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetClassroomDetails) }: Service starts.");
-
-            var authenticatedUser = await _redisCache.GetRedisCacheEntry<AuthenticatedUser>($"{nameof(AuthenticatedUser)}_{accountId}");
-            var classroomDetail = await _classroomService.GetClassroomDetailsFor(classroomId, authenticatedUser.Role == Role.Student);
             
+            var classroomDetail = await _classroomService.GetClassroomDetailsFor(classroomId);
             return classroomDetail is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomDetail });

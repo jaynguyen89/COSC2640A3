@@ -46,7 +46,7 @@ namespace COSC2640A3.ViewModels.Features {
 
             public DateTime CreatedOn { get; set; }
 
-            public string NormalizedDuration => $"{Duration}{((SharedEnums.DurationUnit) DurationUnit).ToString()}";
+            public string NormalizedDuration => $"{ Duration }{ ((SharedEnums.DurationUnit) DurationUnit).ToString() }";
 
             public static implicit operator ClassroomDetailVM(Classroom classroom) {
                 return new() {
