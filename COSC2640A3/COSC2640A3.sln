@@ -18,8 +18,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Helper", "..\Helper\Helper.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AssistantLibrary", "..\AssistantLibrary\AssistantLibrary.csproj", "{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DatabaseLibrary", "..\DatabaseLibrary\DatabaseLibrary.csproj", "{F7838A21-44F4-4EC3-8786-6914730BF33A}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -42,10 +40,6 @@ Global
 		{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D972A48A-C1F1-4C2A-85D1-EB70C6C7EACF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7838A21-44F4-4EC3-8786-6914730BF33A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7838A21-44F4-4EC3-8786-6914730BF33A}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7838A21-44F4-4EC3-8786-6914730BF33A}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7838A21-44F4-4EC3-8786-6914730BF33A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
