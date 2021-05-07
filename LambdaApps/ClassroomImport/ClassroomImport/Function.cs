@@ -26,6 +26,7 @@ namespace ClassroomImport {
 
         private const byte ScheduleProcessingStatus = 1;
         private const byte ScheduleDoneStatus = 2;
+        private const byte ScheduleFailedStatus = 4;
         
         private const string ScheduleTableName = "classroom.import.schedules";
         private const string DbConnectionString = "Server=(localdb)\\MSSQLLocalDB;Database=COSC2640A3;User Id=something;Password=something;Trusted_Connection=True;";
@@ -76,43 +77,43 @@ namespace ClassroomImport {
             importSchedule.Status = ScheduleProcessingStatus;
             var updateScheduleResult = await UpdateImportSchedule(importSchedule);
             if (!updateScheduleResult.HasValue || !updateScheduleResult.Value) {
-                context.Logger.LogLine($"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
+                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
                 await Task.CompletedTask;
                 return;
             }
             
             var fileStream = await GetFileFromS3BucketFor(s3Event.Detail.Asset.FileId, s3Event.Detail.Bucket.Name);
             if (fileStream == Stream.Null) {
-                context.Logger.LogLine($"SQS Event #{ message.MessageId } failed: unable to update get S3 File #{ s3Event.Detail.Asset.FileId }.");
+                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update get S3 File #{ s3Event.Detail.Asset.FileId }.");
                 await Task.CompletedTask;
                 return;
             }
             
             var fileContent = await GetContentFrom(fileStream);
             if (fileContent == null) {
-                context.Logger.LogLine($"SQS Event #{ message.MessageId } failed: unable to get content from file stream.");
+                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to get content from file stream.");
                 await Task.CompletedTask;
                 return;
             }
 
             var classrooms = JsonConvert.DeserializeObject<Classroom[]>(fileContent);
             if (classrooms == null) {
-                context.Logger.LogLine($"SQS Event #{ message.MessageId } failed: unable to deserialize file content to Classroom array.");
+                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to deserialize file content to { nameof(Classroom) } array.");
                 await Task.CompletedTask;
                 return;
             }
 
             var teacherId = await GetTeacherIdBy(importSchedule.AccountId);
             if (string.IsNullOrEmpty(teacherId)) {
-                context.Logger.LogLine($"SQS Event #{ message.MessageId } failed: unable to get teacher ID from RDS.");
+                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to get teacher ID from RDS.");
                 await Task.CompletedTask;
                 return;
             }
 
             foreach (var classroom in classrooms) classroom.TeacherId = teacherId;
-            _ = SaveClassroomsIntoDatabase(classrooms);
+            var saveDataResult = SaveClassroomsIntoDatabase(classrooms);
             
-            importSchedule.Status = ScheduleDoneStatus;
+            importSchedule.Status = saveDataResult ? ScheduleDoneStatus : ScheduleFailedStatus;
             _ = await UpdateImportSchedule(importSchedule);
 
             await Task.CompletedTask;
@@ -121,7 +122,7 @@ namespace ClassroomImport {
         private bool SaveClassroomsIntoDatabase(Classroom[] classrooms) {
             try {
                 var results = classrooms.Select(classroom => {
-                    var query = classroom.GetInsertQuery();
+                    var query = classroom.GetInsertStatement();
                     var command = new SqlCommand(query, _dbConnection);
 
                     try {
@@ -131,10 +132,10 @@ namespace ClassroomImport {
                         _dbConnection.Close();
                         return response == 1;
                     }
-                    catch (Exception e) { return false; }
+                    catch (Exception) { return false; }
                 });
 
-                return results.All(result => result == true);
+                return results.All(result => result);
             }
             catch (Exception) { return false; }
         }
@@ -232,6 +233,12 @@ namespace ClassroomImport {
             }
             catch (Exception) { return default; }
         }
+        
+        private async Task Terminate(ILambdaLogger logger, ImportSchedule importSchedule, string message) {
+            logger.LogLine(message);
+            importSchedule.Status = ScheduleFailedStatus;
+            _ = await UpdateImportSchedule(importSchedule);
+        }
 
         public class S3Record {
             public S3Event[] Records { get; set; }
@@ -292,29 +299,29 @@ namespace ClassroomImport {
             public bool IsActive { get; set; }
             public DateTime CreatedOn { get; set; }
 
-            public string GetInsertQuery() {
+            public string GetInsertStatement() {
                 return $"INSERT INTO Classroom (" +
-                       $"{ nameof(TeacherId) }, " +
-                       $"{ nameof(ClassName) }, " +
-                       $"{ nameof(Capacity) }, " +
-                       $"{ nameof(Price) }, " +
-                       $"{ nameof(CommencedOn) }, " +
-                       $"{ nameof(Duration) }, " +
-                       $"{ nameof(DurationUnit) }, " +
-                       $"{ nameof(IsActive) }, " +
-                       $"{ nameof(CreatedOn) }" +
-                    ") " +
-                    "VALUES (" +
-                       $"{ TeacherId }, " +
-                       $"{ ClassName }, " +
-                       $"{ Capacity }, " +
-                       $"{ Price }, " +
-                       $"{ CommencedOn }, " +
-                       $"{ Duration }, " +
-                       $"{ DurationUnit }, " +
-                       $"{ IsActive }, " +
-                       $"{ CreatedOn }" +
-                    ");";
+                           $"{ nameof(TeacherId) }, " +
+                           $"{ nameof(ClassName) }, " +
+                           $"{ nameof(Capacity) }, " +
+                           $"{ nameof(Price) }, " +
+                           $"{ nameof(CommencedOn) }, " +
+                           $"{ nameof(Duration) }, " +
+                           $"{ nameof(DurationUnit) }, " +
+                           $"{ nameof(IsActive) }, " +
+                           $"{ nameof(CreatedOn) }" +
+                        ") " +
+                        "VALUES (" +
+                           $"{ TeacherId }, " +
+                           $"{ ClassName }, " +
+                           $"{ Capacity }, " +
+                           $"{ Price }, " +
+                           $"{ CommencedOn }, " +
+                           $"{ Duration }, " +
+                           $"{ DurationUnit }, " +
+                           $"{ IsActive }, " +
+                           $"{ CreatedOn }" +
+                        ");";
             }
         }
     }
