@@ -7,6 +7,7 @@ using Amazon.S3.Model;
 using Amazon.S3.Transfer;
 using AmazonLibrary.Contexts;
 using AmazonLibrary.Interfaces;
+using Helper.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -28,15 +29,12 @@ namespace AmazonLibrary.Services {
             _s3Context = s3Context.GetInstance();
         }
 
-        public async Task<string> UploadFileForImportToS3Bucket(Stream fileStream, string importType) {
+        public async Task<string> UploadFileForImportToS3Bucket(Stream fileStream, SharedEnums.ImportType importType) {
             _logger.LogInformation($"{ nameof(S3Service) }.{ nameof(UploadFileForImportToS3Bucket) }: Service starts.");
             
-            var bucketNameToSave = importType.Equals("Classroom")
+            var bucketNameToSave = importType == SharedEnums.ImportType.Classroom
                 ? _options.Value.S3BucketTeacherImportingClassrooms
-                : (importType.Equals("Students")
-                    ? _options.Value.S3BucketTeacherImportingStudentsToClassroom
-                    : _options.Value.S3BucketTeacherImportingClassroomsAndStudents
-                );
+                : _options.Value.S3BucketTeacherImportingStudentsToClassroom;
 
             var uploader = new TransferUtility(_s3Context);
             var fileId = Guid.NewGuid().ToString();

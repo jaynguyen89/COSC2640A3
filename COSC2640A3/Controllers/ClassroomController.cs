@@ -136,7 +136,7 @@ namespace COSC2640A3.Controllers {
             var errors = uploading.VerifyUploading();
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
 
-            var uploadedFileId = await _s3Service.UploadFileForImportToS3Bucket(uploading.FileForImport.OpenReadStream(), uploading.ImportType.ToString());
+            var uploadedFileId = await _s3Service.UploadFileForImportToS3Bucket(uploading.FileForImport.OpenReadStream(), uploading.ImportType);
             if (!Helpers.IsProperString(uploadedFileId)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while uploading your file." } });
 
             var classImportSchedule = new ImportSchedule {
@@ -148,7 +148,7 @@ namespace COSC2640A3.Controllers {
                 Status = (byte) ScheduleStatus.Awaiting
             };
 
-            var scheduleId = await _dynamoService.SaveToSchedulesTable(classImportSchedule, uploading.ImportType.ToString());
+            var scheduleId = await _dynamoService.SaveToSchedulesTable(classImportSchedule, uploading.ImportType);
             if (!Helpers.IsProperString(scheduleId)) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while uploading your file." } });
 
             classImportSchedule.Id = scheduleId;

@@ -28,8 +28,7 @@
         
         public enum ImportType {
             Classroom,
-            Students,
-            Both
+            Students
         }
         
         public enum EmailType {

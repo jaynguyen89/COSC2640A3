@@ -5,6 +5,7 @@ using Amazon.DynamoDBv2.DocumentModel;
 using AmazonLibrary.Contexts;
 using AmazonLibrary.Interfaces;
 using AmazonLibrary.Models;
+using Helper.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
@@ -26,15 +27,12 @@ namespace AmazonLibrary.Services {
             _dbContext = dbContext.GetInstance();
         }
 
-        public async Task<string> SaveToSchedulesTable(ImportSchedule schedule, string importType) {
+        public async Task<string> SaveToSchedulesTable(ImportSchedule schedule, SharedEnums.ImportType importType) {
             _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(SaveToSchedulesTable) }: Service starts.");
             
-            var tableNameToSaveItem = importType.Equals("Classroom")
+            var tableNameToSaveItem = importType == SharedEnums.ImportType.Classroom
                 ? _options.Value.ClassroomImportSchedulesTableName
-                : (importType.Equals("Students")
-                    ? _options.Value.StudentImportSchedulesTableName
-                    : _options.Value.ClassroomAndStudentImportScheduleTableName
-                );
+                : _options.Value.StudentImportSchedulesTableName;
 
             Table tableToSaveItem;
             try {

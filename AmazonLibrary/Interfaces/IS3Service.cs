@@ -1,12 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using Helper.Shared;
 
 namespace AmazonLibrary.Interfaces {
 
     public interface IS3Service {
         
-        Task<string> UploadFileForImportToS3Bucket(Stream fileStream, string importType);
+        Task<string> UploadFileForImportToS3Bucket(Stream fileStream, SharedEnums.ImportType importType);
         
         Task<bool> CreateBucketWithNameIfNeeded(string bucketName);
         

@@ -16,14 +16,10 @@
         
         public string S3BucketTeacherImportingStudentsToClassroom { get; set; }
         
-        public string S3BucketTeacherImportingClassroomsAndStudents { get; set; }
-        
         //For AWS DynamoDb
         public string ClassroomImportSchedulesTableName { get; set; }
         
         public string StudentImportSchedulesTableName { get; set; }
-        
-        public string ClassroomAndStudentImportScheduleTableName { get; set; }
         
         //For AWS Simple Mail Service
         public string MailSentFromAddress { get; set; }
