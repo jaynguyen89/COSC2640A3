@@ -7,5 +7,4 @@ namespace AmazonLibrary.Interfaces {
 
         Task<string> SaveToSchedulesTable(ImportSchedule schedule, string importType);
     }
-
 }
