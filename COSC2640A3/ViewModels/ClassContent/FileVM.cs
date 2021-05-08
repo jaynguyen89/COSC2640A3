@@ -1,7 +1,4 @@
-﻿using System;
-using static Helper.Shared.SharedEnums;
-
-namespace COSC2640A3.ViewModels.ClassContent {
+﻿namespace COSC2640A3.ViewModels.ClassContent {
 
     public sealed class FileVM {
         

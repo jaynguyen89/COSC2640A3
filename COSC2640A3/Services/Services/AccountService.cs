@@ -6,6 +6,7 @@ using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using Helper;
+using Helper.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -67,6 +68,35 @@ namespace COSC2640A3.Services.Services {
             }
             catch (DbUpdateException e) {
                 _logger.LogError($"{ nameof(AccountService) }.{ nameof(InsertToDatabase) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+        
+        public async Task<bool?> CreateRolesForAccountById(string accountId) {
+            var studentRole = new AccountRole {
+                AccountId = accountId,
+                Role = (byte) SharedEnums.Role.Student
+            };
+
+            var teacherRole = new AccountRole {
+                AccountId = accountId,
+                Role = (byte) SharedEnums.Role.Teacher
+            };
+
+            await _dbContext.AccountRoles.AddRangeAsync(new[] { studentRole, teacherRole });
+            
+            var student = new Student { AccountId = accountId };
+            var teacher = new Teacher { AccountId = accountId };
+
+            await _dbContext.Students.AddAsync(student);
+            await _dbContext.Teachers.AddAsync(teacher);
+
+            try {
+                var result = await _dbContext.SaveChangesAsync();
+                return result != 0;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(CreateRolesForAccountById) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }
@@ -148,6 +178,36 @@ namespace COSC2640A3.Services.Services {
             }
             catch (InvalidOperationException e) {
                 _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetAccountById) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<bool?> IsStudentInfoAssociatedWithAccount(string studentId, string accountId) {
+            try {
+                return await _dbContext.Students
+                                       .AnyAsync(student =>
+                                           student.Id.Equals(studentId) &&
+                                           student.AccountId.Equals(accountId) &&
+                                           student.Account.EmailConfirmed
+                                       );
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(IsStudentInfoAssociatedWithAccount) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<bool?> IsTeacherInfoAssociatedWithAccount(string teacherId, string accountId) {
+            try {
+                return await _dbContext.Teachers
+                                       .AnyAsync(teacher =>
+                                           teacher.Id.Equals(teacherId) &&
+                                           teacher.AccountId.Equals(accountId) &&
+                                           teacher.Account.EmailConfirmed
+                                       );
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(IsTeacherInfoAssociatedWithAccount) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }

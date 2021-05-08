@@ -27,6 +27,11 @@ namespace COSC2640A3.Services.Interfaces {
         /// <summary>
         /// Returns null if error, true if success, false if failed.
         /// </summary>
+        Task<bool?> CreateRolesForAccountById(string accountId);
+        
+        /// <summary>
+        /// Returns null if error, true if success, false if failed.
+        /// </summary>
         Task<bool?> UpdateAccount(Account account);
 
         /// <summary>
@@ -44,5 +49,9 @@ namespace COSC2640A3.Services.Interfaces {
         Task<Teacher> GetTeacherByAccountId(string accountId);
         
         Task<Account> GetAccountById(string accountId, bool emailConfirmed = true);
+        
+        Task<bool?> IsStudentInfoAssociatedWithAccount(string studentId, string accountId);
+        
+        Task<bool?> IsTeacherInfoAssociatedWithAccount(string teacherId, string accountId);
     }
 }

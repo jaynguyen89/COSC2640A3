@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using AssistantLibrary.Models;
-using Helper.Shared;
 
 namespace AssistantLibrary.Interfaces {
 

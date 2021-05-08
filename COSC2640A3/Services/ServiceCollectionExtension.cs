@@ -31,8 +31,6 @@ namespace COSC2640A3.Services {
             
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAccountService, AccountService>();
-            services.AddScoped<IRoleService, RoleService>();
-            
             services.AddScoped<IClassroomService, ClassroomService>();
             services.AddScoped<IEnrolmentService, EnrolmentService>();
             services.AddScoped<IClassContentService, ClassContentService>();

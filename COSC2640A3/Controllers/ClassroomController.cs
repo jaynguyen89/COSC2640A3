@@ -129,7 +129,7 @@ namespace COSC2640A3.Controllers {
         }
 
         [RoleAuthorize(Role.Teacher)]
-        [HttpPost("upload")]
+        [HttpPost("import")]
         public async Task<JsonResult> UploadFileForImports([FromHeader] string accountId,[FromForm] FileImportUpload uploading) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(UploadFileForImports) }: Service starts.");
 

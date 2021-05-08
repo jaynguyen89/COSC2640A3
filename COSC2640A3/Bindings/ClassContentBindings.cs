@@ -49,7 +49,7 @@ namespace COSC2640A3.Bindings {
         
         public string[] RemovedFiles { get; set; }
 
-        public new string[] VerifyUpdatedFiles() {
+        public string[] VerifyUpdatedFiles() {
             var errors = new List<string>();
             
             if (FileType is < 0 or > (byte) SharedEnums.FileType.other) errors.Add($"{ nameof(FileType).ToHumanStyled() } is not recognized.");
@@ -105,5 +105,10 @@ namespace COSC2640A3.Bindings {
 
             return errors.ToArray();
         }
+    }
+    
+    public sealed class DataExport {
+        
+        public string[] ClassroomIds { get; set; }
     }
 }

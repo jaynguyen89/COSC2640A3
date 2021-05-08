@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Services.Interfaces;
@@ -27,6 +28,7 @@ namespace COSC2640A3.Controllers {
         ) {
             _logger = logger;
             _enrolmentService = enrolmentService;
+            _accountService = accountService;
         }
 
         [HttpPost("add-marks")]
@@ -53,6 +55,18 @@ namespace COSC2640A3.Controllers {
             return !updateEnrolmentResult.HasValue || !updateEnrolmentResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+        }
+
+        [HttpPost("export-classrooms")]
+        public async Task<JsonResult> ExportClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
+            _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportClassroomData) }: Service starts.");
+            throw new NotImplementedException();
+        }
+        
+        [HttpPost("export-students")]
+        public async Task<JsonResult> ExportStudentsInClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
+            _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportStudentsInClassroomData) }: Service starts.");
+            throw new NotImplementedException();
         }
     }
 }

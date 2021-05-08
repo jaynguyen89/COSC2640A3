@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
@@ -24,7 +23,7 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<ClassContent> GetClassContentByClassroomId(string classroomId) {
             try {
-                return _dbContext.ClassContents.SingleOrDefault(content => content.ClassroomId.Equals(classroomId));
+                return await _dbContext.ClassContents.SingleOrDefaultAsync(content => content.ClassroomId.Equals(classroomId));
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(ClassContentService) }.{ nameof(GetClassContentByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");

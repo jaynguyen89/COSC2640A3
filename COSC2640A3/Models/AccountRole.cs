@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-#nullable disable
-
-namespace COSC2640A3.Models
+﻿namespace COSC2640A3.Models
 {
     public partial class AccountRole
     {

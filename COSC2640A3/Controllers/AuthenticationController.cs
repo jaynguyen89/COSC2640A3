@@ -22,7 +22,6 @@ namespace COSC2640A3.Controllers {
 
         private readonly ILogger<AuthenticationController> _logger;
         private readonly IAuthenticationService _authenticationService;
-        private readonly IRoleService _roleService;
         private readonly IGoogleService _googleService;
 
         public AuthenticationController(
@@ -30,7 +29,6 @@ namespace COSC2640A3.Controllers {
             IContextService contextService,
             IAuthenticationService authenticationService,
             IAccountService accountService,
-            IRoleService roleService,
             IRedisCacheService redisCache,
             IGoogleService googleService,
             IAmazonMailService mailService
@@ -39,7 +37,6 @@ namespace COSC2640A3.Controllers {
         ) {
             _logger = logger;
             _authenticationService = authenticationService;
-            _roleService = roleService;
             _googleService = googleService;
         }
 
@@ -95,7 +92,7 @@ namespace COSC2640A3.Controllers {
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             }
 
-            var isSuccess = await _roleService.CreateRolesForAccountById(account.Id);
+            var isSuccess = await _accountService.CreateRolesForAccountById(account.Id);
             if (!isSuccess.HasValue || !isSuccess.Value) {
                 await _contextService.RevertTransaction();
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });

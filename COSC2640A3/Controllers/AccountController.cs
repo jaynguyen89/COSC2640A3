@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AmazonLibrary.Interfaces;
@@ -42,8 +41,12 @@ namespace COSC2640A3.Controllers {
 
         [RoleAuthorize(Role.Student)]
         [HttpPut("update-student")]
-        public async Task<JsonResult> UpdateStudentDetails(Student student) {
+        public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] Student student) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateStudentDetails) }: Service starts.");
+
+            var isAssociated = await _accountService.IsStudentInfoAssociatedWithAccount(student.Id, accountId);
+            if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
             var updateResult = await _accountService.UpdateStudent(student);
             return !updateResult.HasValue || !updateResult.Value
@@ -73,8 +76,12 @@ namespace COSC2640A3.Controllers {
         
         [RoleAuthorize(Role.Teacher)]
         [HttpPut("update-teacher")]
-        public async Task<JsonResult> UpdateTeacherDetails(Teacher teacher) {
+        public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] Teacher teacher) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateTeacherDetails) }: Service starts.");
+            
+            var isAssociated = await _accountService.IsTeacherInfoAssociatedWithAccount(teacher.Id, accountId);
+            if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
             
             var updateResult = await _accountService.UpdateTeacher(teacher);
             return !updateResult.HasValue || !updateResult.Value

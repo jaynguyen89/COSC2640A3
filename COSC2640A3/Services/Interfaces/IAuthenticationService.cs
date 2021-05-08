@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
-using COSC2640A3.Models;
 
 namespace COSC2640A3.Services.Interfaces {
 

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using Amazon.DynamoDBv2;
 using AmazonLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
@@ -220,7 +219,7 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
-        [HttpPost("update-rich-content")]
+        [HttpPut("update-rich-content")]
         public async Task<JsonResult> UpdateContentForClassroom([FromHeader] string accountId,[FromBody] RichContent richContent) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(UpdateContentForClassroom) }: Service starts.");
             
