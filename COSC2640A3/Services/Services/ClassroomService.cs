@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -95,7 +96,13 @@ namespace COSC2640A3.Services.Services {
         public async Task<ClassroomVM[]> GetAllClassrooms() {
             try {
                 return await _dbContext.Classrooms
-                                       .Select(classroom => (ClassroomVM) classroom)
+                                       .Select(classroom => new ClassroomVM {
+                                           Id = classroom.Id,
+                                           TeacherId = classroom.TeacherId,
+                                           TeacherName = classroom.Teacher.Account.PreferredName,
+                                           ClassName = classroom.ClassName,
+                                           Price = classroom.Price
+                                       })
                                        .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
@@ -107,9 +114,20 @@ namespace COSC2640A3.Services.Services {
         public async Task<ClassroomVM> GetClassroomDetailsFor(string classroomId) {
             _logger.LogInformation($"{ nameof(ClassroomService) }.{ nameof(GetClassroomDetailsFor) }: { nameof(classroomId) }={ classroomId }");
 
-            var classroom = await _dbContext.Classrooms.FindAsync(classroomId);
-            var classroomDetail = (ClassroomVM) classroom;
-            classroomDetail.SetClassroomDetail(classroom);
+            var dbClassroom = await _dbContext.Classrooms
+                                              .Where(classroom => classroom.Id.Equals(classroomId))
+                                              .Select(classroom => new { Classroom = classroom, TeacherName = classroom.Teacher.Account.PreferredName })
+                                              .SingleAsync();
+
+            var classroomDetail = new ClassroomVM {
+                Id = dbClassroom.Classroom.Id,
+                TeacherId = dbClassroom.Classroom.TeacherId,
+                TeacherName = dbClassroom.TeacherName,
+                ClassName = dbClassroom.Classroom.ClassName,
+                Price = dbClassroom.Classroom.Price
+            };
+            
+            classroomDetail.SetClassroomDetail(dbClassroom.Classroom);
                 
             return classroomDetail;
         }
@@ -143,6 +161,29 @@ namespace COSC2640A3.Services.Services {
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+        }
+
+        public async Task<bool?> AreTheseClassroomsBelongedTo(string accountId) {
+            try {
+                return await _dbContext.Classrooms.AllAsync(classroom => classroom.Teacher.AccountId.Equals(accountId));
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(AreTheseClassroomsBelongedTo) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+        }
+
+        public async Task<ClassroomExportVM[]> GetClassroomDataForExportBy(string[] classroomIds) {
+            try {
+                return await _dbContext.Classrooms
+                                       .Where(classroom => classroomIds.Contains(classroom.Id))
+                                       .Select(classroom => (ClassroomExportVM) classroom)
+                                       .ToArrayAsync();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetClassroomDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }

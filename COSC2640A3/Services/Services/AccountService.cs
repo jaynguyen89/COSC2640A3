@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
 using COSC2640A3.DbContexts;
@@ -142,7 +143,11 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<Student> GetStudentByAccountId(string accountId) {
             try {
-                return await _dbContext.Students.SingleOrDefaultAsync(student => student.AccountId.Equals(accountId) && student.Account.EmailConfirmed);
+                var student = await _dbContext.Students.SingleOrDefaultAsync(student => student.AccountId.Equals(accountId) && student.Account.EmailConfirmed);
+                if (student is null) throw new RowNotInTableException();
+
+                student.Account = await _dbContext.Accounts.FindAsync(accountId);
+                return student;
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetStudentByAccountId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
@@ -152,11 +157,19 @@ namespace COSC2640A3.Services.Services {
                 _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetStudentByAccountId) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
+            catch (RowNotInTableException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetStudentByAccountId) } - { nameof(RowNotInTableException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
         }
 
         public async Task<Teacher> GetTeacherByAccountId(string accountId) {
             try {
-                return await _dbContext.Teachers.SingleOrDefaultAsync(teacher => teacher.AccountId.Equals(accountId) && teacher.Account.EmailConfirmed);
+                var teacher = await _dbContext.Teachers.SingleOrDefaultAsync(teacher => teacher.AccountId.Equals(accountId) && teacher.Account.EmailConfirmed);
+                if (teacher is null) throw new RowNotInTableException();
+
+                teacher.Account = await _dbContext.Accounts.FindAsync(accountId);
+                return teacher;
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetTeacherByAccountId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
@@ -164,6 +177,10 @@ namespace COSC2640A3.Services.Services {
             }
             catch (InvalidOperationException e) {
                 _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetTeacherByAccountId) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (RowNotInTableException e) {
+                _logger.LogError($"{ nameof(AccountService) }.{ nameof(GetTeacherByAccountId) } - { nameof(RowNotInTableException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }

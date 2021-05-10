@@ -1,4 +1,5 @@
-﻿using System;
+﻿using System.IO;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
@@ -15,20 +16,23 @@ namespace COSC2640A3.Controllers {
     [MainAuthorize]
     [TwoFaAuthorize]
     [Route("teacher")]
-    public sealed class TeacherController {
+    public sealed class TeacherController : ControllerBase {
         
         private readonly ILogger<TeacherController> _logger;
         private readonly IEnrolmentService _enrolmentService;
         private readonly IAccountService _accountService;
+        private readonly IClassroomService _classroomService;
 
         public TeacherController(
             ILogger<TeacherController> logger,
             IEnrolmentService enrolmentService,
-            IAccountService accountService
+            IAccountService accountService,
+            IClassroomService classroomService
         ) {
             _logger = logger;
             _enrolmentService = enrolmentService;
             _accountService = accountService;
+            _classroomService = classroomService;
         }
 
         [HttpPost("add-marks")]
@@ -58,15 +62,43 @@ namespace COSC2640A3.Controllers {
         }
 
         [HttpPost("export-classrooms")]
-        public async Task<JsonResult> ExportClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
+        public async Task<ActionResult> ExportClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportClassroomData) }: Service starts.");
-            throw new NotImplementedException();
+
+            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId);
+            if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
+
+            var exportedData = await _classroomService.GetClassroomDataForExportBy(dataExport.ClassroomIds);
+            if (exportedData is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var exportedFile = new MemoryStream();
+            var writer = new StreamWriter(exportedFile);
+            await writer.WriteLineAsync(JsonConvert.SerializeObject(exportedData));
+            await writer.FlushAsync();
+
+            exportedFile.Position = 0;
+            return File(exportedFile, MediaTypeNames.Text.Plain, $"{ accountId }_classrooms_exports.json");
         }
         
         [HttpPost("export-students")]
-        public async Task<JsonResult> ExportStudentsInClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
+        public async Task<ActionResult> ExportStudentsInClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportStudentsInClassroomData) }: Service starts.");
-            throw new NotImplementedException();
+            
+            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId);
+            if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
+
+            var exportedData = _enrolmentService.GetEnrolmentDataForExportBy(dataExport.ClassroomIds);
+            if (exportedData is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var exportedFile = new MemoryStream();
+            var writer = new StreamWriter(exportedFile);
+            await writer.WriteLineAsync(JsonConvert.SerializeObject(exportedData));
+            await writer.FlushAsync();
+
+            exportedFile.Position = 0;
+            return File(exportedFile, MediaTypeNames.Text.Plain, $"{ accountId }_enrolments_exports.json");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using COSC2640A3.Models;
+using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 
 namespace COSC2640A3.Services.Interfaces {
@@ -48,5 +49,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task<bool?> DoesEnrolmentRelateToAClassroomOfThisTeacher(string enrolmentId, string teacherId);
 
         Task<bool?> UpdateMultipleEnrolments(Enrolment[] enrolments);
+        
+        EnrolmentExportVM[] GetEnrolmentDataForExportBy(string[] classroomIds);
     }
 }

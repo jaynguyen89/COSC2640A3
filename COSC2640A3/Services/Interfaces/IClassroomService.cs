@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using COSC2640A3.Models;
 using COSC2640A3.ViewModels;
+using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 
 namespace COSC2640A3.Services.Interfaces {
@@ -38,5 +39,9 @@ namespace COSC2640A3.Services.Interfaces {
         Task<EnrolmentVM[]> GetStudentEnrolmentsByClassroomId(string classroomId);
         
         Task<Enrolment[]> GetEnrolmentsByClassroomId(string classroomId);
+        
+        Task<bool?> AreTheseClassroomsBelongedTo(string accountId);
+        
+        Task<ClassroomExportVM[]> GetClassroomDataForExportBy(string[] classroomIds);
     }
 }

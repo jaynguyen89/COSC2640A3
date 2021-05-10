@@ -85,6 +85,12 @@ namespace COSC2640A3.Controllers {
             var errors = classroom.VerifyClassroomData();
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
 
+            var teacher = await _accountService.GetTeacherByAccountId(accountId);
+            if (teacher is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            classroom.TeacherId = teacher.Id;
+            classroom.IsActive = true;
+            
             var updateResult = await _classroomService.UpdateClassroom(classroom);
             return !updateResult.HasValue || !updateResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
@@ -109,6 +115,10 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// Situation 1: Students browse classrooms owned by a Teacher.
+        /// Situation 2: A Teacher browse all classrooms owned by themselves.
+        /// </summary>
         [HttpGet("all-by-teacher/{teacherId}")]
         public async Task<JsonResult> GetAllClassroomsByTeacher([FromHeader] string accountId,[FromRoute] string teacherId) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassroomsByTeacher) }: Service starts.");

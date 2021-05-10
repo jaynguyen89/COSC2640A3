@@ -94,15 +94,15 @@ namespace COSC2640A3.Controllers {
             var enrolment = await _enrolmentService.GetEnrolmentById(enrolmentId);
             if (enrolment is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
+            var invoice = await _enrolmentService.GetInvoiceByEnrolmentId(enrolment.InvoiceId);
+            if (invoice is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            
             await _contextService.StartTransaction();
             var deleteEnrolmentResult = await _enrolmentService.DeleteEnrolment(enrolment);
             if (!deleteEnrolmentResult.HasValue || !deleteEnrolmentResult.Value) {
                 await _contextService.RevertTransaction();
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             }
-
-            var invoice = await _enrolmentService.GetInvoiceByEnrolmentId(enrolmentId);
-            if (invoice is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
             var deleteInvoiceResult = await _enrolmentService.DeleteInvoice(invoice);
             if (!deleteInvoiceResult.HasValue || !deleteInvoiceResult.Value) {

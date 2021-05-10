@@ -48,6 +48,7 @@ namespace COSC2640A3.Controllers {
             if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
+            student.AccountId = accountId;
             var updateResult = await _accountService.UpdateStudent(student);
             return !updateResult.HasValue || !updateResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
@@ -82,7 +83,8 @@ namespace COSC2640A3.Controllers {
             var isAssociated = await _accountService.IsTeacherInfoAssociatedWithAccount(teacher.Id, accountId);
             if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
-            
+
+            teacher.AccountId = accountId;
             var updateResult = await _accountService.UpdateTeacher(teacher);
             return !updateResult.HasValue || !updateResult.Value
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
@@ -118,6 +120,7 @@ namespace COSC2640A3.Controllers {
 
             var twoFa = _googleService.ProduceTwoFactorAuthSetup(account.EmailAddress);
             account.TwoFaSecretKey = twoFa.SecretKey;
+            account.TwoFactorEnabled = true;
 
             var updateAccountResult = await _accountService.UpdateAccount(account);
             if (!updateAccountResult.HasValue || !updateAccountResult.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
@@ -137,6 +140,7 @@ namespace COSC2640A3.Controllers {
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
             account.TwoFaSecretKey = default;
+            account.TwoFactorEnabled = false;
             var updateAccountResult = await _accountService.UpdateAccount(account);
 
             await SendEmail(new EmailComposer {
@@ -166,6 +170,10 @@ namespace COSC2640A3.Controllers {
             var account = await _accountService.GetAccountById(accountId);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
+            account.PhoneNumber = phoneNumber;
+            var updateResult = await _accountService.UpdateAccount(account);
+            if (!updateResult.HasValue || !updateResult.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            
             return await GenerateNewAccountTokenFor(account, NotificationType.Sms);
         }
 

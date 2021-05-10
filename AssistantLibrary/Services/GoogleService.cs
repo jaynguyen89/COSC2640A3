@@ -63,10 +63,18 @@ namespace AssistantLibrary.Services {
                 ), 
                 true
             );
-
-            var authenticator = _authenticator.GenerateSetupCode(
-                SharedConstants.ProjectName, email, secretKey, true, int.Parse(_options.Value.TwoFaQrImageSize)
-            );
+            
+            SetupCode authenticator = null;
+            try {
+                authenticator = _authenticator.GenerateSetupCode(
+                    SharedConstants.ProjectName, email, secretKey, true, int.Parse(_options.Value.TwoFaQrImageSize)
+                );
+            }
+            catch (ArgumentException) {
+                authenticator = _authenticator.GenerateSetupCode(
+                    SharedConstants.ProjectName, email, secretKey, false, int.Parse(_options.Value.TwoFaQrImageSize)
+                );
+            }
 
             return new TwoFa {
                 SecretKey = secretKey,
@@ -78,9 +86,17 @@ namespace AssistantLibrary.Services {
         public TwoFa ReproduceTwoFaAuth(string secretKey, string email) {
             _logger.LogInformation($"{ nameof(GoogleService) }.{ nameof(ReproduceTwoFaAuth) }: Service starts.");
             
-            var authenticator = _authenticator.GenerateSetupCode(
-                SharedConstants.ProjectName, email, secretKey, true, int.Parse(_options.Value.TwoFaQrImageSize)
-            );
+            SetupCode authenticator = null;
+            try {
+                authenticator = _authenticator.GenerateSetupCode(
+                    SharedConstants.ProjectName, email, secretKey, true, int.Parse(_options.Value.TwoFaQrImageSize)
+                );
+            }
+            catch (ArgumentException) {
+                authenticator = _authenticator.GenerateSetupCode(
+                    SharedConstants.ProjectName, email, secretKey, false, int.Parse(_options.Value.TwoFaQrImageSize)
+                );
+            }
 
             return new TwoFa {
                 QrCodeImageUrl = authenticator.QrCodeSetupImageUrl,

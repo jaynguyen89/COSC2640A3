@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -97,13 +98,20 @@ namespace COSC2640A3.Services.Services {
             try {
                 var enrolmentData = await _dbContext.Enrolments
                                        .Where(enrolment => enrolment.Student.AccountId.Equals(accountId))
-                                       .Select(enrolment => new { envolmentVm = (EnrolmentVM) enrolment, invoice = enrolment.Invoice })
+                                       .Select(enrolment => new {
+                                           envolmentVm = (EnrolmentVM) enrolment,
+                                           invoice = enrolment.Invoice,
+                                           classroom = enrolment.Classroom,
+                                           teacherName = enrolment.Classroom.Teacher.Account.PreferredName
+                                       })
                                        .ToArrayAsync();
 
                 return enrolmentData
-                       .Select(pair => {
-                           var enrolment = pair.envolmentVm;
-                           if (pair.invoice.IsPaid) enrolment.Invoice.PaymentDetail = pair.invoice;
+                       .Select(enrolmentInfo => {
+                           var enrolment = enrolmentInfo.envolmentVm;
+                           enrolment.Classroom = enrolmentInfo.classroom;
+                           enrolment.Classroom.TeacherName = enrolmentInfo.teacherName;
+                           if (enrolmentInfo.invoice.IsPaid) enrolment.Invoice.PaymentDetail = enrolmentInfo.invoice;
                            return enrolment;
                        })
                        .ToArray();
@@ -150,6 +158,31 @@ namespace COSC2640A3.Services.Services {
             catch (DbUpdateException e) {
                 _logger.LogError($"{ nameof(EnrolmentService) }.{ nameof(UpdateMultipleEnrolments) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
+            }
+        }
+
+        public EnrolmentExportVM[] GetEnrolmentDataForExportBy(string[] classroomIds) {
+            try {
+                var queryableEnrolments = _dbContext.Enrolments
+                                                    .Where(enrolment => classroomIds.Contains(enrolment.ClassroomId))
+                                                    .Select(enrolment => new { ClassroomId = enrolment.ClassroomId, Enrolment = enrolment, Invoice = enrolment.Invoice })
+                                                    .AsEnumerable();
+                
+                return queryableEnrolments
+                       .GroupBy(enrolment => enrolment.ClassroomId)
+                       .Select(group => new EnrolmentExportVM {
+                           ClassroomId = group.Key, 
+                           Enrolments = group.Select(item => {
+                               var enrolmentVm = (EnrolmentExportVM.EnrolmentExport) item.Enrolment;
+                               enrolmentVm.Invoice = item.Invoice;
+                               return enrolmentVm;
+
+                           }).ToArray()
+                       }).ToArray();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetEnrolmentDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
             }
         }
     }

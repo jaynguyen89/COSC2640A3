@@ -19,10 +19,10 @@ namespace COSC2640A3.ViewModels.Features {
         public ClassroomDetailVM ClassroomDetail { get; set; }
 
         public static implicit operator ClassroomVM(Classroom classroom) {
-            return new() {
+            return classroom is null ? null : new ClassroomVM {
                 Id = classroom.Id,
                 TeacherId = classroom.TeacherId,
-                TeacherName = classroom.Teacher.Account.PreferredName,
+                TeacherName = classroom.Teacher is null ? string.Empty : classroom.Teacher.Account.PreferredName,
                 ClassName = classroom.ClassName,
                 Price = classroom.Price
             };
@@ -46,7 +46,7 @@ namespace COSC2640A3.ViewModels.Features {
 
             public DateTime CreatedOn { get; set; }
 
-            public string NormalizedDuration => $"{ Duration }{ ((SharedEnums.DurationUnit) DurationUnit).ToString() }";
+            public string NormalizedDuration => $"{ Duration }{ SharedConstants.MonoSpace }{ ((SharedEnums.DurationUnit) DurationUnit).ToString() }";
 
             public static implicit operator ClassroomDetailVM(Classroom classroom) {
                 return new() {
