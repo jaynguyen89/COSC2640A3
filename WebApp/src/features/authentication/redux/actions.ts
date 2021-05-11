@@ -1,6 +1,6 @@
 import * as authenticationConstants from './constants';
 import * as authenticationServices from './services';
-import {IAccountData, IAuthUser, ICredentials} from "./interfaces";
+import {IAccountData, IActivationData, IAuthUser, ICredentials, IIdentity} from "./interfaces";
 
 export const invokeAuthenticationRequest = (credentials: ICredentials) => {
     return (dispatch: any) => {
@@ -18,7 +18,7 @@ export const invokeAuthenticationRequest = (credentials: ICredentials) => {
     }
 }
 
-export const setAuthUser = (authUser: object) => {
+export const setAuthUser = (authUser: IAuthUser) => {
     return (dispatch: any) => dispatch({
         type: authenticationConstants.AUTHENTICATED,
         payload: authUser
@@ -66,6 +66,70 @@ export const invokeSignOutRequest = (auth: IAuthUser) => {
             }))
             .catch(error => dispatch({
                 type: authenticationConstants.SIGNOUT_REQUEST_FAILED,
+                error
+            }))
+    }
+}
+
+export const invokeConfirmTfaPinRequest = (auth: IAuthUser, pin: string) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.CONFIRM_TFA_REQUEST_SENT });
+
+        authenticationServices.sendConfirmTfaPinRequest(auth, pin)
+            .then(response => dispatch({
+                type: authenticationConstants.CONFIRM_TFA_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.CONFIRM_TFA_REQUEST_FAILED,
+                error
+            }))
+    }
+}
+
+export const invokeAccountActivationRequest = (activationData: IActivationData) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.ACCOUNT_ACTIVATION_REQUEST_SENT });
+
+        authenticationServices.sendAccountActivationRequest(activationData)
+            .then(response => dispatch({
+                type: authenticationConstants.ACCOUNT_ACTIVATION_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.ACCOUNT_ACTIVATION_REQUEST_FAILED,
+                error
+            }))
+    }
+}
+
+export const invokeSendPinToSmsAndEmailRequest = (auth: IAuthUser) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SENT });
+
+        authenticationServices.sendPinToSmsAndEmailRequest(auth)
+            .then(response => dispatch({
+                type: authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_FAILED,
+                error
+            }))
+    }
+}
+
+export const invokeForgotPasswordRequest = (identity: IIdentity) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.FORGOT_PASSWORD_REQUEST_SENT });
+
+        authenticationServices.sendForgotPasswordRequest(identity)
+            .then(response => dispatch({
+                type: authenticationConstants.FORGOT_PASSWORD_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.FORGOT_PASSWORD_REQUEST_FAILED,
                 error
             }))
     }

@@ -7,12 +7,8 @@ using Helper.Shared;
 
 namespace COSC2640A3.Bindings {
 
-    public sealed class Registration {
-        
-        public string Email { get; set; }
-        
-        public string Username { get; set; }
-        
+    public sealed class Registration : Identity {
+
         public string Password { get; set; }
         
         public string PasswordConfirm { get; set; }
@@ -20,8 +16,6 @@ namespace COSC2640A3.Bindings {
         public string PhoneNumber { get; set; }
         
         public string PreferredName { get; set; }
-        
-        public string RecaptchaToken { get; set; }
 
         public string[] VerifyRegistrationDetails() {
             var errors = new List<string>();

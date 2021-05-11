@@ -15,8 +15,8 @@ export const sendRequestForResult = (
 ) => {
     const authHeaders = auth
         ? {
-            'UserId': auth.userId,
-            'AuthToken': auth.authToken
+            'AccountId': auth.accountId,
+            'Authorization': `Bearer ${ auth.authToken }`
         }
         : {};
 

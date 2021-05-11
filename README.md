@@ -25,6 +25,10 @@ While installing Visual Studio, select the following:
 
 First thing first, fetch and pull everything from git to local machine.
 
+***Set up enrironment
+* Open Control Panel > System > Advanced system settings > Advanced > Environment variables
+* Add new variable: COSC2640A3Environment = Development
+
 ***Set up relational database***
 * Open SQL Server Management Studio, enter Server Name `(localdb)\MSSQLLocalDB`, select *Windows Authentication* and connect.
 * Create a database name `COSC2640A3`

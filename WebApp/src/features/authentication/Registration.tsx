@@ -8,6 +8,7 @@ import * as authenticationConstants from './redux/constants';
 import { EMPTY_ACCOUNT, IRegistrationComponent } from "./redux/interfaces";
 import { EMPTY_STATUS, IStatusMessage, setGlobalMessage } from "../../providers/helpers";
 import { invokeRegistrationRequest } from './redux/actions';
+import ReCAPTCHA from "react-google-recaptcha";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -29,6 +30,9 @@ const Registration = (props: IRegistrationComponent) => {
         if (field === 'username') setAccountData({ ...accountData, username: value });
         if (field === 'password') setAccountData({ ...accountData, password: value });
         if (field === 'passwordConfirm') setAccountData({ ...accountData, passwordConfirm: value });
+        if (field === 'phoneNumber') setAccountData({ ...accountData, phoneNumber: value });
+        if (field === 'preferredName') setAccountData({ ...accountData, preferredName: value });
+        if (field === 'recaptcha') setAccountData({ ...accountData, recaptchaToken: value });
     }
 
     const attemptRegistration = () => props.invokeRegistrationRequest(accountData);
@@ -53,8 +57,8 @@ const Registration = (props: IRegistrationComponent) => {
             }
             else {
                 setStatusMessage(EMPTY_STATUS);
-                setGlobalMessage({ messages: ['Your account was created successfully. You can now login.'], type: 'success' } as IStatusMessage);
-                window.location.href = '/';
+                setGlobalMessage({ messages: ['Your account has been created. Please confirm to activate your account before you can login.'], type: 'success' } as IStatusMessage);
+                window.location.href = '/activate';
             }
     }, [props.registration]);
 
@@ -77,7 +81,7 @@ const Registration = (props: IRegistrationComponent) => {
 
                             <div className='row'>
                                 <div className='input-field col s12'>
-                                    <i className='material-icons prefix'>account_circle</i>
+                                    <i className='material-icons prefix'>alternate_email</i>
                                     <input id='email'
                                            value={ accountData.email }
                                            onChange={ e => updateAccountData(e.target.value, 'email') }
@@ -98,7 +102,7 @@ const Registration = (props: IRegistrationComponent) => {
                                     <label htmlFor='username'>Username</label>
                                 </div>
 
-                                <div className='input-field col s12'>
+                                <div className='input-field col m6 s12'>
                                     <i className='material-icons prefix'>lock</i>
                                     <input id='password'
                                            value={ accountData.password }
@@ -109,7 +113,7 @@ const Registration = (props: IRegistrationComponent) => {
                                     <label htmlFor='password'>Password</label>
                                 </div>
 
-                                <div className='input-field col s12'>
+                                <div className='input-field col m6 s12'>
                                     <i className='material-icons prefix'>lock</i>
                                     <input id='passwordConfirm'
                                            value={ accountData.passwordConfirm }
@@ -118,6 +122,35 @@ const Registration = (props: IRegistrationComponent) => {
                                            className='validate'
                                     />
                                     <label htmlFor='passwordConfirm'>Confirm Password</label>
+                                </div>
+
+                                <div className='input-field col m6 s12'>
+                                    <i className='material-icons prefix'>phone</i>
+                                    <input id='phoneNumber'
+                                           value={ accountData.phoneNumber }
+                                           onChange={ e => updateAccountData(e.target.value, 'phoneNumber') }
+                                           type='text'
+                                           className='validate'
+                                    />
+                                    <label htmlFor='phoneNumber'>Phone Number</label>
+                                </div>
+
+                                <div className='input-field col m6 s12'>
+                                    <i className='material-icons prefix'>history_edu</i>
+                                    <input id='preferredName'
+                                           value={ accountData.preferredName }
+                                           onChange={ e => updateAccountData(e.target.value, 'preferredName') }
+                                           type='text'
+                                           className='validate'
+                                    />
+                                    <label htmlFor='preferredName'>Full Name</label>
+                                </div>
+
+                                <div className='col s12' style={{ marginBottom: '1.5em' }}>
+                                    <ReCAPTCHA
+                                        sitekey='6LeXhN4UAAAAAHKW6-44VxtUVMYSlMPj04WRoC8z'
+                                        onChange={ val => updateAccountData(val as string, 'recaptcha') }
+                                    />
                                 </div>
 
                                 <div className='col s12'>

@@ -139,7 +139,7 @@ namespace COSC2640A3.Controllers {
             await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ SharedConstants.TwoFaCacheName }_{ authenticatedUser.AccountId }", Data = !account.TwoFactorEnabled });
             
             HttpContext.Response.Cookies.Append(nameof(AuthenticatedUser.AuthToken), authTokenOrMessage);
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authenticatedUser });
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = new { AuthenticatedUser = authenticatedUser, ShouldConfirmTfa = account.TwoFactorEnabled } });
         }
 
         [MainAuthorize]

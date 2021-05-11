@@ -11,7 +11,8 @@ export const setLocalData = () => (next: any) => (action: any) =>
     {
         if (action.type === authenticationConstants.AUTHENTICATED) {
             localStorage.setItem('authToken', action.payload.authToken);
-            localStorage.setItem('userId', action.payload.userId);
+            localStorage.setItem('accountId', action.payload.accountId);
+            localStorage.setItem('role', action.payload.role);
         }
 
         if (action.type === authenticationConstants.NO_AUTHENTICATION) localStorage.clear();

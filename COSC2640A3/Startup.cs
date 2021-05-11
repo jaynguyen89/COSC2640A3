@@ -69,6 +69,8 @@ namespace COSC2640A3 {
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory) {
             if (env.IsDevelopment()) app.UseDeveloperExceptionPage();
 
+            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
             var loggerConfig = Configuration.GetAWSLoggingConfigSection();
             _ = loggerFactory.AddAWSProvider(loggerConfig);
             

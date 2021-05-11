@@ -12,6 +12,7 @@ export const modalOptions = {
 
 export interface IResponse {
     result: number,
+    messages: Array<string>,
     data: Array<string> | Array<object> | object
 }
 
@@ -35,7 +36,7 @@ export const DEFAULT_ACTION_RESULT: IActionResult = {
 }
 
 export interface IStatusMessage {
-    messages : string[],
+    messages : Array<string>,
     type : string
 }
 

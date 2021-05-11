@@ -4,7 +4,7 @@ import App from './foundation/App';
 import { Provider } from 'react-redux';
 import { store } from './foundation/store';
 
-import { loadAuthUser } from "./authentication/redux/actions";
+import { loadAuthUser } from "./features/authentication/redux/actions";
 store.dispatch(loadAuthUser());
 
 ReactDOM.render(

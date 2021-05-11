@@ -119,8 +119,7 @@ namespace COSC2640A3.Services.Services {
                 return new KeyValuePair<bool?, string>(default, default);
             }
             catch (NotAuthorizedException e) {
-                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(Authenticate) } - { nameof(NotAuthorizedException) }: { e.Message }\n\n{ e.StackTrace }");
-                return new KeyValuePair<bool?, string>(default, default);
+                return new KeyValuePair<bool?, string>(false, "Your account do not match any entity.");
             }
             catch (UserNotConfirmedException) {
                 return new KeyValuePair<bool?, string>(false, "Your account has not been confirmed.");
