@@ -11,7 +11,8 @@ interface IAuthenticationStore {
     confirmTfa : IActionResult,
     activateAccount: IActionResult,
     sendPin: IActionResult,
-    forgotPassword: IActionResult
+    forgotPassword: IActionResult,
+    switchRole: IActionResult
 }
 
 const initialState: IAuthenticationStore = {
@@ -22,7 +23,8 @@ const initialState: IAuthenticationStore = {
     confirmTfa: DEFAULT_ACTION_RESULT,
     activateAccount: DEFAULT_ACTION_RESULT,
     sendPin: DEFAULT_ACTION_RESULT,
-    forgotPassword: DEFAULT_ACTION_RESULT
+    forgotPassword: DEFAULT_ACTION_RESULT,
+    switchRole: DEFAULT_ACTION_RESULT
 };
 
 const reducer = produce((state, action) => {
@@ -57,6 +59,8 @@ const reducer = produce((state, action) => {
             state.authUser.authToken = action.payload.authToken;
             state.authUser.accountId = action.payload.accountId;
             state.authUser.role = action.payload.role;
+
+            state.switchRole = DEFAULT_ACTION_RESULT;
             return;
         case authenticationConstants.REGISTRATION_REQUEST_SENT:
             state.register.action = authenticationConstants.REGISTRATION_REQUEST_SENT;
@@ -127,12 +131,12 @@ const reducer = produce((state, action) => {
             state.sendPin.error = null;
             return;
         case authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SUCCESS:
-            state.sendPin.action = authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SENT;
+            state.sendPin.action = authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SUCCESS;
             state.sendPin.payload = action.payload;
             state.sendPin.error = null;
             return;
         case authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_FAILED:
-            state.sendPin.action = authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_SENT;
+            state.sendPin.action = authenticationConstants.SEND_PIN_TO_SMS_EMAIL_REQUEST_FAILED;
             state.sendPin.payload = null;
             state.sendPin.error = action.error;
             return;
@@ -150,6 +154,21 @@ const reducer = produce((state, action) => {
             state.forgotPassword.action = authenticationConstants.FORGOT_PASSWORD_REQUEST_FAILED;
             state.forgotPassword.payload = null;
             state.forgotPassword.error = action.error;
+            return;
+        case authenticationConstants.SWITCH_ROLE_REQUEST_SENT:
+            state.switchRole.action = authenticationConstants.SWITCH_ROLE_REQUEST_SENT;
+            state.switchRole.payload = null;
+            state.switchRole.error = null;
+            return;
+        case authenticationConstants.SWITCH_ROLE_REQUEST_SUCCESS:
+            state.switchRole.action = authenticationConstants.SWITCH_ROLE_REQUEST_SUCCESS;
+            state.switchRole.payload = action.payload;
+            state.switchRole.error = null;
+            return;
+        case authenticationConstants.SWITCH_ROLE_REQUEST_FAILED:
+            state.switchRole.action = authenticationConstants.SWITCH_ROLE_REQUEST_FAILED;
+            state.switchRole.payload = null;
+            state.switchRole.error = action.error;
             return;
         default:
             return;

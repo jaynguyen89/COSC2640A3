@@ -58,7 +58,7 @@ namespace COSC2640A3.Controllers {
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed });
             }
             
-            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ nameof(AuthenticatedUser) }_{ SharedConstants.TwoFaCacheName }", Data = true });
+            await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ SharedConstants.TwoFaCacheName }_{ accountId }", Data = true });
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 

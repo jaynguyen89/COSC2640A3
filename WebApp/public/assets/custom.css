@@ -56,17 +56,19 @@ footer {
     color: #e8f5e9 ;
 }
 
-.page-header {
+.section-header {
     margin-top: 2em;
+    margin-bottom: 0;
     color: #de781f;
 }
 
 hr {
     background-color: #de781f;
-    width: 35%;
-    min-width: 15%;
+    width: 30%;
+    min-width: 20%;
     margin-bottom: 2em;
     border-width: 0.075em;
+    float: left;
 }
 
 .border {

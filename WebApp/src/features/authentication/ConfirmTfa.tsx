@@ -55,7 +55,9 @@ const ConfirmTfa = (props: IConfirmTfa) => {
 
         setPinMessage(EMPTY_STRING);
         setShouldEnableDoneButton(false);
-        props.invokeConfirmTfaPinRequest(props.authUser, pin.join(EMPTY_STRING));
+
+        const authUser = JSON.parse(localStorage.getItem('TempAuth') as string) as IAuthUser;
+        props.invokeConfirmTfaPinRequest(authUser, pin.join(EMPTY_STRING));
     }
 
     React.useEffect(() => {

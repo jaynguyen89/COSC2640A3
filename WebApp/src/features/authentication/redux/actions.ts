@@ -134,3 +134,19 @@ export const invokeForgotPasswordRequest = (identity: IIdentity) => {
             }))
     }
 }
+
+export const invokeSwitchRoleRequest = (auth: IAuthUser) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.SWITCH_ROLE_REQUEST_SENT });
+
+        authenticationServices.sendSwitchRoleRequest(auth)
+            .then(response => dispatch({
+                type: authenticationConstants.SWITCH_ROLE_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.SWITCH_ROLE_REQUEST_FAILED,
+                error
+            }))
+    }
+}

@@ -124,9 +124,8 @@ namespace COSC2640A3.Controllers {
 
             var updateAccountResult = await _accountService.UpdateAccount(account);
             if (!updateAccountResult.HasValue || !updateAccountResult.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
-
-            twoFa.SecretKey = default;
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = twoFa });
+            
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = (TwoFaVM) twoFa });
         }
 
         [HttpPut("disable-tfa/{recaptchaToken}")]

@@ -52,7 +52,7 @@ const Registration = (props: IRegistrationComponent) => {
                 setShouldEnableDoneButton(true);
             }
             else if (props.registration.payload.result === 0) {
-                setStatusMessage({ messages: props.registration.payload.data, type: 'error' } as IStatusMessage);
+                setStatusMessage({ messages: props.registration.payload.messages, type: 'error' } as IStatusMessage);
                 setShouldEnableDoneButton(true);
             }
             else {

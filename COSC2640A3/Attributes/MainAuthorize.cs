@@ -21,7 +21,7 @@ namespace COSC2640A3.Attributes {
                 return;
             }
 
-            var (_, accountId) = context.HttpContext.Request.Headers.FirstOrDefault(header => header.Key.Equals(nameof(AuthenticatedUser.AccountId)));
+            var (_, accountId) = context.HttpContext.Request.Headers.FirstOrDefault(header => header.Key.ToLower().Equals(nameof(AuthenticatedUser.AccountId).ToLower()));
             if (!Helpers.IsProperString(accountId)) {
                 context.Result = new ForbidResult();
                 return;

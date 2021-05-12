@@ -92,3 +92,13 @@ export const sendForgotPasswordRequest = (identity: IIdentity): Promise<IRespons
         identity
     );
 }
+
+export const sendSwitchRoleRequest = (auth: IAuthUser): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ AUTHENTICATION_ENDPOINT }switch-role`,
+        auth,
+        null,
+        null,
+        'GET'
+    );
+}

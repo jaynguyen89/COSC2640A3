@@ -20,7 +20,8 @@ export interface IIssue {
     type: string,
     title: string,
     status: number,
-    traceId: string
+    traceId: string,
+    message: string
 }
 
 export interface IActionResult {
@@ -66,4 +67,22 @@ export const normalizeDt = (dt: string): string => {
     const timeParts = dtParts[1].split(':');
 
     return `${ dateParts[2] }/${ dateParts[1] }/${ dateParts[0] } ${ timeParts[0] }:${ timeParts[1] }`;
+}
+
+export const checkSession = (
+    clearAuthUser: () => void, setStatusMessage: (message: IStatusMessage) => void, error?: string
+): boolean => {
+    if (error === undefined || error.indexOf('401') === -1) {
+        setStatusMessage({ messages: ['Failed to send request to server. Please try again.'], type: 'error' } as IStatusMessage);
+        return true;
+    }
+
+    if (error.indexOf('401') !== -1) {
+        setGlobalMessage({ messages: ['Your session has expired. Please login again.'], type: 'error' } as IStatusMessage);
+        clearAuthUser();
+        window.location.href = '/';
+        return false;
+    }
+
+    return true;
 }

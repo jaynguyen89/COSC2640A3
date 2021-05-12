@@ -62,7 +62,7 @@ const Login = (props: ILoginComponent) => {
             if (props.authentication.payload === null)
                 setStatusMessage({ messages: ['Failed to send request to server. Please try again.'], type: 'error' } as IStatusMessage);
             else if (props.authentication.payload.result === 0)
-                setStatusMessage({ messages: props.authentication.payload.data, type: 'error' } as IStatusMessage);
+                setStatusMessage({ messages: props.authentication.payload.messages, type: 'error' } as IStatusMessage);
             else {
                 setStatusMessage(EMPTY_STATUS);
 
