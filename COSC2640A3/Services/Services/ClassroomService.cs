@@ -93,9 +93,10 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<ClassroomVM[]> GetAllClassrooms() {
+        public async Task<ClassroomVM[]> GetAllClassroomsExcludeFromTeacherId(string teacherId) {
             try {
                 return await _dbContext.Classrooms
+                                       .Where(classroom => !classroom.TeacherId.Equals(teacherId))
                                        .Select(classroom => new ClassroomVM {
                                            Id = classroom.Id,
                                            TeacherId = classroom.TeacherId,
@@ -106,7 +107,7 @@ namespace COSC2640A3.Services.Services {
                                        .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassrooms) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassroomsExcludeFromTeacherId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }

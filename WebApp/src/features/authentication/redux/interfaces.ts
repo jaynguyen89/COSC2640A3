@@ -11,13 +11,15 @@ export interface IAuthUser {
     authToken: string,
     accountId: string,
     role: number // 0 for student, 1 for teacher
+    preferredName: string
 }
 
 export const DEFAULT_AUTH_USER: IAuthUser = {
     isAuthenticated: false,
     authToken: EMPTY_STRING,
     accountId: EMPTY_STRING,
-    role: 0
+    role: 0,
+    preferredName: EMPTY_STRING
 };
 
 export interface ILoginComponent {

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-
+import M from 'materialize-css';
 import {
     invokeGetStudentDetailRequest,
     invokeGetTeacherDetailRequest
@@ -14,19 +14,18 @@ import Spinner from "../../shared/Spinner";
 import {checkSession, EMPTY_STATUS, IStatusMessage, setGlobalMessage} from "../../providers/helpers";
 import {
     clearAuthUser,
-    invokeSignOutRequest,
     invokeSwitchRoleRequest,
     loadAuthUser
 } from "../authentication/redux/actions";
 import Alert from "../../shared/Alert";
 import AccountDetail from "./components/AccountDetail";
 import TwoFactorDetail from "./components/TwoFactorDetail";
+import HeaderNav from "../../shared/HeaderNav";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
     getStudentDetail: state.accountStore.getStudentDetail,
     getTeacherDetail: state.accountStore.getTeacherDetail,
-    unauthenticate: state.authenticationStore.unauthenticate,
     switchRole: state.authenticationStore.switchRole
 });
 
@@ -34,7 +33,6 @@ const mapActionToProps = {
     invokeGetStudentDetailRequest,
     invokeGetTeacherDetailRequest,
     clearAuthUser,
-    invokeSignOutRequest,
     invokeSwitchRoleRequest,
     loadAuthUser
 };
@@ -60,6 +58,7 @@ const GenericHome = (props: IGenericHome) => {
             else if (props.switchRole.payload.result === 0)
                 setStatusMessage({ messages: props.switchRole.payload.messages, type: 'error' } as IStatusMessage);
             else {
+                localStorage.setItem('preferredName', (props.authUser.role === 0 && studentDetail.preferredName) || teacherDetail.preferredName);
                 localStorage.setItem('role', props.switchRole.payload.data as unknown as string);
                 props.loadAuthUser();
                 alert(`You are now logged in as ${ (Number(props.switchRole.payload.data) === 0 && 'Student') || 'Teacher' }`);
@@ -102,17 +101,6 @@ const GenericHome = (props: IGenericHome) => {
         setShouldShowPage(false);
     }, [props.getTeacherDetail]);
 
-    React.useEffect(() => {
-        if (props.unauthenticate.action === authenticationConstants.SIGNOUT_REQUEST_FAILED)
-            checkSession(props.clearAuthUser, setStatusMessage, props.unauthenticate.error?.message);
-
-        if (props.unauthenticate.action === authenticationConstants.SIGNOUT_REQUEST_SUCCESS) {
-            setGlobalMessage({ messages: ['You have been signed out.'], type: 'success' } as IStatusMessage);
-            props.clearAuthUser();
-            window.location.href = '/';
-        }
-    }, [props.unauthenticate]);
-
     if (!props.authUser.isAuthenticated)
         window.location.href = '/';
 
@@ -127,23 +115,16 @@ const GenericHome = (props: IGenericHome) => {
                     <Spinner />
                 </div>
             }
-
-            { props.unauthenticate.action === authenticationConstants.SIGNOUT_REQUEST_SENT && <Spinner /> }
             <Alert { ...statusMessage } />
 
             {
                 shouldShowPage &&
                 <div className='row'>
                     <div className='col s12'>
-                        <h4 className='section-header'>
-                            Hello { (props.authUser.role === 0 && studentDetail.preferredName) || teacherDetail.preferredName }!
-                            <button className='btn waves-effect waves-light pink'
-                                    style={{ marginLeft: '1em' }}
-                                    onClick={ () => props.invokeSignOutRequest(props.authUser) }
-                            >
-                                Sign out
-                            </button>
-                        </h4>
+                        <HeaderNav
+                            location='home'
+                            greetingName={ (props.authUser.role === 0 && studentDetail.preferredName) || teacherDetail.preferredName }
+                        />
 
                         <div className='clearfix'/>
                         <div className='card'>

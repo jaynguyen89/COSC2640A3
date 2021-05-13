@@ -205,10 +205,13 @@ namespace COSC2640A3.Controllers {
 
         [RoleAuthorize(Role.Student)]
         [HttpGet("all")]
-        public async Task<JsonResult> GetAllClassrooms() {
+        public async Task<JsonResult> GetAllClassrooms([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassrooms) }: Service starts.");
+            
+            var teacher = await _accountService.GetTeacherByAccountId(accountId);
+            if (teacher is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
-            var classrooms = await _classroomService.GetAllClassrooms();
+            var classrooms = await _classroomService.GetAllClassroomsExcludeFromTeacherId(teacher.Id);
             return classrooms is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });
@@ -217,7 +220,7 @@ namespace COSC2640A3.Controllers {
         [RoleAuthorize(Role.Teacher)]
         [HttpGet("enrolments/{classroomId}")]
         public async Task<JsonResult> GetEnrolmentsByClassroom([FromHeader] string accountId,[FromRoute] string classroomId) {
-            _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassrooms) }: Service starts.");
+            _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetEnrolmentsByClassroom) }: Service starts.");
             
             var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });

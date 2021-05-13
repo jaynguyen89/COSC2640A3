@@ -50,8 +50,6 @@ export interface IGenericHome {
     getStudentDetail: IActionResult,
     getTeacherDetail: IActionResult,
     clearAuthUser: () => void,
-    invokeSignOutRequest: (auth: IAuthUser) => void,
-    unauthenticate: IActionResult,
     invokeSwitchRoleRequest: (auth: IAuthUser) => void,
     switchRole: IActionResult,
     loadAuthUser: () => void
