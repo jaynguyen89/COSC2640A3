@@ -8,6 +8,7 @@ import ConfirmTfa from "../features/authentication/ConfirmTfa";
 import ActivateAccount from "../features/authentication/ActivateAccount";
 import ForgotPassword from "../features/authentication/ForgotPassword";
 import GenericHome from "../features/homepage/GenericHome";
+import ManageClassrooms from "../features/classroom/ManageClassrooms";
 
 function App() {
     return (
@@ -21,6 +22,7 @@ function App() {
                     <Route path='/activate' component={ ActivateAccount } />
                     <Route path='/forgot-password' component={ ForgotPassword } />
                     <Route path='/home' component={ GenericHome } />
+                    <Route path='/manage-classrooms' component={ ManageClassrooms } />
                 </Switch>
             </BrowserRouter>
         </>

@@ -80,7 +80,8 @@ const TwoFactorDetail = (props: ITwoFactorDetail) => {
                         <button className='btn waves-effect waves-light'
                                 onClick={ () => props.invokeEnableOrRenewTfaRequest(props.authUser) }
                         >
-                            Enable Two-Factor Authentication
+                            <i className="fas fa-cog" />
+                            &nbsp; Enable Two-Factor Authentication
                         </button>
                     ) ||
                     <div className='row'>
@@ -97,7 +98,8 @@ const TwoFactorDetail = (props: ITwoFactorDetail) => {
                             <button className='btn waves-effect waves-light'
                                     onClick={ () => props.invokeEnableOrRenewTfaRequest(props.authUser) }
                             >
-                                Renew
+                                <i className="fas fa-redo" />
+                                &nbsp; Renew
                             </button>
 
                             <a className='text-link red-text small-text' id='showRecaptcha2'
@@ -107,7 +109,8 @@ const TwoFactorDetail = (props: ITwoFactorDetail) => {
                                    $('#recaptchaChecker2').show();
                                }}
                             >
-                                Disable
+                                <i className="fas fa-power-off" />
+                                &nbsp; Disable
                             </a>
                         </div>
 

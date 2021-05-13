@@ -143,13 +143,15 @@ const AccountDetail = (props: IAccountDetail) => {
                             <button className='btn waves-effect waves-light amber'
                                     onClick={ () => props.invokeRemovePhoneNumberRequest(props.authUser) }
                             >
-                                Remove
+                                <i className="fas fa-trash-alt" />
+                                &nbsp; Remove
                             </button>
                         ) ||
                         <button className='btn waves-effect waves-light'
                                 onClick={ () => props.invokeAddPhoneNumberRequest(props.authUser, phoneNumber) }
                         >
-                            Add
+                            <i className="fas fa-plus-circle" />
+                            &nbsp; Add
                         </button>
                     }
 
@@ -223,7 +225,8 @@ const AccountDetail = (props: IAccountDetail) => {
                                     M.Modal.init(confirmPhoneModal, {});
                                 }}
                         >
-                            Confirm
+                            <i className="fas fa-check" />
+                            &nbsp; Confirm
                         </button>
                     </div>
                 </div>

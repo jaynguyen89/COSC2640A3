@@ -6,9 +6,6 @@ import {checkSession, EMPTY_STATUS, IActionResult, IStatusMessage, setGlobalMess
 import * as authenticationConstants from "../features/authentication/redux/constants";
 import Alert from "./Alert";
 import Spinner from "./Spinner";
-import { createBrowserHistory } from 'history';
-
-const history = createBrowserHistory();
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -44,11 +41,11 @@ const HeaderNav = (props: IHeaderNav) => {
     }, [props.unauthenticate]);
 
     const goToSelectedPage = (location: string) => {
-        if (location === 'home' && history.location.pathname.indexOf('home') === -1) window.location.href = '/home';
+        if (location === 'home' && props.location.indexOf('home') === -1) window.location.href = '/home';
         // if (location === 'studentClassrooms') window.location.href = '/home';
         // if (location === 'studentEnrolments') window.location.href = '/home';
         // if (location === 'studentAllClassrooms') window.location.href = '/home';
-        if (location === 'teacherClassrooms' && history.location.pathname.indexOf('manage-classrooms') === -1) window.location.href = '/manage-classrooms';
+        if (location === 'manage-classrooms' && props.location.indexOf('manage-classrooms') === -1) window.location.href = '/manage-classrooms';
         // if (location === 'teacherImportExport') window.location.href = '/home';
     }
 
@@ -64,7 +61,8 @@ const HeaderNav = (props: IHeaderNav) => {
                             style={{ marginLeft: '1em' }}
                             onClick={ () => props.invokeSignOutRequest(props.authUser) }
                     >
-                        Sign out
+                        <i className="fas fa-sign-out-alt" />
+                        &nbsp; Sign out
                     </button>
                 </h4>
             </div>
@@ -85,7 +83,7 @@ const HeaderNav = (props: IHeaderNav) => {
                             </>
                         ) ||
                         <>
-                            <option value="teacherClassrooms">Manage my classrooms</option>
+                            <option value="manage-classrooms">Manage my classrooms</option>
                             <option value="teacherImportExport">Import & Export My Data</option>
                         </>
                     }

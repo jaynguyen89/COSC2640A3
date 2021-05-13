@@ -17,7 +17,6 @@ export const loadAuthUserFromCookies = (): IAuthUser => {
     const authToken = localStorage.getItem('authToken');
     const accountId = localStorage.getItem('accountId');
     const role = localStorage.getItem('role');
-    const name = localStorage.getItem('preferredName');
 
     const isAuthenticated = isProperString(accountId as string) &&
                             isProperString(authToken as string) &&
@@ -28,8 +27,7 @@ export const loadAuthUserFromCookies = (): IAuthUser => {
             isAuthenticated,
             authToken: authToken as string,
             accountId: accountId as string,
-            role: Number(role as string),
-            preferredName: name as string
+            role: Number(role as string)
         } as IAuthUser
         : DEFAULT_AUTH_USER;
 }

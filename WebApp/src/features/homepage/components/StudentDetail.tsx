@@ -104,7 +104,8 @@ const StudentDetail = (props: IStudentComponent) => {
                 <button className='btn waves-effect waves-light'
                         onClick={ () => props.invokeUpdateStudentRequest(props.authUser, studentDetail) }
                 >
-                    Update
+                    <i className="fas fa-pen" />
+                    &nbsp; Update
                 </button>
             </div>
         </div>

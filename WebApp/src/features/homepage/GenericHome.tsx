@@ -11,7 +11,7 @@ import {defaultStudent, defaultTeacher, IGenericHome, IStudentDetail, ITeacherDe
 import * as accountConstants from './redux/constants';
 import * as authenticationConstants from '../authentication/redux/constants';
 import Spinner from "../../shared/Spinner";
-import {checkSession, EMPTY_STATUS, IStatusMessage, setGlobalMessage} from "../../providers/helpers";
+import {checkSession, EMPTY_STATUS, IStatusMessage} from "../../providers/helpers";
 import {
     clearAuthUser,
     invokeSwitchRoleRequest,
@@ -58,7 +58,6 @@ const GenericHome = (props: IGenericHome) => {
             else if (props.switchRole.payload.result === 0)
                 setStatusMessage({ messages: props.switchRole.payload.messages, type: 'error' } as IStatusMessage);
             else {
-                localStorage.setItem('preferredName', (props.authUser.role === 0 && studentDetail.preferredName) || teacherDetail.preferredName);
                 localStorage.setItem('role', props.switchRole.payload.data as unknown as string);
                 props.loadAuthUser();
                 alert(`You are now logged in as ${ (Number(props.switchRole.payload.data) === 0 && 'Student') || 'Teacher' }`);
@@ -101,6 +100,10 @@ const GenericHome = (props: IGenericHome) => {
         setShouldShowPage(false);
     }, [props.getTeacherDetail]);
 
+    React.useEffect(() => {
+        localStorage.setItem('preferredName', studentDetail.preferredName || teacherDetail.preferredName);
+    }, [studentDetail.preferredName, teacherDetail.preferredName]);
+
     if (!props.authUser.isAuthenticated)
         window.location.href = '/';
 
@@ -138,7 +141,8 @@ const GenericHome = (props: IGenericHome) => {
                                                 style={{ marginLeft: '1em' }}
                                                 onClick={ () => props.invokeSwitchRoleRequest(props.authUser) }
                                         >
-                                            Switch to { (props.authUser.role === 0 && 'Teacher') || 'Student' }
+                                            <i className="fas fa-sync-alt" />
+                                            &nbsp; Switch to { (props.authUser.role === 0 && 'Teacher') || 'Student' }
                                         </button>
                                     </div>
                                 </div>
