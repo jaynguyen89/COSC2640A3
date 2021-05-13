@@ -2,6 +2,9 @@ import _ from 'lodash';
 
 export const EMPTY_STRING = '';
 export const MAX_FILES_COUNT = 5;
+export const TASK_VIEW = 'view';
+export const TASK_UPDATE = 'update';
+export const TASK_CREATE = 'create';
 
 export const modalOptions = {
     opacity : 0.8,
@@ -9,6 +12,14 @@ export const modalOptions = {
     outDuration : 200,
     dismissible : true
 };
+
+export const DurationUnits = [
+    { index: 0, text: 'Hours' },
+    { index: 1, text: 'Days' },
+    { index: 2, text: 'Weeks' },
+    { index: 3, text: 'Months' },
+    { index: 4, text: 'Years' }
+]
 
 export interface IResponse {
     result: number,

@@ -30,7 +30,7 @@ namespace COSC2640A3.Services.Interfaces {
         /// </summary>
         Task<bool?> DeleteClassroom(Classroom classroom);
         
-        Task<ClassroomVM[]> GetAllClassroomsByTeacherId(string teacherId);
+        Task<ClassroomVM[]> GetAllClassroomsByTeacherId(string teacherId, bool isActive = true);
         
         Task<ClassroomVM[]> GetAllClassroomsExcludeFromTeacherId(string teacherId);
         

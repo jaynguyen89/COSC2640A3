@@ -80,12 +80,19 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<ClassroomVM[]> GetAllClassroomsByTeacherId(string teacherId) {
+        public async Task<ClassroomVM[]> GetAllClassroomsByTeacherId(string teacherId, bool isActive = true) {
             try {
-                return await _dbContext.Classrooms
-                                       .Where(classroom => classroom.TeacherId.Equals(teacherId))
-                                       .Select(classroom => (ClassroomVM) classroom)
+                var classroomData = await _dbContext.Classrooms
+                                       .Where(classroom => classroom.TeacherId.Equals(teacherId) && classroom.IsActive == isActive)
+                                       .Select(classroom => new { classroom = (ClassroomVM) classroom, enrolments = classroom.Enrolments.Count })
                                        .ToArrayAsync();
+
+                return classroomData.Select(data => {
+                                        var classroom = data.classroom;
+                                        classroom.EnrolmentsCount = data.enrolments;
+                                        return classroom;
+                                    })
+                                    .ToArray();
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassroomsByTeacherId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");

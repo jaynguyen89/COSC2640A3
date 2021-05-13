@@ -15,6 +15,8 @@ namespace COSC2640A3.ViewModels.Features {
         public string ClassName { get; set; }
 
         public decimal Price { get; set; }
+        
+        public int EnrolmentsCount { get; set; }
 
         public ClassroomDetailVM ClassroomDetail { get; set; }
 

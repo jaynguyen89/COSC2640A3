@@ -118,7 +118,7 @@ namespace COSC2640A3.Services.Services {
                 _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(Authenticate) } - { nameof(TooManyRequestsException) }: { e.Message }\n\n{ e.StackTrace }");
                 return new KeyValuePair<bool?, string>(default, default);
             }
-            catch (NotAuthorizedException e) {
+            catch (NotAuthorizedException) {
                 return new KeyValuePair<bool?, string>(false, "Your account do not match any entity.");
             }
             catch (UserNotConfirmedException) {

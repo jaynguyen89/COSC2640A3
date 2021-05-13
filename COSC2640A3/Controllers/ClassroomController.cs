@@ -7,6 +7,7 @@ using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
+using COSC2640A3.ViewModels.Features;
 using Helper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -119,23 +120,27 @@ namespace COSC2640A3.Controllers {
         /// Situation 1: Students browse classrooms owned by a Teacher.
         /// Situation 2: A Teacher browse all classrooms owned by themselves.
         /// </summary>
-        [HttpGet("all-by-teacher/{teacherId}")]
+        [HttpGet("all-by-teacher/{teacherId?}")]
         public async Task<JsonResult> GetAllClassroomsByTeacher([FromHeader] string accountId,[FromRoute] string teacherId) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassroomsByTeacher) }: Service starts.");
 
+            ClassroomVM[] classrooms;
+            ClassroomVM[] completedClassrooms = null;
+
             var authenticatedUser = await _redisCache.GetRedisCacheEntry<AuthenticatedUser>($"{ nameof(AuthenticatedUser) }_{ accountId }");
-            if (authenticatedUser.Role == Role.Teacher) {
+            if (authenticatedUser.Role == Role.Teacher) { // Situation 2
                 var teacherByAuthenticatedUser = await _accountService.GetTeacherByAccountId(accountId);
                 if (teacherByAuthenticatedUser is null)
                     return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
                 
-                if (teacherByAuthenticatedUser.Id != teacherId)
-                    return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
+                classrooms = await _classroomService.GetAllClassroomsByTeacherId(teacherByAuthenticatedUser.Id);
+                completedClassrooms = await _classroomService.GetAllClassroomsByTeacherId(teacherByAuthenticatedUser.Id, false);
             }
-
-            var classrooms = await _classroomService.GetAllClassroomsByTeacherId(teacherId);
+            else // Situation 1
+                classrooms = await _classroomService.GetAllClassroomsByTeacherId(teacherId);
+            
             return classrooms is null ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                                      : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });
+                                      : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = new { classrooms, completedClassrooms } });
         }
 
         [RoleAuthorize(Role.Teacher)]
