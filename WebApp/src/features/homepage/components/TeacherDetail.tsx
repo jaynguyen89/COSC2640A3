@@ -59,7 +59,7 @@ const TeacherDetail = (props: ITeacherComponent) => {
     return (
         <div className='row'>
             { props.updateTeacher.action === accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_SENT && <Spinner /> }
-            <Alert { ...statusMessage } />
+            <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
 
             <div className='col s6'>
                 <div className='input-field col s12'>

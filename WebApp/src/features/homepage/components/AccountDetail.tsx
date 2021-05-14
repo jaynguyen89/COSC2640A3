@@ -123,7 +123,7 @@ const AccountDetail = (props: IAccountDetail) => {
                     ) &&
                     <div className='row'><Spinner /></div>
                 }
-                <Alert { ...statusMessage } />
+                <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
 
                 <div className='input-field col s4'>
                     <i className='material-icons prefix'>phone</i>

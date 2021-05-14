@@ -68,7 +68,7 @@ namespace COSC2640A3.Controllers {
             classroom.TeacherId = teacher.Id;
             classroom.IsActive = true;
             var classroomId = await _classroomService.InsertNewClassroom(classroom);
-            
+
             return !Helpers.IsProperString(classroomId)
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomId });

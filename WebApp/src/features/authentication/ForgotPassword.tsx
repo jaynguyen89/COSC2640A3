@@ -22,7 +22,7 @@ const ForgotPassword = (props: IForgotPassword) => {
     const [identity, setIdentity] = React.useState(defaultIdentity);
     const [statusMessage, setStatusMessage] = React.useState(EMPTY_STATUS);
 
-    const updateIdentity = (field: string, value: string) => {
+    const updateIdentity = (value: string, field: string) => {
         if (field === 'emailOrUsername') {
             if ((value as string).indexOf('@') !== -1) setIdentity({ ...identity, email: value as string, username: EMPTY_STRING });
             else setIdentity({ ...identity, username: value as string, email: EMPTY_STRING });
@@ -56,7 +56,7 @@ const ForgotPassword = (props: IForgotPassword) => {
         <div className='main-content'>
             <div className='row'>
                 { props.forgotPassword.action === authenticationConstants.FORGOT_PASSWORD_REQUEST_SENT && <Spinner /> }
-                <Alert { ...statusMessage } />
+                <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
                 <h5 style={{ marginTop: '2em' }}>Recover your password</h5>
                 <p>Enter your email or username, then confirm Recaptcha to automatically get a recovery email.</p>
 

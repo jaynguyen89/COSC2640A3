@@ -72,7 +72,7 @@ const TwoFactorDetail = (props: ITwoFactorDetail) => {
         <div className='row'>
             <div className='col s12'>
                 <b>Two Factor Authentication:</b><br />
-                <Alert { ...statusMessage } />
+                <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
 
                 {
                     (

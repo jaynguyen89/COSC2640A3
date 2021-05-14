@@ -59,7 +59,7 @@ const StudentDetail = (props: IStudentComponent) => {
     return (
         <div className='row'>
             { props.updateStudent.action === accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_SENT && <Spinner /> }
-            <Alert { ...statusMessage } />
+            <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
 
             <div className='col s6'>
                 <div className='input-field col s12'>

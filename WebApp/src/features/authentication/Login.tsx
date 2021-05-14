@@ -83,7 +83,7 @@ const Login = (props: ILoginComponent) => {
     return (
         <div className='main-content'>
             <div className='login-area'>
-                <Alert { ...statusMessage } />
+                <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
                 { props.authentication.action === authenticationConstants.AUTHENTICATION_BEGIN && <Spinner /> }
 
                 <div className='card horizontal'>

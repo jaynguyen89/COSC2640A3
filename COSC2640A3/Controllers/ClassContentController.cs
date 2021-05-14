@@ -249,7 +249,7 @@ namespace COSC2640A3.Controllers {
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
             
-            var classContent = await _classContentService.GetClassContentByClassroomId(classroomId);
+            var classContent = await _classContentService.GetClassContentVmByClassroomId(classroomId);
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = (ClassContentVM) classContent });

@@ -13,5 +13,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task<bool?> UpdateContent(ClassContent classContent);
         
         Task<string> InsertNewContent(ClassContent classContent);
+        
+        Task<ClassContentVM> GetClassContentVmByClassroomId(string classroomId);
     }
 }

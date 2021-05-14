@@ -1,6 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {IClassroom, IClassroomCard} from "../redux/interfaces";
+import {IClassroomCard} from "../redux/interfaces";
+import Spinner from "../../../shared/Spinner";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser
@@ -12,6 +13,11 @@ const ClassroomCard = (props: IClassroomCard) => {
     return (
         <div className='card'>
             <div className='card-content'>
+                {
+                    props.classroom.id === props.selectedClassroomId &&
+                    <div className='corner'><Spinner /></div>
+                }
+
                 <a className='section-header text-link'
                    onClick={ () => props.handleTitleClicked(props.classroom.id) }
                 >

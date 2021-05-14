@@ -1,8 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {defaultClassroom, defaultClassroomDetail, IClassroom, IClassroomModal} from "../redux/interfaces";
-import {DurationUnits, EMPTY_STRING, TASK_CREATE, TASK_UPDATE, TASK_VIEW} from "../../../providers/helpers";
+import {defaultClassroom, defaultClassroomDetail, IClassroomData, IClassroomModal} from "../redux/interfaces";
+import {
+    DurationUnits,
+    EMPTY_STRING,
+    normalizeDt,
+    TASK_CREATE,
+    TASK_UPDATE,
+    TASK_VIEW
+} from "../../../providers/helpers";
+import Spinner from "../../../shared/Spinner";
+import Alert from "../../../shared/Alert";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser
@@ -14,16 +23,16 @@ const ClassroomModal = (props: IClassroomModal) => {
     const [classroom, setClassroom] = React.useState(defaultClassroom);
 
     React.useEffect(() => {
-
-    }, [props.selectedClassroomId]);
+        setClassroom(props.selectedClassroom);
+    }, [props.selectedClassroom]);
 
     const updateClassroom = (field: string, value: string) => {
-        if (field === 'className') setClassroom({ ...classroom, className: value } as IClassroom);
-        if (field === 'price') setClassroom({ ...classroom, price: (value && Number(value)) || 0 } as IClassroom);
-        if (field === 'capacity') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, capacity: (value && Number(value)) || 0 } } as IClassroom);
-        if (field === 'commenceDate') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, commencedOn: value } } as IClassroom);
-        if (field === 'duration') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, duration: (value && Number(value)) || 0 } } as IClassroom);
-        if (field === 'durationUnit') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, durationUnit: Number(value) } } as IClassroom);
+        if (field === 'className') setClassroom({ ...classroom, className: value } as IClassroomData);
+        if (field === 'price') setClassroom({ ...classroom, price: (value && Number(value)) || 0 } as IClassroomData);
+        if (field === 'capacity') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, capacity: (value && Number(value)) || 0 } } as IClassroomData);
+        if (field === 'commenceDate') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, commencedOn: value } } as IClassroomData);
+        if (field === 'duration') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, duration: (value && Number(value)) || 0 } } as IClassroomData);
+        if (field === 'durationUnit') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, durationUnit: Number(value) } } as IClassroomData);
     }
 
     return (
@@ -38,6 +47,11 @@ const ClassroomModal = (props: IClassroomModal) => {
                             )
                         }
                     </p>
+                </div>
+
+                <div className='col s12'>
+                    { props.isTaskRunning && <Spinner /> }
+                    <Alert { ...props.statusMessage } closeAlert={ props.closeAlert }  />
                 </div>
 
                 <div className='input-field col m6 s12'>
@@ -76,7 +90,7 @@ const ClassroomModal = (props: IClassroomModal) => {
                 <div className='input-field col m4 s12'>
                     <i className='material-icons prefix'>account_circle</i>
                     <input id='commenceDate' type='text' className='validate'
-                           value={ classroom.classroomDetail.commencedOn || EMPTY_STRING }
+                           value={ normalizeDt(classroom.classroomDetail.commencedOn) || EMPTY_STRING }
                            onChange={ e => updateClassroom('commenceDate', e.target.value) }
                     />
                     <label htmlFor='commenceDate'>Commence Date</label>
@@ -107,12 +121,21 @@ const ClassroomModal = (props: IClassroomModal) => {
                 <div className='col s12'>
                     {
                         props.task === TASK_UPDATE &&
-                        <button className='btn waves-effect waves-light'
-                                onClick={ () => props.handleUpdateBtn(classroom) }
-                        >
-                            <i className="fas fa-edit" />
-                            &nbsp; Update
-                        </button>
+                        <>
+                            <button className='btn waves-effect waves-light'
+                                    onClick={ () => props.handleUpdateBtn(classroom) }
+                            >
+                                <i className="fas fa-edit" />
+                                &nbsp; Update
+                            </button>
+
+                            <button className='btn waves-effect waves-light right'
+                                    onClick={ () => window.location.href = '/manage-classroom-contents' }
+                            >
+                                <i className="fas fa-pencil-ruler" />
+                                &nbsp; Manage Contents
+                            </button>
+                        </>
                     }
 
                     {
@@ -122,6 +145,16 @@ const ClassroomModal = (props: IClassroomModal) => {
                         >
                             <i className="fas fa-plus-circle" />
                             &nbsp; Add
+                        </button>
+                    }
+
+                    {
+                        props.task === TASK_VIEW &&
+                        <button className='btn waves-effect waves-light'
+                                onClick={ () => window.location.href = '/manage-classroom-contents' }
+                        >
+                            <i className="fas fa-pencil-ruler" />
+                            &nbsp; Manage Contents
                         </button>
                     }
                 </div>

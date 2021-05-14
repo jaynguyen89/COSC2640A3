@@ -46,16 +46,6 @@ footer {
     color: #c050a8;
 }
 
-.alert-error {
-    background-color: #c050a8;
-    color: #f3e5f5;
-}
-
-.alert-success {
-    background-color: #a8c050;
-    color: #e8f5e9 ;
-}
-
 .section-header {
     /*margin-top: 2em;*/
     margin-bottom: 0;
@@ -81,9 +71,12 @@ hr {
     border-radius: 0.2em;
 }
 
-.profile-name {
-    margin: 0;
-    font-weight: bold;
+.corner {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    top: 5px;
+    right: 5px
 }
 
 .small-text {
@@ -107,3 +100,33 @@ hr {
 }
 
 .text-link { cursor: pointer; }
+
+.alert {
+    padding: 20px;
+    margin-bottom: 15px;
+}
+
+.close-btn {
+    margin-left: 15px;
+    color: white;
+    font-weight: bold;
+    float: right;
+    font-size: 22px;
+    line-height: 20px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.close-btn:hover {
+    color: black;
+}
+
+.alert-error {
+    background-color: #c050a8;
+    color: #f3e5f5;
+}
+
+.alert-success {
+    background-color: #a8c050;
+    color: #e8f5e9 ;
+}

@@ -69,7 +69,7 @@ const Registration = (props: IRegistrationComponent) => {
         <div className='container'>
             <div className='row'>
                 <div className='login-area'>
-                    <Alert { ...statusMessage } />
+                    <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
                     { props.registration.action === authenticationConstants.REGISTRATION_REQUEST_SENT && <Spinner /> }
 
                     <div className='card horizontal'>

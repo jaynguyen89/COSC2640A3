@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.ClassContent;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -57,6 +59,22 @@ namespace COSC2640A3.Services.Services {
             }
             catch (DbUpdateException e) {
                 _logger.LogError($"{ nameof(ClassContentService) }.{ nameof(InsertNewContent) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<ClassContentVM> GetClassContentVmByClassroomId(string classroomId) {
+            try {
+                var classContent = await _dbContext.ClassContents
+                                                   .SingleOrDefaultAsync(content => content.ClassroomId.Equals(classroomId));
+                return classContent;
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(ClassContentService) }.{ nameof(GetClassContentVmByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (InvalidOperationException e) {
+                _logger.LogWarning($"{ nameof(ClassContentService) }.{ nameof(GetClassContentVmByClassroomId) } - { nameof(InvalidOperationException) }: { e.Message }\n\n{ e.StackTrace }");
                 return default;
             }
         }

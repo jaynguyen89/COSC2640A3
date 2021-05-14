@@ -149,6 +149,7 @@ namespace COSC2640A3.Services.Services {
         }
 
         public async Task<bool?> UpdateMultipleEnrolments(Enrolment[] enrolments) {
+            if (enrolments.Length == 0) return true;
             _dbContext.Enrolments.UpdateRange(enrolments);
 
             try {

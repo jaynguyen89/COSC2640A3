@@ -9,6 +9,7 @@ import ActivateAccount from "../features/authentication/ActivateAccount";
 import ForgotPassword from "../features/authentication/ForgotPassword";
 import GenericHome from "../features/homepage/GenericHome";
 import ManageClassrooms from "../features/classroom/ManageClassrooms";
+import ManageClassContent from "../features/classContents/ManageClassContent";
 
 function App() {
     return (
@@ -23,6 +24,7 @@ function App() {
                     <Route path='/forgot-password' component={ ForgotPassword } />
                     <Route path='/home' component={ GenericHome } />
                     <Route path='/manage-classrooms' component={ ManageClassrooms } />
+                    <Route path='/manage-classroom-contents' component={ ManageClassContent } />
                 </Switch>
             </BrowserRouter>
         </>

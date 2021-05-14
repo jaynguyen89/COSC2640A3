@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import M from 'materialize-css';
 import {
     invokeGetStudentDetailRequest,
     invokeGetTeacherDetailRequest

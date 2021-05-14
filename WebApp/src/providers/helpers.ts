@@ -49,7 +49,8 @@ export const DEFAULT_ACTION_RESULT: IActionResult = {
 
 export interface IStatusMessage {
     messages : Array<string>,
-    type : string
+    type : string,
+    closeAlert?: () => void,
 }
 
 export const EMPTY_STATUS: IStatusMessage = {
@@ -58,7 +59,7 @@ export const EMPTY_STATUS: IStatusMessage = {
 }
 
 export const isProperString = (item: string): boolean => {
-    if (item === null) return false;
+    if (item === null || item === undefined) return false;
 
     item = _.trim(item);
     return item.length !== 0;
@@ -73,6 +74,8 @@ export const removeGlobalMessage = () => {
 }
 
 export const normalizeDt = (dt: string): string => {
+    if (!isProperString(dt)) return EMPTY_STRING;
+
     const dtParts = dt.split('T');
     const dateParts = dtParts[0].split('-');
     const timeParts = dtParts[1].split(':');

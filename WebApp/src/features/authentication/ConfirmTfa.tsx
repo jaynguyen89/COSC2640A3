@@ -106,7 +106,7 @@ const ConfirmTfa = (props: IConfirmTfa) => {
             <div className='row'>
                 <div className='col s12'>
                     { props.confirmTfa.action === authenticationConstants.CONFIRM_TFA_REQUEST_SENT && <Spinner /> }
-                    <Alert { ...statusMessage } />
+                    <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
 
                     <h5 style={{ marginTop: '2em' }}>Enter Two-Factor Authentication PIN</h5>
                     <div className='error'>{ pinMessage }</div>

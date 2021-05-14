@@ -104,7 +104,7 @@ const ActivateAccount = (props: IActivateAccount) => {
         <div className='main-content'>
             <div className='row'>
                 { props.activateAccount.action === authenticationConstants.ACCOUNT_ACTIVATION_REQUEST_SENT && <Spinner /> }
-                <Alert { ...statusMessage } />
+                <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
                 <h5 style={{ marginTop: '2em' }}>Activate Account</h5>
 
                 <div className='input-field col s4'>

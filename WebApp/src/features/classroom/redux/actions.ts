@@ -1,6 +1,7 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
 import * as classroomConstants from "./constants";
 import * as classroomServices from "./services";
+import {IClassroom} from "./interfaces";
 
 export const invokeGetAllTeacherClassroomsRequest = (auth: IAuthUser, teacherId: string | null) => {
     return (dispatch: any) => {
@@ -20,15 +21,15 @@ export const invokeGetAllTeacherClassroomsRequest = (auth: IAuthUser, teacherId:
 
 export const invokeRemoveClassroomsRequest = (auth: IAuthUser, classroomId: string) => {
     return (dispatch: any) => {
-        dispatch({ type: classroomConstants.REMOVE_CLASSROOMS_REQUEST_SENT });
+        dispatch({ type: classroomConstants.REMOVE_CLASSROOM_REQUEST_SENT });
 
         classroomServices.sendRemoveClassroomRequest(auth, classroomId)
             .then(response => dispatch({
-                type: classroomConstants.REMOVE_CLASSROOMS_REQUEST_SUCCESS,
+                type: classroomConstants.REMOVE_CLASSROOM_REQUEST_SUCCESS,
                 payload: response
             }))
             .catch(error => dispatch({
-                type: classroomConstants.REMOVE_CLASSROOMS_REQUEST_FAILED,
+                type: classroomConstants.REMOVE_CLASSROOM_REQUEST_FAILED,
                 error
             }))
     };
@@ -36,15 +37,63 @@ export const invokeRemoveClassroomsRequest = (auth: IAuthUser, classroomId: stri
 
 export const invokeCompletedClassroomsRequest = (auth: IAuthUser, classroomId: string) => {
     return (dispatch: any) => {
-        dispatch({ type: classroomConstants.COMPLETED_CLASSROOMS_REQUEST_SENT });
+        dispatch({ type: classroomConstants.COMPLETED_CLASSROOM_REQUEST_SENT });
 
         classroomServices.sendCompletedClassroomRequest(auth, classroomId)
             .then(response => dispatch({
-                type: classroomConstants.COMPLETED_CLASSROOMS_REQUEST_SUCCESS,
+                type: classroomConstants.COMPLETED_CLASSROOM_REQUEST_SUCCESS,
                 payload: response
             }))
             .catch(error => dispatch({
-                type: classroomConstants.COMPLETED_CLASSROOMS_REQUEST_FAILED,
+                type: classroomConstants.COMPLETED_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeGetClassroomDetailRequest = (auth: IAuthUser, classroomId: string) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_SENT });
+
+        classroomServices.sendGetClassroomDetailRequest(auth, classroomId)
+            .then(response => dispatch({
+                type: classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeCreateClassroomsRequest = (auth: IAuthUser, classroom: IClassroom) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.CREATE_CLASSROOM_REQUEST_SENT });
+
+        classroomServices.sendCreateClassroomRequest(auth, classroom)
+            .then(response => dispatch({
+                type: classroomConstants.CREATE_CLASSROOM_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.CREATE_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeUpdateClassroomsRequest = (auth: IAuthUser, classroom: IClassroom) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.UPDATE_CLASSROOM_REQUEST_SENT });
+
+        classroomServices.sendUpdateClassroomRequest(auth, classroom)
+            .then(response => dispatch({
+                type: classroomConstants.UPDATE_CLASSROOM_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.UPDATE_CLASSROOM_REQUEST_FAILED,
                 error
             }))
     };
