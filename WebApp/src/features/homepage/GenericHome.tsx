@@ -20,6 +20,7 @@ import Alert from "../../shared/Alert";
 import AccountDetail from "./components/AccountDetail";
 import TwoFactorDetail from "./components/TwoFactorDetail";
 import HeaderNav from "../../shared/HeaderNav";
+import ImportExport from "../teacher/ImportExport";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -170,6 +171,15 @@ const GenericHome = (props: IGenericHome) => {
                                 <TwoFactorDetail accountDetail={ (props.authUser.role === 0 && studentDetail) || teacherDetail } />
                             </div>
                         </div>
+
+                        {
+                            props.authUser.role === 1 &&
+                            <div className='card'  style={{ marginBottom: '2em' }}>
+                                <div className='card-content'>
+                                    <ImportExport />
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             }

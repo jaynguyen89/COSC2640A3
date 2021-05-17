@@ -1,7 +1,7 @@
 import {IIssue, IResponse} from "../../../providers/helpers";
 import {sendRequestForResult} from "../../../providers/serviceProvider";
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {IClassroom} from "./interfaces";
+import {IClassroom, IFileImport} from "./interfaces";
 
 const CLASSROOM_ENDPOINT = 'classroom/';
 
@@ -66,3 +66,17 @@ export const sendUpdateClassroomRequest = (auth: IAuthUser, classroom: IClassroo
         'PUT'
     );
 }
+
+export const sendImportJsonFileClassroomsRequest = (auth: IAuthUser, fileData: IFileImport): Promise<IResponse | IIssue> => {
+    let formData = new FormData();
+
+    formData.append('importType', fileData.importType.toString());
+    formData.append('fileForImport', fileData.fileForImport, fileData.fileForImport.name);
+
+    return sendRequestForResult(
+        `${ CLASSROOM_ENDPOINT }import`,
+        auth,
+        null,
+        formData
+    );
+};

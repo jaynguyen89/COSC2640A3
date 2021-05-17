@@ -99,3 +99,13 @@ export const getClassroom = (classroom: IClassroomData): IClassroom => {
         durationUnit: classroom.classroomDetail.durationUnit
     } as IClassroom;
 }
+
+export interface IFileImport {
+    importType: number,
+    fileForImport: File
+}
+
+export const defaultFileImport : IFileImport = {
+    importType: 0,
+    fileForImport: null as unknown as File
+}

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using Amazon.DynamoDBv2.DataModel;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 
 namespace AmazonLibrary.Models {
 
@@ -20,6 +22,8 @@ namespace AmazonLibrary.Models {
         public long UploadedOn { get; set; }
         
         public byte Status { get; set; }
+        
+        public bool IsForClassroom { get; set; }
 
         public Document CreateItemDocument() {
             return new() {
@@ -30,6 +34,18 @@ namespace AmazonLibrary.Models {
                 [nameof(FileSize)] = FileSize,
                 [nameof(UploadedOn)] = UploadedOn,
                 [nameof(Status)] = Status
+            };
+        }
+
+        public static implicit operator ImportSchedule(Dictionary<string, AttributeValue> item) {
+            return new() {
+                Id = item[nameof(Id)].S,
+                AccountId = item[nameof(AccountId)].S,
+                FileId = item[nameof(FileId)].S,
+                FileName = item[nameof(FileName)].S,
+                FileSize = long.Parse(item[nameof(FileSize)].N),
+                UploadedOn = long.Parse(item[nameof(UploadedOn)].N),
+                Status = byte.Parse(item[nameof(Status)].N)
             };
         }
     }

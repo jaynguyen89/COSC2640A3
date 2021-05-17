@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using Amazon.DynamoDBv2;
 using Amazon.DynamoDBv2.DocumentModel;
+using Amazon.DynamoDBv2.Model;
 using AmazonLibrary.Contexts;
 using AmazonLibrary.Interfaces;
 using AmazonLibrary.Models;
@@ -47,6 +51,64 @@ namespace AmazonLibrary.Services {
             _ = await tableToSaveItem.PutItemAsync(itemDocument);
 
             return itemDocument[nameof(ImportSchedule.Id)];
+        }
+
+        public async Task<ImportSchedule[]> GetAllSchedulesDataFor(string accountId) {
+            _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) }: Service starts.");
+
+            var classroomSchedules = await GetSchedulesByTable(_options.Value.ClassroomImportSchedulesTableName, accountId);
+            var studentSchedules = await GetSchedulesByTable(_options.Value.StudentImportSchedulesTableName, accountId);
+
+            return classroomSchedules.Concat(studentSchedules).ToArray();
+        }
+
+        private async Task<ImportSchedule[]> GetSchedulesByTable(string tableName, string accountId) {
+            _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) }: Service starts.");
+            
+            var scanSchedulesRequest = new ScanRequest {
+                TableName = tableName,
+                ScanFilter = new Dictionary<string, Condition> {
+                    {
+                        nameof(ImportSchedule.AccountId),
+                        new Condition {
+                            ComparisonOperator = ComparisonOperator.EQ,
+                            AttributeValueList = new List<AttributeValue> { new(accountId) }
+                        }
+                    }
+                }
+            };
+
+            try {
+                var response = await _dbContext.ScanAsync(scanSchedulesRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Request to AWS DynamoDb failed.");
+                
+                return response.Items
+                               .Select(item => {
+                                   var schedule = (ImportSchedule) item;
+                                   schedule.IsForClassroom = tableName.Equals(_options.Value.ClassroomImportSchedulesTableName);
+                                   return schedule;
+                               })
+                               .ToArray();
+            }
+            catch (InternalServerErrorException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) } - { nameof(InternalServerErrorException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (ProvisionedThroughputExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) } - { nameof(ProvisionedThroughputExceededException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (RequestLimitExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) } - { nameof(RequestLimitExceededException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (ResourceNotFoundException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) } - { nameof(ResourceNotFoundException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (NullReferenceException) {
+                return default;
+            }
         }
     }
 }

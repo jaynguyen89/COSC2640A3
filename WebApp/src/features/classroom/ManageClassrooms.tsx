@@ -1,6 +1,5 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import $ from 'jquery';
 import M from 'materialize-css';
 import Spinner from "../../shared/Spinner";
