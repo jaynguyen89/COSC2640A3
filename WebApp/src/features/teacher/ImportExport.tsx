@@ -6,7 +6,7 @@ import {invokeUploadFileForImportRequest} from "../classroom/redux/actions";
 import {invokeGetSchedulesProgressRequest} from "./redux/actions";
 import * as classroomConstants from '../classroom/redux/constants';
 import * as teacherConstants from './redux/constants';
-import {defaultFileImport, IClassroomData, IFileImport} from "../classroom/redux/interfaces";
+import {defaultFileImport, IFileImport} from "../classroom/redux/interfaces";
 import ImportData from "./components/ImportData";
 import ScheduleList from "./components/ScheduleList";
 import ExportData from "./components/ExportData";

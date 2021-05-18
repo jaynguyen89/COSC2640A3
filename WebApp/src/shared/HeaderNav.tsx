@@ -41,12 +41,11 @@ const HeaderNav = (props: IHeaderNav) => {
     }, [props.unauthenticate]);
 
     const goToSelectedPage = (location: string) => {
-        if (location === 'home' && props.location.indexOf('home') === -1) window.location.href = '/home';
-        // if (location === 'studentClassrooms') window.location.href = '/home';
-        // if (location === 'studentEnrolments') window.location.href = '/home';
-        // if (location === 'studentAllClassrooms') window.location.href = '/home';
-        if (location === 'manage-classrooms' && props.location.indexOf('manage-classrooms') === -1) window.location.href = '/manage-classrooms';
-        // if (location === 'teacherImportExport') window.location.href = '/home';
+        const currentLocation = window.location.href.split('/').pop();
+
+        if (location === 'home' && currentLocation !== 'home') window.location.href = '/home';
+        if (location === 'browse-classrooms' && currentLocation !== 'browse-classrooms') window.location.href = '/browse-classrooms';
+        if (location === 'manage-classrooms' && currentLocation !== 'manage-classrooms') window.location.href = '/manage-classrooms';
     }
 
     return (
@@ -69,23 +68,16 @@ const HeaderNav = (props: IHeaderNav) => {
 
             <div className="input-field col s5">
                 <select className="browser-default" style={{ marginTop: '0.5em' }}
-                        value={ props.location }
+                        value={ window.location.href.split('/').pop() }
                         onChange={ e => goToSelectedPage(e.target.value) }
                 >
                     <option value="home" selected>My Profile & Account Details</option>
                     {
                         (
                             props.authUser.role === 0 &&
-                            <>
-                                <option value="studentClassrooms">My Classrooms & Marks</option>
-                                <option value="studentEnrolments">My Enrolments, Invoices & Payments</option>
-                                <option value="studentAllClassrooms">Browse for all classrooms</option>
-                            </>
+                            <option value="browse-classrooms">Browse for all classrooms</option>
                         ) ||
-                        <>
-                            <option value="manage-classrooms">Manage my classrooms</option>
-                            <option value="teacherImportExport">Import & Export My Data</option>
-                        </>
+                        <option value="manage-classrooms">Manage my classrooms</option>
                     }
                 </select>
             </div>

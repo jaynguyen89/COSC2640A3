@@ -6,7 +6,7 @@ import Spinner from "../../shared/Spinner";
 import Alert from "../../shared/Alert";
 import * as classroomConstants from './redux/constants';
 import HeaderNav from "../../shared/HeaderNav";
-import {defaultClassroom, getClassroom, IClassroom, IClassroomData, IManageClassroom} from "./redux/interfaces";
+import {defaultClassroom, getClassroom, IClassroomData, IManageClassroom} from "./redux/interfaces";
 import {
     invokeCompletedClassroomsRequest, invokeCreateClassroomsRequest,
     invokeGetAllTeacherClassroomsRequest, invokeGetClassroomDetailRequest,

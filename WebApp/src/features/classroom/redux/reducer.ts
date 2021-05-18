@@ -9,7 +9,8 @@ interface IClassroomStore {
     getClassroomDetail: IActionResult,
     createClassroom: IActionResult,
     updateClassroom: IActionResult,
-    uploadFileImport: IActionResult
+    uploadFileImport: IActionResult,
+    getAllClassrooms: IActionResult
 }
 
 const initialState : IClassroomStore = {
@@ -19,7 +20,8 @@ const initialState : IClassroomStore = {
     getClassroomDetail: DEFAULT_ACTION_RESULT,
     createClassroom: DEFAULT_ACTION_RESULT,
     updateClassroom: DEFAULT_ACTION_RESULT,
-    uploadFileImport: DEFAULT_ACTION_RESULT
+    uploadFileImport: DEFAULT_ACTION_RESULT,
+    getAllClassrooms: DEFAULT_ACTION_RESULT
 }
 
 const reducer = produce((state, action) => {
@@ -128,6 +130,21 @@ const reducer = produce((state, action) => {
             state.uploadFileImport.action = classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_FAILED;
             state.uploadFileImport.payload = null;
             state.uploadFileImport.error = action.error;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT;
+            state.getAllClassrooms.payload = null;
+            state.getAllClassrooms.error = null;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS;
+            state.getAllClassrooms.payload = action.payload;
+            state.getAllClassrooms.error = null;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED;
+            state.getAllClassrooms.payload = null;
+            state.getAllClassrooms.error = action.error;
             return;
         default:
             return;

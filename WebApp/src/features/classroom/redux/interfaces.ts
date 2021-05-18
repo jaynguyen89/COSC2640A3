@@ -109,3 +109,14 @@ export const defaultFileImport : IFileImport = {
     importType: 0,
     fileForImport: null as unknown as File
 }
+
+export interface IAllClassrooms {
+    authUser: IAuthUser,
+    clearAuthUser: () => void,
+    invokeGetAllClassroomsRequest: (auth: IAuthUser) => void,
+    getAllClassrooms: IActionResult,
+    invokeGetClassroomDetailRequest: (auth: IAuthUser, classroomId: string) => void,
+    getClassroomDetail: IActionResult,
+    invokeStudentEnrolmentRequest: (auth: IAuthUser, classroomId: string) => void,
+    enrolClassroom: IActionResult
+}

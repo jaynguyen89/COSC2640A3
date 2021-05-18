@@ -114,3 +114,19 @@ export const invokeUploadFileForImportRequest = (auth: IAuthUser, fileData: IFil
             }))
     };
 }
+
+export const invokeGetAllClassroomsRequest = (auth: IAuthUser) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT });
+
+        classroomServices.sendGetAllClassroomsRequest(auth)
+            .then(response => dispatch({
+                type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED,
+                error
+            }))
+    };
+}

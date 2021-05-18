@@ -103,7 +103,7 @@ namespace COSC2640A3.Services.Services {
         public async Task<ClassroomVM[]> GetAllClassroomsExcludeFromTeacherId(string teacherId) {
             try {
                 return await _dbContext.Classrooms
-                                       .Where(classroom => !classroom.TeacherId.Equals(teacherId))
+                                       //.Where(classroom => !classroom.TeacherId.Equals(teacherId))
                                        .Select(classroom => new ClassroomVM {
                                            Id = classroom.Id,
                                            TeacherId = classroom.TeacherId,

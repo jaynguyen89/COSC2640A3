@@ -80,3 +80,13 @@ export const sendImportJsonFileClassroomsRequest = (auth: IAuthUser, fileData: I
         formData
     );
 };
+
+export const sendGetAllClassroomsRequest = (auth: IAuthUser): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ CLASSROOM_ENDPOINT }all`,
+        auth,
+        null,
+        null,
+        'GET'
+    );
+}

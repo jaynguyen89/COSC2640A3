@@ -111,7 +111,7 @@ namespace COSC2640A3.Controllers {
             }
 
             await _contextService.ConfirmTransaction();
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = enrolmentId });
         }
         
         [HttpGet("enrolments")]
