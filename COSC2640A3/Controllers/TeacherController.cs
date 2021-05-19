@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using AmazonLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Services.Interfaces;
@@ -22,17 +23,20 @@ namespace COSC2640A3.Controllers {
         private readonly IEnrolmentService _enrolmentService;
         private readonly IAccountService _accountService;
         private readonly IClassroomService _classroomService;
+        private readonly IDynamoService _dynamoService;
 
         public TeacherController(
             ILogger<TeacherController> logger,
             IEnrolmentService enrolmentService,
             IAccountService accountService,
-            IClassroomService classroomService
+            IClassroomService classroomService,
+            IDynamoService dynamoService
         ) {
             _logger = logger;
             _enrolmentService = enrolmentService;
             _accountService = accountService;
             _classroomService = classroomService;
+            _dynamoService = dynamoService;
         }
 
         [HttpPost("add-marks")]
@@ -99,6 +103,16 @@ namespace COSC2640A3.Controllers {
 
             exportedFile.Position = 0;
             return File(exportedFile, MediaTypeNames.Text.Plain, $"{ accountId }_enrolments_exports.json");
+        }
+
+        [HttpGet("schedules")]
+        public async Task<JsonResult> GetImportSchedules([FromHeader] string accountId) {
+            _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(GetImportSchedules) }: Service starts.");
+
+            var schedules = await _dynamoService.GetAllSchedulesDataFor(accountId);
+            return schedules is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = schedules });
         }
     }
 }

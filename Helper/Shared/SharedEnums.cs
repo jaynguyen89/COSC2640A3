@@ -23,7 +23,9 @@
         public enum ScheduleStatus {
             Awaiting,
             Processing,
-            Completed
+            Completed,
+            Partial,
+            Failed
         }
         
         public enum ImportType {

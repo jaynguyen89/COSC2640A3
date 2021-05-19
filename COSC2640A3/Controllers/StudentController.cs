@@ -14,7 +14,6 @@ namespace COSC2640A3.Controllers {
     [ApiController]
     [MainAuthorize]
     [TwoFaAuthorize]
-    [RoleAuthorize(Role.Student)]
     [Route("student")]
     public sealed class StudentController {
         
@@ -39,6 +38,7 @@ namespace COSC2640A3.Controllers {
         }
 
         [HttpPost("enrol/{classroomId}")]
+        [RoleAuthorize(Role.Student)]
         public async Task<JsonResult> EnrolIntoClassroom([FromHeader] string accountId,[FromRoute] string classroomId) {
             _logger.LogInformation($"{ nameof(StudentController) }.{ nameof(EnrolIntoClassroom) }: Service starts.");
 
@@ -111,10 +111,11 @@ namespace COSC2640A3.Controllers {
             }
 
             await _contextService.ConfirmTransaction();
-            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = enrolmentId });
         }
         
         [HttpGet("enrolments")]
+        [RoleAuthorize(Role.Student)]
         public async Task<JsonResult> GetAllEnrolments([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(StudentController) }.{ nameof(GetAllEnrolments) }: Service starts.");
 

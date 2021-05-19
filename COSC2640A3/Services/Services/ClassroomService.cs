@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.Account;
 using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 using Microsoft.EntityFrameworkCore;
@@ -52,9 +53,8 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<bool?> IsClassroomBelongedToThisTeacherByAccountId(string accountId, string classroomId) {
             try {
-                return await _dbContext.Teachers
-                                       .Where(teacher => teacher.AccountId.Equals(accountId))
-                                       .SelectMany(teacher => teacher.Classrooms)
+                return await _dbContext.Classrooms
+                                       .Where(classroom => classroom.Teacher.Account.Id.Equals(accountId))
                                        .AnyAsync(classroom => classroom.Id.Equals(classroomId));
             }
             catch (ArgumentNullException e) {
@@ -100,10 +100,26 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<ClassroomVM[]> GetAllClassroomsExcludeFromTeacherId(string teacherId) {
+        public async Task<string[]> GetIdsOfClassroomsAlreadyEnrolledByStudentWith(string accountId) {
+            try {
+                return await _dbContext.Enrolments
+                                       .Where(enrolment => enrolment.Student.Account.Id.Equals(accountId))
+                                       .Select(enrolment => enrolment.Id)
+                                       .ToArrayAsync();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetIdsOfClassroomsAlreadyEnrolledByStudentWith) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+        }
+
+        public async Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] enrolledClassroomIds) {
             try {
                 return await _dbContext.Classrooms
-                                       .Where(classroom => !classroom.TeacherId.Equals(teacherId))
+                                       .Where(classroom => 
+                                           !classroom.TeacherId.Equals(teacherId) &&
+                                           !enrolledClassroomIds.Contains(classroom.Id)
+                                        )
                                        .Select(classroom => new ClassroomVM {
                                            Id = classroom.Id,
                                            TeacherId = classroom.TeacherId,
@@ -114,7 +130,7 @@ namespace COSC2640A3.Services.Services {
                                        .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassroomsExcludeFromTeacherId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetAllClassroomsExcludingFrom) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }
@@ -144,13 +160,29 @@ namespace COSC2640A3.Services.Services {
             try {
                 var enrolmentData = await _dbContext.Enrolments
                                                     .Where(enrolment => enrolment.ClassroomId.Equals(classroomId))
-                                                    .Select(enrolment => new { envolmentVm = (EnrolmentVM) enrolment, invoice = enrolment.Invoice })
+                                                    .Select(enrolment => new {
+                                                        envolmentVm = (EnrolmentVM) enrolment, 
+                                                        invoice = enrolment.Invoice, 
+                                                        student = enrolment.Student,
+                                                        studentAccount = enrolment.Student.Account
+                                                    })
                                                     .ToArrayAsync();
 
                 return enrolmentData
-                       .Select(pair => {
-                           var enrolment = pair.envolmentVm;
-                           if (pair.invoice.IsPaid) enrolment.Invoice.PaymentDetail = pair.invoice;
+                       .Select(data => {
+                           var enrolment = data.envolmentVm;
+                           if (data.invoice.IsPaid) enrolment.Invoice.PaymentDetail = data.invoice;
+
+                           enrolment.Student = new StudentVM {
+                               Email = data.studentAccount.EmailAddress,
+                               Username = data.studentAccount.Username,
+                               PhoneNumber = data.studentAccount.PhoneNumber,
+                               PreferredName = data.studentAccount.PreferredName,
+                               SchoolName = data.student.SchoolName,
+                               Faculty = data.student.Faculty,
+                               PersonalUrl = data.student.PersonalUrl
+                           };
+                           
                            return enrolment;
                        })
                        .ToArray();

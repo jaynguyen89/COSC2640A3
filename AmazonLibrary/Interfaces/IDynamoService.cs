@@ -7,5 +7,7 @@ namespace AmazonLibrary.Interfaces {
     public interface IDynamoService {
 
         Task<string> SaveToSchedulesTable(ImportSchedule schedule, SharedEnums.ImportType importType);
+        
+        Task<ImportSchedule[]> GetAllSchedulesDataFor(string accountId);
     }
 }

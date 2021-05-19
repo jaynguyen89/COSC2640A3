@@ -1,4 +1,6 @@
 import _ from 'lodash';
+import {IEnrolment, IMarkBreakdown} from "../features/student/redux/interfaces";
+import * as studentConstants from '../features/student/redux/constants';
 
 export const EMPTY_STRING = '';
 export const MAX_FILES_COUNT = 5;
@@ -99,4 +101,35 @@ export const checkSession = (
     }
 
     return true;
+}
+
+export const calculateOverallMarks = (marks: Array<IMarkBreakdown>): number => {
+    const totalSum = 1;
+    const rewardedSum = 1;
+
+    const average = totalSum * 100.0 / rewardedSum;
+    return average % 1 >= 0.5 ? Math.ceil(average) : Math.floor(average);
+}
+
+export const checkUnenrolmentResult = (
+    clearAuthUser: () => void, setStatusMessage: (message: IStatusMessage) => void, unenrolResult: IActionResult, enrolments: Array<IEnrolment>
+): Array<IEnrolment> | undefined => {
+    if (unenrolResult.action === studentConstants.UNENROL_INTO_CLASSROOM_REQUEST_FAILED)
+        checkSession(clearAuthUser, setStatusMessage, unenrolResult.error?.message);
+
+    if (unenrolResult.action === studentConstants.UNENROL_INTO_CLASSROOM_REQUEST_SUCCESS)
+        if (unenrolResult.payload === null)
+            setStatusMessage({ messages: ['Failed to send request to server. Please try again.'], type: 'error' } as IStatusMessage);
+        else if (unenrolResult.payload.result === 0)
+            setStatusMessage({ messages: unenrolResult.payload.messages, type: 'error' } as IStatusMessage);
+        else {
+            setStatusMessage({ messages: ['Your enrolment and its corresponding invoice has been removed.'], type: 'error' } as IStatusMessage);
+            const removedEnrolmentId = unenrolResult.payload.data as unknown as string;
+
+            let clone = _.cloneDeep(enrolments);
+            _.remove(clone, enrolment => enrolment.id === removedEnrolmentId);
+            return clone;
+        }
+
+    return undefined;
 }

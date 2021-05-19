@@ -1,7 +1,7 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
 import * as classroomConstants from "./constants";
 import * as classroomServices from "./services";
-import {IClassroom} from "./interfaces";
+import {IClassroom, IFileImport} from "./interfaces";
 
 export const invokeGetAllTeacherClassroomsRequest = (auth: IAuthUser, teacherId: string | null) => {
     return (dispatch: any) => {
@@ -94,6 +94,54 @@ export const invokeUpdateClassroomsRequest = (auth: IAuthUser, classroom: IClass
             }))
             .catch(error => dispatch({
                 type: classroomConstants.UPDATE_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeUploadFileForImportRequest = (auth: IAuthUser, fileData: IFileImport) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SENT });
+
+        classroomServices.sendImportJsonFileClassroomsRequest(auth, fileData)
+            .then(response => dispatch({
+                type: classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeGetAllClassroomsRequest = (auth: IAuthUser) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT });
+
+        classroomServices.sendGetAllClassroomsRequest(auth)
+            .then(response => dispatch({
+                type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeGetEnrolmentsByClassroomRequest = (auth: IAuthUser, classroomId: string) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SENT });
+
+        classroomServices.sendGetEnrolmentsByClassroomRequest(auth, classroomId)
+            .then(response => dispatch({
+                type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED,
                 error
             }))
     };

@@ -1,18 +1,5 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {
-    invokeAddPhoneNumberRequest,
-    invokeConfirmPhoneNumberRequest, invokeDisableTfaRequest, invokeEnableOrRenewTfaRequest,
-    invokeGetStudentDetailRequest,
-    invokeNewSmsTokenRequest,
-    invokeRemovePhoneNumberRequest, invokeUpdateStudentRequest, invokeUpdateTeacherRequest
-} from "./actions";
 import {EMPTY_STRING, IActionResult} from "../../../providers/helpers";
-import {
-    clearAuthUser,
-    invokeSignOutRequest,
-    invokeSwitchRoleRequest,
-    loadAuthUser
-} from "../../authentication/redux/actions";
 
 interface IAccount {
     email: string,

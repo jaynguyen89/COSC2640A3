@@ -21,7 +21,6 @@ namespace COSC2640A3.Controllers {
     [ApiController]
     [MainAuthorize]
     [TwoFaAuthorize]
-    [RoleAuthorize(Role.Teacher)]
     [Route("class-content")]
     public sealed class ClassContentController {
 
@@ -46,6 +45,7 @@ namespace COSC2640A3.Controllers {
         }
 
         [HttpPost("add-files")]
+        [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> AddFilesToClassroom([FromHeader] string accountId,[FromForm] FilesAdding filesToAdd) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(AddFilesToClassroom) }: Service starts.");
 
@@ -88,6 +88,7 @@ namespace COSC2640A3.Controllers {
         }
         
         [HttpPost("update-files")]
+        [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> UpdateFilesForClassroom([FromHeader] string accountId,[FromForm] FilesUpdating filesToUpdate) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(UpdateFilesForClassroom) }: Service starts.");
 
@@ -151,6 +152,7 @@ namespace COSC2640A3.Controllers {
         }
         
         [HttpPost("add-rich-content")]
+        [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> AddContentToClassroom([FromHeader] string accountId,[FromBody] RichContent richContent) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(AddContentToClassroom) }: Service starts.");
 
@@ -176,6 +178,7 @@ namespace COSC2640A3.Controllers {
         }
         
         [HttpPost("import-rich-content")]
+        [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> ImportContentToClassroom([FromHeader] string accountId,[FromForm] RichContentImport richContent) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(ImportContentToClassroom) }: Service starts.");
             
@@ -220,6 +223,7 @@ namespace COSC2640A3.Controllers {
         }
         
         [HttpPut("update-rich-content")]
+        [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> UpdateContentForClassroom([FromHeader] string accountId,[FromBody] RichContent richContent) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(UpdateContentForClassroom) }: Service starts.");
             

@@ -20,7 +20,7 @@ namespace Helper.Shared {
         public const string ParaOpen = "<p>";
         public const string ParaClose = "<p/>";
         
-        public static readonly string EmailTemplateFolderPath = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + $"/AmazonLibrary/Templates/";
+        public static readonly string EmailTemplateFolderPath = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + $"\\AmazonLibrary\\Templates\\";
         
         public static readonly List<string> InvalidTokens = new() {
             "--", "_@", "-@", ".-", "-.", "._", "_.", "@_", "@-", "__", "..", "_-", "-_"

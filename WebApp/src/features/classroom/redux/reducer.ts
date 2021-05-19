@@ -8,7 +8,10 @@ interface IClassroomStore {
     completedClassroom: IActionResult,
     getClassroomDetail: IActionResult,
     createClassroom: IActionResult,
-    updateClassroom: IActionResult
+    updateClassroom: IActionResult,
+    uploadFileImport: IActionResult,
+    getAllClassrooms: IActionResult,
+    getClassroomEnrolments: IActionResult
 }
 
 const initialState : IClassroomStore = {
@@ -17,7 +20,10 @@ const initialState : IClassroomStore = {
     completedClassroom: DEFAULT_ACTION_RESULT,
     getClassroomDetail: DEFAULT_ACTION_RESULT,
     createClassroom: DEFAULT_ACTION_RESULT,
-    updateClassroom: DEFAULT_ACTION_RESULT
+    updateClassroom: DEFAULT_ACTION_RESULT,
+    uploadFileImport: DEFAULT_ACTION_RESULT,
+    getAllClassrooms: DEFAULT_ACTION_RESULT,
+    getClassroomEnrolments: DEFAULT_ACTION_RESULT
 }
 
 const reducer = produce((state, action) => {
@@ -111,6 +117,51 @@ const reducer = produce((state, action) => {
             state.updateClassroom.action = classroomConstants.UPDATE_CLASSROOM_REQUEST_FAILED;
             state.updateClassroom.payload = null;
             state.updateClassroom.error = action.error;
+            return;
+        case classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SENT:
+            state.uploadFileImport.action = classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SENT;
+            state.uploadFileImport.payload = null;
+            state.uploadFileImport.error = null;
+            return;
+        case classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SUCCESS:
+            state.uploadFileImport.action = classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_SUCCESS;
+            state.uploadFileImport.payload = action.payload;
+            state.uploadFileImport.error = null;
+            return;
+        case classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_FAILED:
+            state.uploadFileImport.action = classroomConstants.UPLOAD_JSON_CLASSROOMS_FILE_REQUEST_FAILED;
+            state.uploadFileImport.payload = null;
+            state.uploadFileImport.error = action.error;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT;
+            state.getAllClassrooms.payload = null;
+            state.getAllClassrooms.error = null;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS;
+            state.getAllClassrooms.payload = action.payload;
+            state.getAllClassrooms.error = null;
+            return;
+        case classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED:
+            state.getAllClassrooms.action = classroomConstants.GET_ALL_CLASSROOMS_REQUEST_FAILED;
+            state.getAllClassrooms.payload = null;
+            state.getAllClassrooms.error = action.error;
+            return;
+        case classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SENT:
+            state.getClassroomEnrolments.action = classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SENT;
+            state.getClassroomEnrolments.payload = null;
+            state.getClassroomEnrolments.error = null;
+            return;
+        case classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SUCCESS:
+            state.getClassroomEnrolments.action = classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SUCCESS;
+            state.getClassroomEnrolments.payload = action.payload;
+            state.getClassroomEnrolments.error = null;
+            return;
+        case classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED:
+            state.getClassroomEnrolments.action = classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED;
+            state.getClassroomEnrolments.payload = null;
+            state.getClassroomEnrolments.error = action.error;
             return;
         default:
             return;
