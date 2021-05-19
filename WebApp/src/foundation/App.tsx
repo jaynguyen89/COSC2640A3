@@ -11,6 +11,7 @@ import GenericHome from "../features/homepage/GenericHome";
 import ManageClassrooms from "../features/classroom/ManageClassrooms";
 import ManageClassContent from "../features/classContents/ManageClassContent";
 import AllClassrooms from "../features/classroom/AllClassrooms";
+import ManageEnrolments from "../features/teacher/ManageEnrolments";
 
 function App() {
     return (
@@ -27,6 +28,7 @@ function App() {
                     <Route path='/manage-classrooms' component={ ManageClassrooms } />
                     <Route path='/manage-classroom-contents' component={ ManageClassContent } />
                     <Route path='/browse-classrooms' component={ AllClassrooms } />
+                    <Route path='/manage-enrolments' component={ ManageEnrolments } />
                 </Switch>
             </BrowserRouter>
         </>

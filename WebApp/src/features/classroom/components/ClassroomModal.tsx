@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import _ from 'lodash';
-import {defaultClassroom, defaultClassroomDetail, IClassroomData, IClassroomModal} from "../redux/interfaces";
+import {defaultClassroom, IClassroomData, IClassroomModal} from "../redux/interfaces";
 import {
     DurationUnits,
     EMPTY_STRING,
@@ -130,6 +130,7 @@ const ClassroomModal = (props: IClassroomModal) => {
                             </button>
 
                             <button className='btn waves-effect waves-light right'
+                                    style={{ marginLeft: '1em' }}
                                     onClick={ () => window.location.href = '/manage-classroom-contents' }
                             >
                                 <i className="fas fa-pencil-ruler" />
@@ -154,9 +155,19 @@ const ClassroomModal = (props: IClassroomModal) => {
                                 onClick={ () => window.location.href = '/manage-classroom-contents' }
                         >
                             <i className="fas fa-pencil-ruler" />
-                            &nbsp; Manage Contents
+                            &nbsp; { (props.selectedClassroom.classroomDetail.isActive && 'Manage') || 'View' } Contents
                         </button>
                     }
+
+                    <button className='btn waves-effect waves-light right'
+                            onClick={ () => {
+                                localStorage.setItem('classroom_ManageEnrolments', JSON.stringify(classroom));
+                                window.location.href = '/manage-enrolments'
+                            }}
+                    >
+                        <i className="fas fa-user-graduate" />
+                        &nbsp; View Students
+                    </button>
                 </div>
             </div>
         </div>

@@ -1,6 +1,7 @@
 import {IClassroomData} from "../../classroom/redux/interfaces";
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {IActionResult} from "../../../providers/helpers";
+import {EMPTY_STRING, IActionResult} from "../../../providers/helpers";
+import {IStudentDetail} from "../../homepage/redux/interfaces";
 
 export interface IEnrolmentList {
     authUser: IAuthUser,
@@ -13,6 +14,7 @@ export interface IEnrolmentList {
 
 export interface IEnrolment {
     id: string,
+    student: IStudentDetail,
     classroom: IClassroomData,
     invoice: IInvoice,
     marksDetail: IMarkDetail
@@ -38,13 +40,28 @@ interface IPaymentDetail {
 interface IMarkDetail {
     overallMarks: number | null,
     markBreakdowns: Array<IMarkBreakdown>
-    isPaid: boolean | null
+    isPassed: boolean | null
 }
 
-interface IMarkBreakdown {
+export interface IMarkBreakdown {
     taskName: string,
     totalMarks: number,
     rewardedMarks: number,
     markedOn: string,
     comment: string
+}
+
+export const defaultMarkBreakdown : IMarkBreakdown = {
+    taskName: EMPTY_STRING,
+    totalMarks: 100,
+    rewardedMarks: 100,
+    markedOn: EMPTY_STRING,
+    comment: EMPTY_STRING
+}
+
+export interface IEnrolmentInfo {
+    enrolment: IEnrolment,
+    viewByStudent?: true,
+    handleUnenrolBtn: any
+    handleUpdateMarksBtn?: any
 }

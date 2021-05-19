@@ -1,7 +1,7 @@
 import * as teacherConstants from './constants';
 import * as teacherServices from './services';
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {IDataExport} from "./interfaces";
+import {IDataExport, IUpdateMarks} from "./interfaces";
 
 export const invokeExportClassroomsRequest = (auth: IAuthUser, dataExport: IDataExport) => {
     return (dispatch: any) => {
@@ -46,6 +46,22 @@ export const invokeGetSchedulesProgressRequest = (auth: IAuthUser) => {
             }))
             .catch(error => dispatch({
                 type: teacherConstants.GET_IMPORT_SCHEDULES_PROGRESS_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeAddMarksToEnrolmentRequest = (auth: IAuthUser, marks: IUpdateMarks) => {
+    return (dispatch: any) => {
+        dispatch({ type: teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SENT });
+
+        teacherServices.sendAddMarksToEnrolmentRequest(auth, marks)
+            .then(response => dispatch({
+                type: teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_FAILED,
                 error
             }))
     };

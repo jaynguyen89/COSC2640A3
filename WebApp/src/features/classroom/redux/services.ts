@@ -90,3 +90,13 @@ export const sendGetAllClassroomsRequest = (auth: IAuthUser): Promise<IResponse 
         'GET'
     );
 }
+
+export const sendGetEnrolmentsByClassroomRequest = (auth: IAuthUser, classroomId: string): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ CLASSROOM_ENDPOINT }enrolments/${ classroomId }`,
+        auth,
+        null,
+        null,
+        'GET'
+    );
+}

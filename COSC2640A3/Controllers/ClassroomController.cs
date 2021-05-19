@@ -216,7 +216,10 @@ namespace COSC2640A3.Controllers {
             var teacher = await _accountService.GetTeacherByAccountId(accountId);
             if (teacher is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
-            var classrooms = await _classroomService.GetAllClassroomsExcludeFromTeacherId(teacher.Id);
+            var enrolledClassroomIds = await _classroomService.GetIdsOfClassroomsAlreadyEnrolledByStudentWith(accountId);
+            if (enrolledClassroomIds is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var classrooms = await _classroomService.GetAllClassroomsExcludingFrom(teacher.Id, enrolledClassroomIds);
             return classrooms is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });

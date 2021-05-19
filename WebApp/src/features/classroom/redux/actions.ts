@@ -130,3 +130,19 @@ export const invokeGetAllClassroomsRequest = (auth: IAuthUser) => {
             }))
     };
 }
+
+export const invokeGetEnrolmentsByClassroomRequest = (auth: IAuthUser, classroomId: string) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SENT });
+
+        classroomServices.sendGetEnrolmentsByClassroomRequest(auth, classroomId)
+            .then(response => dispatch({
+                type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}

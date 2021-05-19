@@ -19,6 +19,7 @@ import {
 import * as classroomConstants from './redux/constants';
 import * as studentConstants from '../student/redux/constants';
 import {invokeStudentEnrolmentRequest} from "../student/redux/actions";
+import ClassroomInfo from "./components/ClassroomInfo";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -190,49 +191,7 @@ const AllClassrooms = (props: IAllClassrooms) => {
             </div>
 
             <div className='modal' id='classroomDetailModal'>
-                <div className='row'>
-                    <div className='col s12 center-align'>
-                        <h5 style={{ marginTop: 0 }}>Classroom Details</h5>
-                        <hr />
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Teacher Name:</b></span>
-                        <span className='right'>{ classroomDetails.teacherName }</span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Classroom Name:</b></span>
-                        <span className='right'>{ classroomDetails.className }</span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Price:</b></span>
-                        <span className='right'>${ classroomDetails.price }</span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Places left:</b></span>
-                        <span className='right'>
-                            ${ classroomDetails.classroomDetail.capacity - classroomDetails.enrolmentsCount }/{ classroomDetails.classroomDetail.capacity }
-                        </span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Duration:</b></span>
-                        <span className='right'>{ classroomDetails.classroomDetail.normalizedDuration }</span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Commenced On:</b></span>
-                        <span className='right'>{ moment(classroomDetails.classroomDetail.commencedOn).format('DD MMM YYYY hh:mm') }</span>
-                    </div>
-
-                    <div className='col m6 s12'>
-                        <span><b>Listed On:</b></span>
-                        <span className='right'>{ moment(classroomDetails.classroomDetail.createdOn).format('DD MMM YYYY hh:mm') }</span>
-                    </div>
-                </div>
+                <ClassroomInfo classroom={ classroomDetails } showTitle />
             </div>
         </div>
     );

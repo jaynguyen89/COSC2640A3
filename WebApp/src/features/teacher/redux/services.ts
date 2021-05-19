@@ -1,7 +1,7 @@
 import {IIssue, IResponse} from "../../../providers/helpers";
 import {sendRequestForResult} from "../../../providers/serviceProvider";
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {IDataExport} from "./interfaces";
+import {IDataExport, IUpdateMarks} from "./interfaces";
 
 const TEACHER_ENDPOINT = 'teacher/';
 
@@ -28,5 +28,14 @@ export const sendGetScheduleProgressRequest = (auth: IAuthUser): Promise<IRespon
         null,
         null,
         'GET'
+    );
+}
+
+export const sendAddMarksToEnrolmentRequest = (auth: IAuthUser, marks: IUpdateMarks): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ TEACHER_ENDPOINT }add-marks`,
+        auth,
+        marks,
+        null
     );
 }

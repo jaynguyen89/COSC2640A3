@@ -5,13 +5,15 @@ import {DEFAULT_ACTION_RESULT, IActionResult} from "../../../providers/helpers";
 interface ITeacherStore {
     exportClassrooms: IActionResult,
     exportStudents: IActionResult,
-    getSchedules: IActionResult
+    getSchedules: IActionResult,
+    updateMarks: IActionResult
 }
 
 const initialState: ITeacherStore = {
     exportClassrooms: DEFAULT_ACTION_RESULT,
     exportStudents: DEFAULT_ACTION_RESULT,
-    getSchedules: DEFAULT_ACTION_RESULT
+    getSchedules: DEFAULT_ACTION_RESULT,
+    updateMarks: DEFAULT_ACTION_RESULT
 }
 
 const reducer = produce((state, action) => {
@@ -60,6 +62,21 @@ const reducer = produce((state, action) => {
             state.getSchedules.action = teacherConstants.GET_IMPORT_SCHEDULES_PROGRESS_REQUEST_FAILED;
             state.getSchedules.payload = null;
             state.getSchedules.error = action.error;
+            return;
+        case teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SENT:
+            state.updateMarks.action = teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SENT;
+            state.updateMarks.payload = null;
+            state.updateMarks.error = null;
+            return;
+        case teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SUCCESS:
+            state.updateMarks.action = teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_SUCCESS;
+            state.updateMarks.payload = action.payload;
+            state.updateMarks.error = null;
+            return;
+        case teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_FAILED:
+            state.updateMarks.action = teacherConstants.ADD_MARKS_TO_ENROLMENT_REQUEST_FAILED;
+            state.updateMarks.payload = null;
+            state.updateMarks.error = action.error;
             return;
         default:
             return;

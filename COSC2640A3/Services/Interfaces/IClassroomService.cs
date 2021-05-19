@@ -32,7 +32,9 @@ namespace COSC2640A3.Services.Interfaces {
         
         Task<ClassroomVM[]> GetAllClassroomsByTeacherId(string teacherId, bool isActive = true);
         
-        Task<ClassroomVM[]> GetAllClassroomsExcludeFromTeacherId(string teacherId);
+        Task<string[]> GetIdsOfClassroomsAlreadyEnrolledByStudentWith(string accountId);
+        
+        Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] enrolledClassroomIds);
         
         Task<ClassroomVM> GetClassroomDetailsFor(string classroomId);
         

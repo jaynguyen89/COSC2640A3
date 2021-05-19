@@ -1,5 +1,6 @@
 ﻿using System;
 using COSC2640A3.Models;
+using COSC2640A3.ViewModels.Account;
 using Helper;
 using Newtonsoft.Json;
 
@@ -9,7 +10,9 @@ namespace COSC2640A3.ViewModels.Features {
         
         public string Id { get; set; }
         
-        public ClassroomVM Classroom { get; set; }
+        public StudentVM Student { get; set; } // Has value when instantiated by Teacher role, otherwise null
+        
+        public ClassroomVM Classroom { get; set; } // Has value when instantiated by Student role, otherwise null
         
         public InvoiceVM Invoice { get; set; }
         

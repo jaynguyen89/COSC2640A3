@@ -1,6 +1,7 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
 import {IFileImport} from "../../classroom/redux/interfaces";
-import {IActionResult, IStatusMessage} from "../../../providers/helpers";
+import {EMPTY_STRING, IActionResult, IStatusMessage} from "../../../providers/helpers";
+import {defaultMarkBreakdown, IMarkBreakdown} from "../../student/redux/interfaces";
 
 export interface IImportExport {
     authUser: IAuthUser,
@@ -65,4 +66,25 @@ export const getSchedule = (data: any) => {
         status: data.status,
         isForClassroom: false
     } as ISchedule;
+}
+
+export interface IManageEnrolments {
+    authUser: IAuthUser,
+    clearAuthUser: () => void,
+    invokeGetEnrolmentsByClassroomRequest: (auth: IAuthUser, classroomId: string) => void,
+    getClassroomEnrolments: IActionResult,
+    invokeUnenrolFromClassroomRequest: (auth: IAuthUser, enrolmentId: string) => void,
+    unenrolClassroom: IActionResult,
+    invokeAddMarksToEnrolmentRequest: (auth: IAuthUser, marks: IUpdateMarks) => void,
+    updateMarks: IActionResult
+}
+
+export interface IUpdateMarks {
+    enrolmentId: string,
+    markBreakdowns: Array<IMarkBreakdown>
+}
+
+export const defaultMarks : IUpdateMarks = {
+    enrolmentId: EMPTY_STRING,
+    markBreakdowns: Array<IMarkBreakdown>(defaultMarkBreakdown)
 }
