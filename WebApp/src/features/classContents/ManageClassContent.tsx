@@ -6,6 +6,7 @@ import Alert from "../../shared/Alert";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser
+    getTeacherClassrooms: state.classroomStore.getTeacherClassrooms,
 });
 
 const mapActionsToProps = {};
