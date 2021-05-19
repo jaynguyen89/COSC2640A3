@@ -12,6 +12,7 @@ import ManageClassrooms from "../features/classroom/ManageClassrooms";
 import ManageClassContent from "../features/classContents/ManageClassContent";
 import AllClassrooms from "../features/classroom/AllClassrooms";
 import ManageEnrolments from "../features/teacher/ManageEnrolments";
+import CheckoutSummary from "../features/checkout/CheckoutSummary";
 
 function App() {
     return (
@@ -29,6 +30,7 @@ function App() {
                     <Route path='/manage-classroom-contents' component={ ManageClassContent } />
                     <Route path='/browse-classrooms' component={ AllClassrooms } />
                     <Route path='/manage-enrolments' component={ ManageEnrolments } />
+                    <Route path='/checkout-summary' component={ CheckoutSummary } />
                 </Switch>
             </BrowserRouter>
         </>

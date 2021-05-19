@@ -128,3 +128,21 @@ hr {
     background-color: #a8c050;
     color: #e8f5e9 ;
 }
+
+.payment-logo {
+    margin: 1em;
+    border: 1px solid #528dcc;
+    border-radius: 4px;
+}
+
+.payment-logo-active {
+    border: 2px solid #de781f !important;
+    cursor: pointer;
+    width: 125px;
+}
+
+.payment-logo:hover {
+    border: 2px solid #de781f;
+    cursor: pointer;
+    width: 125px;
+}
