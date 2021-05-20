@@ -14,9 +14,7 @@ namespace AssistantLibrary {
 
             services.AddScoped<IGoogleService, GoogleService>();
             services.AddScoped<ISmsService, SmsService>();
-
-            services.AddScoped<IPaypalService, PaypalService>();
-            services.AddScoped<IStripeService, StripeService>();
+            services.AddScoped<IPaymentService, PaymentService>();
         }
     }
 }

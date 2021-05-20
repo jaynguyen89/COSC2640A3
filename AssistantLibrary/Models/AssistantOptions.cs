@@ -26,5 +26,31 @@
         public string ApiKeyPlaceholder { get; set; }
         
         public string SmsContentPlaceholder { get; set; }
+        
+        // For Paypal service
+        public string PaypalClientId { get; set; }
+        
+        public string PaypalSecret { get; set; }
+        
+        public string PaypalCapturePaymentUrl { get; set; }
+        
+        public string PaypalGetAccessTokenUrl { get; set; }
+        
+        public string PaypalVerifyPaymentAuthorizationUrl { get; set; }
+        
+        public string PaypalUrlPlaceholder { get; set; }
+        
+        public string PaypalMerchantEmailAddress { get; set; }
+        
+        public string PaypalMerchantId { get; set; }
+        
+        // For Stripe service: Google Pay and Card
+        public string StripeSecretKey { get; set; }
+        
+        public string StripeClientId { get; set; }
+        
+        public string StripePaymentCancelCallback { get; set; }
+        
+        public string StripePaymentSuccessCallback { get; set; }
     }
 }

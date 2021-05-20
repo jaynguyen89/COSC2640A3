@@ -47,6 +47,7 @@ const CheckoutSummary = (props: any) => {
         const last4Digits = token.card.last4;
         const clientIp = token.client_ip;
         const tokenId = token.id;
+        console.log(tokenId)
     }
 
     return (
@@ -130,8 +131,7 @@ const CheckoutSummary = (props: any) => {
                                             }}
                                             onApprove={ (data: any, actions: any) => {
                                                 actions.order.authorize().then((authorization: any) => {
-                                                    const facilitatorAccessToken = data.facilitatorAccessToken;
-                                                    const orderId = data.orderId;
+                                                    const orderId = data.orderID;
                                                     const amount = authorization.purchase_units[0].payments.authorizations[0].amount.value;
                                                     const authorizationId = authorization.purchase_units[0].payments.authorizations[0].id;
                                                     //Capture payment at server
@@ -185,6 +185,7 @@ const CheckoutSummary = (props: any) => {
                                                 const clientIp = paymentToken.client_ip;
                                                 const tokenId = paymentToken.id;
                                                 //Capture payment at server
+                                                console.log(tokenId)
                                             }}
                                         />
                                     </div>
@@ -200,6 +201,7 @@ const CheckoutSummary = (props: any) => {
                                             name="cosc2640a3.com"
                                             stripeKey="pk_test_51HQDZND2FG7NncIEj68F5ie7Yc6VKR7y5r0aMkoaf3OD5CUIcqHBCYq3Wb2biu3D1jie5wjUKdsfwh3kdWG6flgJ00KdGXIjMp"
                                             token={ processStripeCheckout }
+                                            panelLabel='Pay {{ amount }}'
                                         >
                                             <button className='btn waves-effect waves-light'>
                                                 <i className="fas fa-coins"/>&nbsp;

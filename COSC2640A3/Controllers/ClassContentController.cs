@@ -256,7 +256,7 @@ namespace COSC2640A3.Controllers {
             var classContent = await _classContentService.GetClassContentVmByClassroomId(classroomId);
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = (ClassContentVM) classContent });
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classContent });
         }
 
         private async Task<FileVM[]> UploadVideosToS3Bucket(string classroomId, IFormFileCollection videos) {
