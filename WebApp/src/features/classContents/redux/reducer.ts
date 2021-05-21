@@ -2,18 +2,18 @@ import * as classcontentConstants from "./constants";
 import produce from 'immer';
 import {DEFAULT_ACTION_RESULT, IActionResult} from "../../../providers/helpers";
 
-interface IClasscontnetStore {
-    addFiles: IActionResult,
-    updateFiles: IActionResult,
+interface IClasscontentStore {
+    addFileClassContent: IActionResult,
+    updateFileClassContent: IActionResult,
     addRichContent: IActionResult,
     importRichContent: IActionResult,
     updateRichContent: IActionResult,
     getClassContent: IActionResult
 }
 
-const initialState : IClasscontnetStore = {
-    addFiles: DEFAULT_ACTION_RESULT,
-    updateFiles: DEFAULT_ACTION_RESULT,
+const initialState : IClasscontentStore = {
+    addFileClassContent: DEFAULT_ACTION_RESULT,
+    updateFileClassContent: DEFAULT_ACTION_RESULT,
     addRichContent: DEFAULT_ACTION_RESULT,
     importRichContent: DEFAULT_ACTION_RESULT,
     updateRichContent: DEFAULT_ACTION_RESULT,

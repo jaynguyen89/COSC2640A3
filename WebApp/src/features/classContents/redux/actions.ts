@@ -1,7 +1,7 @@
-export {};import {IAuthUser} from "../../authentication/redux/interfaces";
+import {IAuthUser} from "../../authentication/redux/interfaces";
 import * as classcontentConstants from "./constants";
 import * as classcontentServices from "./services";
-import {IClassContent, IFileAdding, IRichContent} from "./interfaces";
+import {IClassContent, IFileAdding, IRichContent,IUpdateFile} from "./interfaces";
 
 
 export const invokeAddFileRequest = (auth: IAuthUser, file:IFileAdding) => {
@@ -20,7 +20,7 @@ export const invokeAddFileRequest = (auth: IAuthUser, file:IFileAdding) => {
     };
 }
 
-export const invokeUpdateFileRequest = (auth: IAuthUser, file:IFile) => {
+export const invokeUpdateFileRequest = (auth: IAuthUser, file:IUpdateFile) => {
     return (dispatch: any) => {
         dispatch({ type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_SENT });
 
