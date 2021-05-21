@@ -8,8 +8,7 @@ import {
     EMPTY_STATUS,
     EMPTY_STRING,
     IStatusMessage,
-    removeGlobalMessage,
-    setGlobalMessage
+    removeGlobalMessage
 } from "../../providers/helpers";
 import {invokeAuthenticationRequest, setAuthUser} from "./redux/actions";
 import * as authenticationConstants from './redux/constants';

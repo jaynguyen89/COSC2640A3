@@ -140,9 +140,9 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                 }
 
                 <div id="marks" className='row' style={{ marginBottom: 0 }}>
-                    <div className='col s12'>
-                        <span>Overall Mark:</span>
-                        <span className='right'>{ props.enrolment.marksDetail.overallMarks } (provisional)</span>
+                    <div className='col s12 center-align'>
+                        <span>Overall Mark:&nbsp;</span>
+                        <span>{ props.enrolment.marksDetail.overallMarks }</span>
                     </div>
                     <div className='clearfix' />
 

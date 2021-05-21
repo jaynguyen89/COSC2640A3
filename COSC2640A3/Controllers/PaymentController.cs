@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using AssistantLibrary.Interfaces;
 using AssistantLibrary.Models;
 using COSC2640A3.Attributes;
@@ -52,6 +53,7 @@ namespace COSC2640A3.Controllers {
             invoice.PaymentId = paymentAuthorization.OrderId;
             invoice.TransactionId = paymentAuthorization.AuthorizationId[^10..];
             invoice.PaymentStatus = "Completed";
+            invoice.PaidOn = DateTime.UtcNow;
 
             var updateResult = await _invoiceService.UpdateInvoice(invoice);
             return !updateResult.HasValue || !updateResult.Value
@@ -75,6 +77,7 @@ namespace COSC2640A3.Controllers {
             invoice.TransactionId = transactionId;
             invoice.ChargeId = chargeId;
             invoice.PaymentStatus = "Completed";
+            invoice.PaidOn = DateTime.UtcNow;
 
             var updateResult = await _invoiceService.UpdateInvoice(invoice);
             return !updateResult.HasValue || !updateResult.Value
@@ -98,6 +101,7 @@ namespace COSC2640A3.Controllers {
             invoice.TransactionId = transactionId;
             invoice.ChargeId = chargeId;
             invoice.PaymentStatus = "Completed";
+            invoice.PaidOn = DateTime.UtcNow;
             
             var updateResult = await _invoiceService.UpdateInvoice(invoice);
             return !updateResult.HasValue || !updateResult.Value

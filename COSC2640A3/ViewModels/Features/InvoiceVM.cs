@@ -41,7 +41,7 @@ namespace COSC2640A3.ViewModels.Features {
                     PaymentId = invoice.PaymentId,
                     TransactionId = invoice.TransactionId,
                     ChargeId = invoice.ChargeId,
-                    PaymentStatus = invoice.ChargeId,
+                    PaymentStatus = invoice.PaymentStatus,
                     PaidOn = invoice.PaidOn
                 };
             }

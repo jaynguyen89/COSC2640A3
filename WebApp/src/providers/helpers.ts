@@ -3,7 +3,6 @@ import {IEnrolment, IMarkBreakdown} from "../features/student/redux/interfaces";
 import * as studentConstants from '../features/student/redux/constants';
 
 export const EMPTY_STRING = '';
-export const MAX_FILES_COUNT = 5;
 export const TASK_VIEW = 'view';
 export const TASK_UPDATE = 'update';
 export const TASK_CREATE = 'create';

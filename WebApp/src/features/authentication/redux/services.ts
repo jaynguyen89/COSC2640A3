@@ -37,6 +37,7 @@ export const clearAuthUserInCookie = (): void => {
     localStorage.removeItem('accountId');
     localStorage.removeItem('role');
     localStorage.removeItem('preferredName');
+    localStorage.removeItem('enrolment_checkoutSummary');
 }
 
 export const sendRegistrationRequest = (accountData: IAccountData): Promise<IResponse> => {

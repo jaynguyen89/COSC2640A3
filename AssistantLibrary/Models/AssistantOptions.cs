@@ -48,9 +48,5 @@
         public string StripeSecretKey { get; set; }
         
         public string StripeClientId { get; set; }
-        
-        public string StripePaymentCancelCallback { get; set; }
-        
-        public string StripePaymentSuccessCallback { get; set; }
     }
 }

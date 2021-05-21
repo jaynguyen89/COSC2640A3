@@ -3,27 +3,45 @@ import {connect} from 'react-redux';
 import _ from 'lodash';
 import Spinner from "../../shared/Spinner";
 import Alert from "../../shared/Alert";
-import {EMPTY_STATUS, EMPTY_STRING, IStatusMessage} from "../../providers/helpers";
+import {
+    checkSession,
+    EMPTY_STATUS,
+    EMPTY_STRING,
+    IResponse,
+    IStatusMessage
+} from "../../providers/helpers";
 import {IEnrolment} from "../student/redux/interfaces";
 import moment from "moment";
 import { PayPalButton } from 'react-paypal-button-v2';
 import GooglePayButton from '@google-pay/button-react';
 import StripeCheckout from 'react-stripe-checkout';
+import {invokeCardCheckoutRequest, invokeGoogleCheckoutRequest, invokePaypalCheckoutRequest} from "./redux/actions";
+import {ICheckoutSummary, IPayment, IPaypalAuthorization, IStripeAuthorization} from "./redux/interfaces";
+import * as checkoutConstants from './redux/constants';
+import {clearAuthUser} from "../authentication/redux/actions";
 
 const mapStateToProps = (state: any) => ({
-    authUser: state.authenticationStore.authUser
+    authUser: state.authenticationStore.authUser,
+    paypalCheckout: state.checkoutStore.paypalCheckout,
+    googleCheckout: state.checkoutStore.googleCheckout,
+    cardCheckout: state.checkoutStore.cardCheckout,
 });
 
-const mapActionsToProps = {};
+const mapActionsToProps = {
+    invokePaypalCheckoutRequest,
+    invokeGoogleCheckoutRequest,
+    invokeCardCheckoutRequest,
+    clearAuthUser
+};
 
-const CheckoutSummary = (props: any) => {
+const CheckoutSummary = (props: ICheckoutSummary) => {
     const [enrolment, setEnrolment] = React.useState(null as unknown as IEnrolment);
     const [paymentMethod, setPaymentMethod] = React.useState(EMPTY_STRING);
     const [statusMessage, setStatusMessage] = React.useState(EMPTY_STATUS);
+    const [payment, setPayment] = React.useState(null as unknown as IPayment);
 
     React.useEffect(() => {
         const storedEnrolment = localStorage.getItem('enrolment_checkoutSummary');
-        //localStorage.removeItem('enrolment_checkoutSummary');
 
         if (storedEnrolment) setEnrolment(JSON.parse(storedEnrolment) as IEnrolment);
         else setStatusMessage({
@@ -43,11 +61,55 @@ const CheckoutSummary = (props: any) => {
     }
 
     const processStripeCheckout = (token: any) => {
-        const cardType = token.card.brand;
-        const last4Digits = token.card.last4;
-        const clientIp = token.client_ip;
-        const tokenId = token.id;
-        console.log(tokenId)
+        const paymentAuthorization: IStripeAuthorization = {
+            cardType: token.card.brand,
+            last4Digits: token.card.last4,
+            tokenId: token.id,
+            details: {
+                classroomId: enrolment.classroom.id,
+                className: enrolment.classroom.className,
+                amount: enrolment.invoice.amount
+            }
+        };
+
+        setStatusMessage(EMPTY_STATUS);
+        if (paymentMethod === 'google') props.invokeGoogleCheckoutRequest(props.authUser, paymentAuthorization, enrolment.id);
+        else props.invokeCardCheckoutRequest(props.authUser, paymentAuthorization, enrolment.id);
+
+        setPaymentMethod(EMPTY_STRING);
+    }
+
+    React.useEffect(() => {
+        if (props.paypalCheckout.action === checkoutConstants.PAYPAL_CHECKOUT_REQUEST_FAILED)
+            checkSession(props.clearAuthUser, setStatusMessage, props.paypalCheckout.error?.message);
+
+        if (props.paypalCheckout.action === checkoutConstants.PAYPAL_CHECKOUT_REQUEST_SUCCESS)
+            checkResults(props.paypalCheckout.payload);
+    }, [props.paypalCheckout]);
+
+    React.useEffect(() => {
+        if (props.googleCheckout.action === checkoutConstants.GOOGLE_CHECKOUT_REQUEST_FAILED)
+            checkSession(props.clearAuthUser, setStatusMessage, props.googleCheckout.error?.message);
+
+        if (props.googleCheckout.action === checkoutConstants.GOOGLE_CHECKOUT_REQUEST_SUCCESS)
+            checkResults(props.googleCheckout.payload);
+    }, [props.googleCheckout]);
+
+    React.useEffect(() => {
+        if (props.cardCheckout.action === checkoutConstants.CARD_CHECKOUT_REQUEST_FAILED)
+            checkSession(props.clearAuthUser, setStatusMessage, props.cardCheckout.error?.message);
+
+        if (props.cardCheckout.action === checkoutConstants.CARD_CHECKOUT_REQUEST_SUCCESS)
+            checkResults(props.cardCheckout.payload);
+    }, [props.cardCheckout]);
+
+    const checkResults = (result: IResponse | null) => {
+        if (result === null) setStatusMessage({ messages: ['Failed to send request to server. Payment was not processed. Please try again.'], type: 'error' } as IStatusMessage);
+        else if (result.result === 0) setStatusMessage({ messages: result.messages, type: 'error' } as IStatusMessage);
+        else {
+            setStatusMessage({ messages: ['We have got your payment. Your invoice has been updated. Thank you!'], type: 'error' } as IStatusMessage);
+            setPayment(result.data as IPayment);
+        }
     }
 
     return (
@@ -56,6 +118,27 @@ const CheckoutSummary = (props: any) => {
                 <div className='col s12'>
                     <div className='card' style={{ marginTop: '2em' }}>
                         <div className='card-content'>
+                            <Alert { ...statusMessage } closeAlert={ () => setStatusMessage(EMPTY_STATUS) } />
+                            {
+                                payment &&
+                                <div className='alert alert-success small-text'>
+                                    <div className='row' style={{ margin: 0 }}>
+                                        <div className='col s6'>
+                                            <p>Payment ID: <span className='right'>{ payment.paymentId }</span></p>
+                                            <p>Payment Method: <span className='right'>{ payment.paymentMethod }</span></p>
+                                            <p>Payment Status: <span className='right'>{ payment.paymentStatus }</span></p>
+                                            <p>Transaction ID: <span className='right'>{ payment.transactionId || 'N/A' }</span></p>
+                                        </div>
+                                        <div className='col s6'>
+                                            <p>Charge ID: <span className='right'>{ payment.chargeId || 'N/A' }</span></p>
+                                            <p>Paid Amount: <span className='right'>${ payment.dueAmount }</span></p>
+                                            <p>Money Captured: <span className='right'>{ (payment.isPaid && 'YES') || 'N/A' }</span></p>
+                                            <p>Paid On: <span className='right'>{ moment(payment.paidOn).format('DD MMM YYYY hh:mm') }</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+
                             <p className='section-header'>
                                 <i className="fas fa-shopping-cart" />&nbsp;
                                 Checkout Summary
@@ -63,7 +146,7 @@ const CheckoutSummary = (props: any) => {
 
                             <div className='row' style={{ marginTop: '1em', marginBottom: 0 }}>
                                 <div className='col m6 s12'>
-                                    <p className='small-text'>Enrolled classroom</p>
+                                    <p className='small-text'>Enrolled classroom:</p>
                                     <div className='row'>
                                         <div className='col s9 push-s3 small-text'>
                                             <p>Class Name: <span className='right'>{ enrolment && enrolment.classroom.className }</span></p>
@@ -74,7 +157,7 @@ const CheckoutSummary = (props: any) => {
                                 </div>
 
                                 <div className='col m6 s12'>
-                                    <p className='small-text'>Invoice details</p>
+                                    <p className='small-text'>Invoice details:</p>
                                     <div className='row'>
                                         <div className='col s9 push-s3 small-text'>
                                             <p>Base Price: <span className='right'>${ _.round(enrolment && enrolment.invoice.amount / 1.135, 2) }</span></p>
@@ -104,6 +187,13 @@ const CheckoutSummary = (props: any) => {
                                          onClick={ () => updatePaymentMethod('card') }
                                     />
                                 </div>
+                                {
+                                    (
+                                        props.paypalCheckout.action === checkoutConstants.PAYPAL_CHECKOUT_REQUEST_SENT ||
+                                        props.googleCheckout.action === checkoutConstants.GOOGLE_CHECKOUT_REQUEST_SENT ||
+                                        props.cardCheckout.action === checkoutConstants.CARD_CHECKOUT_REQUEST_SENT
+                                    ) && <Spinner />
+                                }
 
                                 {
                                     paymentMethod === 'paypal' &&
@@ -131,10 +221,20 @@ const CheckoutSummary = (props: any) => {
                                             }}
                                             onApprove={ (data: any, actions: any) => {
                                                 actions.order.authorize().then((authorization: any) => {
-                                                    const orderId = data.orderID;
-                                                    const amount = authorization.purchase_units[0].payments.authorizations[0].amount.value;
-                                                    const authorizationId = authorization.purchase_units[0].payments.authorizations[0].id;
-                                                    //Capture payment at server
+                                                    if (authorization.status !== 'COMPLETED') {
+                                                        setStatusMessage({ messages: ['Payment has been cancelled.'], type: 'error', closeAlert: () => setStatusMessage(EMPTY_STATUS) } as IStatusMessage);
+                                                        return;
+                                                    }
+
+                                                    setStatusMessage(EMPTY_STATUS);
+                                                    const paypalAuthorization: IPaypalAuthorization = {
+                                                        paypalEmail: authorization.payer.email_address,
+                                                        authorizationId: authorization.purchase_units[0].payments.authorizations[0].id,
+                                                        amount: authorization.purchase_units[0].payments.authorizations[0].amount.value,
+                                                        orderId: data.orderID
+                                                    };
+
+                                                    props.invokePaypalCheckoutRequest(props.authUser, paypalAuthorization, enrolment.id);
                                                 });
                                             }}
                                         />
@@ -175,17 +275,12 @@ const CheckoutSummary = (props: any) => {
                                                     totalPriceLabel: 'Total Payable',
                                                     totalPrice: enrolment.invoice.amount.toString(),
                                                     currencyCode: 'AUD',
-                                                    countryCode: 'AU',
-                                                },
+                                                    countryCode: 'AU'
+                                                }
                                             }}
                                             onLoadPaymentData={ (paymentRequest: any) => {
                                                 const paymentToken = JSON.parse(paymentRequest.paymentMethodData.tokenizationData.token);
-                                                const cardType = paymentToken.card.brand;
-                                                const last4Digits = paymentToken.card.last4;
-                                                const clientIp = paymentToken.client_ip;
-                                                const tokenId = paymentToken.id;
-                                                //Capture payment at server
-                                                console.log(tokenId)
+                                                processStripeCheckout(paymentToken);
                                             }}
                                         />
                                     </div>
