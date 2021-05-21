@@ -42,6 +42,21 @@ namespace COSC2640A3.Controllers {
             _tokenDuration = int.Parse(options.Value.TokenValidityDuration);
         }
 
+        /// <summary>
+        /// For both. To verify Two-Factor Authentication after user performs login.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /security/confirm-tfa-pin/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="tfaPin">The Two-Factor PIN to verify.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("confirm-tfa-pin/{tfaPin}")]
         [MainAuthorize]
         public async Task<JsonResult> ConfirmTwoFaPin([FromHeader] string accountId,[FromRoute] string tfaPin) {
@@ -62,6 +77,20 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For both. To send the Two-Factor PIN to user's phone number and email address.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /security/send-tfa-pin
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("send-tfa-pin")]
         [MainAuthorize]
         public async Task<JsonResult> SendTwoFaPinToEmailAndSms([FromHeader] string accountId) {
@@ -88,6 +117,21 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For both. To verify token sent to user's phone number to confirm the phone number.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /security/verify-sms-token/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="smsToken">The SMS token to verify.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("verify-sms-token/{smsToken}")]
         [MainAuthorize]
         public async Task<JsonResult> VerifySmsTokenForPhoneNumberConfirmation([FromHeader] string accountId,[FromRoute] string smsToken) {
@@ -115,6 +159,22 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For both. To request a new SMS token: send the token to user's phone number.
+        /// This service is necessary when the old SMS token is expired.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /security/request-sms-token/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="recaptchaToken">The token obtained from Google Recaptcha.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("request-sms-token/{recaptchaToken}")]
         [MainAuthorize]
         [TwoFaAuthorize]
@@ -127,6 +187,27 @@ namespace COSC2640A3.Controllers {
             return await GenerateNewAccountTokenFor(account, NotificationType.Sms);
         }
 
+        /// <summary>
+        /// For guest. To request a new account recovery token: send the token to user's phone number and email address.
+        /// This service is necessary when user forgets their account's password.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /security/request-recovery-token
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             email: string, ---> Only email or username is required at once
+        ///             username: string,
+        ///             recaptchaToken: string ---> Not required in testings
+        ///         }
+        /// </remarks>
+        /// <param name="identity">The detail of forgotten account to send recovery data to.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("request-recovery-token")]
         public async Task<JsonResult> RequestNewTokenForAccountRecovery([FromBody] Identity identity) {
             _logger.LogInformation($"{ nameof(SecurityController) }.{ nameof(RequestNewTokenForAccountRecovery) }: service starts.");

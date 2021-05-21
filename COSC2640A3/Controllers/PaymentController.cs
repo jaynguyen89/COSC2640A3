@@ -33,6 +33,39 @@ namespace COSC2640A3.Controllers {
             _invoiceService = invoiceService;
         }
 
+        /// <summary>
+        /// For student. To make a payment using <b>Paypal</b> for an enrolment's invoice.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /payment/paypal/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             paypalEmail: string,
+        ///             orderId: string,
+        ///             amount: number,
+        ///             authorizationId: string
+        ///         }
+        ///
+        /// Returned object signature:
+        /// {
+        ///     id: string,
+        ///     isPaid: boolean,
+        ///     paymentMethod: string,
+        ///     paymentId: string,
+        ///     transactionId: string,
+        ///     paymentStatus: string,
+        ///     paidOn: string
+        /// }
+        /// </remarks>
+        /// <param name="enrolmentId" type="string">The account's ID.</param>
+        /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("paypal/{enrolmentId}")]
         public async Task<JsonResult> CapturePaypalPayment([FromRoute] string enrolmentId,[FromBody] PaypalAuthorization paymentAuthorization) {
             _logger.LogInformation($"{ nameof(PaymentController) }.{ nameof(CapturePaypalPayment) }: Service starts.");
@@ -61,6 +94,44 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = invoice });
         }
 
+        /// <summary>
+        /// For student. To make a payment using <b>Bank Card</b> for an enrolment's invoice.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /payment/card/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             cardType: string,
+        ///             last4Digits: string,
+        ///             tokenId: number,
+        ///             details: {
+        ///                 classroomId: string,
+        ///                 className: string,
+        ///                 amount: number
+        ///             }
+        ///         }
+        /// 
+        /// Returned object signature:
+        /// {
+        ///     id: string,
+        ///     isPaid: boolean,
+        ///     paymentMethod: string,
+        ///     paymentId: string,
+        ///     transactionId: string,
+        ///     chargeId: string
+        ///     paymentStatus: string,
+        ///     paidOn: string
+        /// }
+        /// </remarks>
+        /// <param name="enrolmentId" type="string">The account's ID.</param>
+        /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("card/{enrolmentId}")]
         public async Task<JsonResult> CaptureStripeCardPayment([FromRoute] string enrolmentId,[FromBody] StripeAuthorization paymentAuthorization) {
             _logger.LogInformation($"{ nameof(PaymentController) }.{ nameof(CaptureStripeCardPayment) }: Service starts.");
@@ -85,6 +156,44 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = invoice });
         }
         
+        /// <summary>
+        /// For student. To make a payment using <b>Google Pay</b> for an enrolment's invoice.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /payment/card/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             cardType: string,
+        ///             last4Digits: string,
+        ///             tokenId: number,
+        ///             details: {
+        ///                 classroomId: string,
+        ///                 className: string,
+        ///                 amount: number
+        ///             }
+        ///         }
+        /// 
+        /// Returned object signature:
+        /// {
+        ///     id: string,
+        ///     isPaid: boolean,
+        ///     paymentMethod: string,
+        ///     paymentId: string,
+        ///     transactionId: string,
+        ///     chargeId: string
+        ///     paymentStatus: string,
+        ///     paidOn: string
+        /// }
+        /// </remarks>
+        /// <param name="enrolmentId" type="string">The account's ID.</param>
+        /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("google/{enrolmentId}")]
         public async Task<JsonResult> CaptureStripeGooglePayment([FromRoute] string enrolmentId,[FromBody] StripeAuthorization paymentAuthorization) {
             _logger.LogInformation($"{ nameof(PaymentController) }.{ nameof(CaptureStripeGooglePayment) }: Service starts.");
