@@ -40,6 +40,25 @@ namespace COSC2640A3.Controllers {
             _googleService = googleService;
         }
 
+        /// <summary>
+        /// For guest. To create a new Account. The `<c>username</c>` and `<c>email</c>` must be unique. Email will be confirmed so use <b>REAL</b> email.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /authentication/register
+        ///     Body
+        ///         {
+        ///             "email": string,
+        ///             "username": string,
+        ///             "password": string
+        ///             "passwordConfirm": string,
+        ///             "phoneNumber": string | null,
+        ///             "preferredName": string
+        ///         }
+        /// </remarks>
+        /// <param name="registration">The registration data required for creating new Account.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
         [HttpPost("register")]
         public async Task<JsonResult> Register(Registration registration) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Register) }: service starts.");
@@ -66,6 +85,23 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For guest. To activate a newly created Account. If the account is activated elsewhere, additional data for Student and Teacher must be inserted manually.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /authentication/confirm-registration
+        ///     Body
+        ///         {
+        ///             "email": string | null, ---> Only provide `<c>username</c>` or `<c>email</c>` at once.
+        ///             "username": string | null,
+        ///             "confirmCode": string, ---> Obtained from email
+        ///             "recaptchaToken": string | null ---> Not required in testings
+        ///         }
+        /// </remarks>
+        /// <param name="confirmation">The confirmation data required for activating account.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
         [HttpPut("confirm-registration")]
         public async Task<JsonResult> ConfirmRegistration(ConfirmRegistration confirmation) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(ConfirmRegistration) }: service starts.");
@@ -112,6 +148,34 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse {  Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For guest. To perform a login and obtain the authentication data for authorized requests.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /authentication/authenticate
+        ///     Body
+        ///         {
+        ///             "email": string | null, ---> Only provide `<c>username</c>` or `<c>email</c>` at once.
+        ///             "username": string | null,
+        ///             "password": string, ---> Obtained from email
+        ///             "asStudent": boolean, ---> Set `<c>true</c>` to login as Student role, `<c>false</c>` to login as Teacher role
+        ///             "recaptchaToken": string | null ---> Not required in testings
+        ///         }
+        /// 
+        /// Returned data signature:
+        /// {
+        ///     authenticatedUser: {
+        ///         authToken: string,
+        ///         accountId: string,
+        ///         role: 0 | 1
+        ///     },
+        ///     shouldConfirmTfa: boolean
+        /// }
+        /// </remarks>
+        /// <param name="credentials">The confirmation data required for activating account.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
         [HttpPost("authenticate")]
         public async Task<JsonResult> Authenticate(LoginCredentials credentials) {
             _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(Authenticate) }: service starts.");
@@ -142,6 +206,20 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = new { AuthenticatedUser = authenticatedUser, ShouldConfirmTfa = account.TwoFactorEnabled } });
         }
 
+        /// <summary>
+        /// For both. To perform logout and clear all authentication data.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /authentication/unauthenticate
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [MainAuthorize]
         [HttpGet("unauthenticate")]
         public async Task<JsonResult> Unauthenticate([FromHeader] string accountId) {
@@ -151,6 +229,22 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For both. To switch role for the authenticated user without having to logout.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /authentication/switch-role
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///
+        /// Returns the role that has been switched to.
+        /// </remarks>
+        /// <param name="accountId">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = 0 | 1 }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [MainAuthorize]
         [HttpGet("switch-role")]
         public async Task<JsonResult> SwitchRoleForAuthenticatedUser([FromHeader] string accountId) {

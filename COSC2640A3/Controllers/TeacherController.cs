@@ -39,6 +39,35 @@ namespace COSC2640A3.Controllers {
             _dynamoService = dynamoService;
         }
 
+        /// <summary>
+        /// For teacher. To add or update marks for a student enrolment.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /teacher/add-marks
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             enrolmentId: string,
+        ///             markBreakdowns: [MarkBreakdownVM]
+        ///         }
+        ///
+        /// where `<c>MarkBreakdownVM</c>` has following schema:
+        /// {
+        ///     taskName: string,
+        ///     totalMarks: number,
+        ///     rewardedMarks: number,
+        ///     markedOn: string,
+        ///     comment: string
+        /// }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="studentMarks">The details od marking to update enrolment.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("add-marks")]
         public async Task<JsonResult> AddMarksToStudentEnrolment([FromHeader] string accountId,[FromBody] StudentMarks studentMarks) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(AddMarksToStudentEnrolment) }: Service starts.");
@@ -65,6 +94,25 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For teacher. To export selected classrooms to a JSON file and download.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /teacher/export-classrooms
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             classroomIds: [string]
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="dataExport">The IDs of classrooms to be exported.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("export-classrooms")]
         public async Task<ActionResult> ExportClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportClassroomData) }: Service starts.");
@@ -85,6 +133,25 @@ namespace COSC2640A3.Controllers {
             return File(exportedFile, MediaTypeNames.Text.Plain, $"{ accountId }_classrooms_exports.json");
         }
         
+        /// <summary>
+        /// For teacher. To export student enrolment and invoice data from selected classroom to a JSON file and download.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /teacher/export-students
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             classroomIds: [string]
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="dataExport">The IDs of classrooms to be exported.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("export-students")]
         public async Task<ActionResult> ExportStudentsInClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportStudentsInClassroomData) }: Service starts.");
@@ -105,6 +172,32 @@ namespace COSC2640A3.Controllers {
             return File(exportedFile, MediaTypeNames.Text.Plain, $"{ accountId }_enrolments_exports.json");
         }
 
+        /// <summary>
+        /// For teacher. To get all Lambda schedules from DynamoDb.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /teacher/schedules
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// 
+        /// Returned object signature:
+        /// [{
+        ///     id: string,
+        ///     accountId: string,
+        ///     fileId: string,
+        ///     fileName: string,
+        ///     fileSize: number, ---> in KB
+        ///     uploadedOn: number, ---> Unix timestamp
+        ///     status: 0 | 1 | 2 | 3 | 4,
+        ///     isForClassroom: boolean
+        /// }]
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("schedules")]
         public async Task<JsonResult> GetImportSchedules([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(GetImportSchedules) }: Service starts.");

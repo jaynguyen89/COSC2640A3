@@ -44,6 +44,30 @@ namespace COSC2640A3.Controllers {
             _textractService = textractService;
         }
 
+        /// <summary>
+        /// For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.
+        /// Each request sent to this endpoint is to add files of 1 specified type.
+        /// Files will be uploaded to S3 and corresponding data will be saved in database.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /class-content/add-files
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///         "Content-Type": "multipart/form-data"
+        ///     Body
+        ///         {
+        ///             classroomId: string,
+        ///             fileType: 0 | 1 | 2 | 3,
+        ///             uploadedFiles: [binary]
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="filesToAdd">The data containing files binary to be added.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("add-files")]
         [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> AddFilesToClassroom([FromHeader] string accountId,[FromForm] FilesAdding filesToAdd) {
@@ -87,6 +111,31 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.
+        /// Each request sent to this endpoint is to add files of 1 specified type. Request body can specify files to be removed, and files to be added more.
+        /// One or both of the 2 optional property in request body must have value, they can't be null at the same time.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /class-content/update-files
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///         "Content-Type": "multipart/form-data"
+        ///     Body
+        ///         {
+        ///             classroomId: string,
+        ///             fileType: 0 | 1 | 2 | 3,
+        ///             uploadedFiles: [binary], ---> optional: select files to add if any
+        ///             removedFiles: [string] ---> optional: select files to remove if any
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="filesToUpdate">The data containing files binary and serialized data to be updated.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("update-files")]
         [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> UpdateFilesForClassroom([FromHeader] string accountId,[FromForm] FilesUpdating filesToUpdate) {
@@ -151,6 +200,26 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For teacher. To add rich-text content to classroom contents.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /class-content/add-rich-content
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             classroomId: string,
+        ///             htmlContent: string
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="richContent">The required data to be added.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("add-rich-content")]
         [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> AddContentToClassroom([FromHeader] string accountId,[FromBody] RichContent richContent) {
@@ -177,6 +246,27 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For teacher. To add rich-text content to classroom contents by uploaded images containing texts to be extracted programmatically.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     POST /class-content/import-rich-content
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///         "Content-Type": "multipart/form-data"
+        ///     Body
+        ///         {
+        ///             classroomId: string,
+        ///             filesForImport: [binary]
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="richContent">The required data to be added.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("import-rich-content")]
         [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> ImportContentToClassroom([FromHeader] string accountId,[FromForm] RichContentImport richContent) {
@@ -222,6 +312,26 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For teacher. To update rich-text content for classroom contents.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /class-content/update-rich-content
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             classroomId: string,
+        ///             htmlContent: string
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="richContent">The required data to be updated.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPut("update-rich-content")]
         [RoleAuthorize(Role.Teacher)]
         public async Task<JsonResult> UpdateContentForClassroom([FromHeader] string accountId,[FromBody] RichContent richContent) {
@@ -245,6 +355,40 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For both. To get all data to display for classroom contents including all files and rich-text content.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /class-content/all/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///
+        /// Returned object signature:
+        /// {
+        ///     id: string,
+        ///     videos: [FileVM],
+        ///     audios: [FileVM],
+        ///     photos: [FileVM],
+        ///     attachments: [FileVM],
+        ///     htmlContent: string
+        /// }
+        ///
+        /// where `<c>FileVM</c>` is an object:
+        /// {
+        ///     id: string,
+        ///     name: string,
+        ///     type: 0 | 1 | 2 | 3,
+        ///     extension: string,
+        ///     uploadedOn: number ---> Unix timestamp
+        /// }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="classroomId">The classroom ID to get contents for.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpGet("all/{classroomId}")]
         public async Task<JsonResult> GetClassroomContents([FromHeader] string accountId,[FromRoute] string classroomId) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(UpdateContentForClassroom) }: Service starts.");
@@ -256,7 +400,7 @@ namespace COSC2640A3.Controllers {
             var classContent = await _classContentService.GetClassContentVmByClassroomId(classroomId);
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = (ClassContentVM) classContent });
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classContent });
         }
 
         private async Task<FileVM[]> UploadVideosToS3Bucket(string classroomId, IFormFileCollection videos) {

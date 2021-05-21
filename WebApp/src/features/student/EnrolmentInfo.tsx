@@ -20,7 +20,10 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                         <>
                             <i className="fas fa-info-circle red-text" />&nbsp;Invoice: ${ props.enrolment.invoice.amount }
                             <button className='btn waves-effect waves-light right'
-                                    onClick={ () => alert('Open checkout page to select payment method then make payment.') }
+                                    onClick={ () => {
+                                        localStorage.setItem('enrolment_checkoutSummary', JSON.stringify(props.enrolment));
+                                        window.location.href = '/checkout-summary';
+                                    }}
                             >
                                 <i className="fas fa-shopping-cart" />&nbsp;Pay
                             </button>
@@ -137,9 +140,9 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                 }
 
                 <div id="marks" className='row' style={{ marginBottom: 0 }}>
-                    <div className='col s12'>
-                        <span>Overall Mark:</span>
-                        <span className='right'>{ props.enrolment.marksDetail.overallMarks } (provisional)</span>
+                    <div className='col s12 center-align'>
+                        <span>Overall Mark:&nbsp;</span>
+                        <span>{ props.enrolment.marksDetail.overallMarks }</span>
                     </div>
                     <div className='clearfix' />
 

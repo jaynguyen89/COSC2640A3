@@ -60,5 +60,10 @@ namespace Helper {
 
             return randomString;
         }
+
+        public static string HideEmailPartial(this string email) {
+            var emailTokens = email.Split("@");
+            return $"{ emailTokens[0][..2] }***{ emailTokens[0][^2..] }@{ emailTokens[^1] }";
+        }
     }
 }

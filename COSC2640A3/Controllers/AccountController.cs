@@ -39,6 +39,28 @@ namespace COSC2640A3.Controllers {
             _googleService = googleService;
         }
 
+        /// <summary>
+        /// For student. Update student data including school name, faculty, and personal URL.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/update-student
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             "id": string,
+        ///             "schoolName": string,
+        ///             "faculty": string
+        ///             "personalUrl": string
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="student">The required data to update Student.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Student)]
         [HttpPut("update-student")]
         public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] Student student) {
@@ -55,6 +77,38 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For student. Get all student details including student data and account data.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /account/student
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// 
+        /// Returned object signature:
+        /// {
+        ///     email: string,
+        ///     username: string,
+        ///     phoneNumber: string,
+        ///     phoneNumberConfirmed: boolean,
+        ///     twoFaEnabled: boolean,
+        ///     preferredName: string,
+        ///     twoFa: {
+        ///         qrImageUrl: string,
+        ///         manualQrCode: string
+        ///     },
+        ///     studentId: string,
+        ///     schoolName: string,
+        ///     faculty: string,
+        ///     personalUrl: string
+        /// }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Student)]
         [HttpGet("student")]
         public async Task<JsonResult> GetStudentDetails([FromHeader] string accountId) {
@@ -75,6 +129,28 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = studentVm });
         }
         
+        /// <summary>
+        /// For teacher. Update teacher data including company, jobTitle, and personal website.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/update-teacher
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             "id": string,
+        ///             "company": string,
+        ///             "jobTitle": string
+        ///             "personalUrl": string
+        ///         }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="teacher">The required data to update Teacher.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Teacher)]
         [HttpPut("update-teacher")]
         public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] Teacher teacher) {
@@ -91,6 +167,38 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
+        /// <summary>
+        /// For teacher. Get all teacher details including teacher data and account data.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     GET /account/teacher
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// 
+        /// Returned object signature:
+        /// {
+        ///     email: string,
+        ///     username: string,
+        ///     phoneNumber: string,
+        ///     phoneNumberConfirmed: boolean,
+        ///     twoFaEnabled: boolean,
+        ///     preferredName: string,
+        ///     twoFa: {
+        ///         qrImageUrl: string,
+        ///         manualQrCode: string
+        ///     },
+        ///     teacherId: string,
+        ///     company: string,
+        ///     jobTitle: string,
+        ///     personalWebsite: string
+        /// }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Teacher)]
         [HttpGet("teacher")]
         public async Task<JsonResult> GetTeacherDetails([FromHeader] string accountId) {
@@ -111,6 +219,26 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = teacherVm });
         }
 
+        /// <summary>
+        /// For both. To turn on or renew Two-Factor Authentication protection.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/new-tfa
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///
+        /// Returned object signature:
+        /// {
+        ///     qrImageUrl: string,
+        ///     manualEntryKey: string
+        /// }
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPut("new-tfa")]
         public async Task<JsonResult> EnableOrRenewTwoFa([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(EnableOrRenewTwoFa) }: Service starts.");
@@ -128,6 +256,21 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = (TwoFaVM) twoFa });
         }
 
+        /// <summary>
+        /// For both. To turn off Two-Factor Authentication protection.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/disable-tfa/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="recaptchaToken" type="string">The recaptcha confirmation, not required in testings.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPut("disable-tfa/{recaptchaToken}")]
         public async Task<JsonResult> DisableTwoFa([FromHeader] string accountId,[FromRoute] string recaptchaToken) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(DisableTwoFa) }: Service starts.");
@@ -157,6 +300,21 @@ namespace COSC2640A3.Controllers {
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
+        /// <summary>
+        /// For both. To add a phone number for an account. An SMS will be sent to the phone number to confirm it so use a <b>REAL</b> phone number.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/set-phone-number/{string}
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="phoneNumber" type="string">The phone number to be added.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPut("set-phone-number/{phoneNumber}")]
         public async Task<JsonResult> UpdatePhoneNumber([FromHeader] string accountId,[FromRoute] string phoneNumber) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdatePhoneNumber) }: Service starts.");
@@ -176,6 +334,20 @@ namespace COSC2640A3.Controllers {
             return await GenerateNewAccountTokenFor(account, NotificationType.Sms);
         }
 
+        /// <summary>
+        /// For both. To remove phone number for an account.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        ///     PUT /account/remove-phone-number
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPut("remove-phone-number")]
         public async Task<JsonResult> RemovePhoneNumber([FromHeader] string accountId) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(RemovePhoneNumber) }: Service starts.");
