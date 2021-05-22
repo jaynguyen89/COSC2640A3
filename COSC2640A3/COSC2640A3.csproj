@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
     <StartupObject>COSC2640A3.Program</StartupObject>
+    <UserSecretsId>0fa98e9c-ae4e-4555-a0ec-6fbc69201fb0</UserSecretsId>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

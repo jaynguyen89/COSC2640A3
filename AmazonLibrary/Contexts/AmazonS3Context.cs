@@ -11,11 +11,11 @@ namespace AmazonLibrary.Contexts {
 
         public AmazonS3Context(IOptions<AmazonOptions> options) {
             _s3Context = new AmazonS3Client(
-                options.Value.AwsAccessKeyId,
-                options.Value.AwsSecretKey,
+                options.Value.AwsAccessKeyId ?? "AKIAJSENDXCAPZWGB6HQ",
+                options.Value.AwsSecretKey ?? "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",
                 new AmazonS3Config {
                     RegionEndpoint = RegionEndpoint.GetBySystemName(options.Value.RegionEndpoint),
-                    Timeout = TimeSpan.FromSeconds(int.Parse(options.Value.S3TimeoutSeconds))
+                    Timeout = TimeSpan.FromSeconds(int.Parse(options.Value.S3TimeoutSeconds ?? "120"))
                 }
             );
         }
