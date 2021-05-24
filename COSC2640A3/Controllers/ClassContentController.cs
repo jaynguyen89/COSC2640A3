@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AmazonLibrary.Interfaces;
+using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
@@ -29,19 +30,25 @@ namespace COSC2640A3.Controllers {
         private readonly IClassroomService _classroomService;
         private readonly IS3Service _s3Service;
         private readonly ITextractService _textractService;
+        private readonly ITranslateService _translateService;
+        private readonly IDictionaryService _dictionaryService;
 
         public ClassContentController(
             ILogger<ClassContentController> logger,
             IClassContentService classContentService,
             IClassroomService classroomService,
             IS3Service s3Service,
-            ITextractService textractService
+            ITextractService textractService,
+            ITranslateService translateService,
+            IDictionaryService dictionaryService
         ) {
             _logger = logger;
             _classContentService = classContentService;
             _classroomService = classroomService;
             _s3Service = s3Service;
             _textractService = textractService;
+            _translateService = translateService;
+            _dictionaryService = dictionaryService;
         }
 
         /// <summary>
@@ -401,6 +408,36 @@ namespace COSC2640A3.Controllers {
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classContent });
+        }
+
+        [HttpPost("translate-sentences")]
+        public async Task<JsonResult> TranslateSentences(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateSentences) }: Service starts.");
+
+            var (isSuccess, translatedPhraseOrMessage) = await _translateService.Translate(translateIt.TargetLanguage, translateIt.Phrase);
+            return !isSuccess
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { translatedPhraseOrMessage } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = translatedPhraseOrMessage });
+        }
+
+        [HttpPost("translate-word")]
+        public async Task<JsonResult> TranslateWord(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateWord) }: Service starts.");
+
+            var translation = await _dictionaryService.Translate(translateIt.TargetLanguage, translateIt.Phrase);
+            return translation is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = translation });
+        }
+
+        [HttpPost("get-thesaurus")]
+        public async Task<JsonResult> GetThesaurus(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateWord) }: Service starts.");
+
+            var thesaurus = await _dictionaryService.GetSynonymsOrAntonymsFor(translateIt.Phrase, translateIt.ForSynonyms);
+            return thesaurus is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = thesaurus });
         }
 
         private async Task<FileVM[]> UploadVideosToS3Bucket(string classroomId, IFormFileCollection videos) {

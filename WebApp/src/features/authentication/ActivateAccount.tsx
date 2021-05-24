@@ -13,7 +13,7 @@ import {
 } from "../../providers/helpers";
 import _ from "lodash";
 import $ from "jquery";
-import {defaultActivationData, IActivateAccount, IAuthUser} from "./redux/interfaces";
+import {defaultActivationData, IActivateAccount} from "./redux/interfaces";
 import ReCAPTCHA from "react-google-recaptcha";
 import {invokeAccountActivationRequest} from "./redux/actions";
 
@@ -71,7 +71,7 @@ const ActivateAccount = (props: IActivateAccount) => {
         const shouldActivate =
             code.every(item => item >= 0 && item <= 9) &&
             (activationData.email.length > 0 || activationData.username.length > 0) &&
-            activationData.confirmCode.length > 0;
+            activationData.recaptchaToken.length > 0;
 
         if (shouldActivate) {
             setMessage(EMPTY_STRING);

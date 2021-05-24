@@ -52,5 +52,20 @@
             photo,
             other // must always be at bottom
         }
+        
+        public enum Language {
+            English,
+            Chinese,
+            French,
+            German,
+            Greek,
+            Hindi,
+            Indonesian,
+            Italian,
+            Malay,
+            Portuguese,
+            Russian,
+            Spanish
+        }
     }
 }

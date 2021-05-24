@@ -246,7 +246,7 @@ namespace COSC2640A3.DbContexts
 
                 entity.Property(e => e.Company).HasMaxLength(50);
 
-                entity.Property(e => e.JobTitle).HasMaxLength(20);
+                entity.Property(e => e.JobTitle).HasMaxLength(50);
 
                 entity.Property(e => e.PersonalWebsite).HasMaxLength(100);
 
