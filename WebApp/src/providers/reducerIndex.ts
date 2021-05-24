@@ -6,6 +6,7 @@ import classroomStore from '../features/classroom/redux/reducer';
 import teacherStore from '../features/teacher/redux/reducer';
 import studentStore from '../features/student/redux/reducer';
 import checkoutStore from '../features/checkout/redux/reducer';
+import classcontentStore from '../features/classContents/redux/reducer';
 
 export default combineReducers({
     authenticationStore,
@@ -13,5 +14,6 @@ export default combineReducers({
     classroomStore,
     teacherStore,
     studentStore,
-    checkoutStore
+    checkoutStore,
+    classcontentStore
 });

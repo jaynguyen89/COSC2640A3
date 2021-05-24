@@ -6,9 +6,20 @@ export const EMPTY_NUMBER = -1;
 
 export interface IManageClassroomContent {
     authUser: IAuthUser,
-    invokeGetClassContent: (auth: IAuthUser, classroomId: string | null) => void,
+    invokeGetClassContent: (auth: IAuthUser, classroomId: string) => void,
     getClassContent: IActionResult,
     clearAuthUser: () => void,
+    invokeAddFileRequest: (auth: IAuthUser, file: IFileAdding) => void,
+    getAddFileRequest: IActionResult,
+    invokeUpdateFileRequest: (auth: IAuthUser, file:IUpdateFile) => void,
+    getUpdateFileRequest: IActionResult,
+    invokeAddRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
+    getAddRichContentRequest: IActionResult,
+    invokeUpdateRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
+    getUpdateRichContentRequest: IActionResult,
+    invokeImportRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
+    getupdateRichContentRequest: IActionResult,
+    classroomId: typeof EMPTY_STRING; 
 }
 
 //IClassContent = To Display Files
@@ -23,7 +34,7 @@ export interface IFile {
     name: string,
     type: number,
     extension: string,
-    uploadedOn: string
+    uploadedOn: number
 }
 //IRichContent = To Display RichContent
 export interface IRichContent {
@@ -41,7 +52,7 @@ export const defaultFileContent: IFile = {
     name: EMPTY_STRING,
     type: EMPTY_NUMBER,
     extension: EMPTY_STRING,
-    uploadedOn: EMPTY_STRING
+    uploadedOn: EMPTY_NUMBER
 }
 
 export const EMPTY_IFILE = [defaultFileContent];
@@ -77,4 +88,10 @@ export interface IClassroomContentModal {
     task: string,
     isTaskRunning: boolean,
     handleAddBtn: (newFile: IFile) => void,
+}
+
+export interface IFileList {
+    files: Array<IFile>,
+    statusMessage: IStatusMessage | null,
+    shouldShowSpinner: boolean | null,
 }
