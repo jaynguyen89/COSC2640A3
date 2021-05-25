@@ -6,12 +6,18 @@ using Helper;
 
 namespace COSC2640A3.Bindings {
 
+    /// <summary>
+    /// Used for translating sentences/paragraphs and words.
+    /// </summary>
     public class TranslateIt {
         
+        // Any languages in SharedEnums.Language other than English
         public SharedEnums.Language TargetLanguage { get; set; }
         
+        // A sentence/paragraph or a single word
         public string Phrase { get; set; }
         
+        // Ignored if the request is for translation, used if the request is for thesaurus
         public bool ForSynonyms { get; set; }
 
         public string[] VerifyTranslation() {

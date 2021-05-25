@@ -47,10 +47,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /security/confirm-tfa-pin/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="tfaPin">The Two-Factor PIN to verify.</param>
@@ -82,10 +86,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /security/send-tfa-pin
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
@@ -122,10 +130,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /security/verify-sms-token/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="smsToken">The SMS token to verify.</param>
@@ -165,10 +177,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /security/request-sms-token/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="recaptchaToken">The token obtained from Google Recaptcha.</param>
@@ -193,16 +209,23 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - Only provide `<c>username</c>` or `<c>email</c>` at once
+        /// - <c>recaptchaToken</c> is not required for testings
+        /// - <c></c>
+        /// <!--
+        /// <code>
         ///     POST /security/request-recovery-token
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
         ///     Body
         ///         {
-        ///             email: string, ---> Only email or username is required at once
+        ///             email: string,
         ///             username: string,
-        ///             recaptchaToken: string ---> Not required in testings
+        ///             recaptchaToken: string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="identity">The detail of forgotten account to send recovery data to.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>

@@ -42,10 +42,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /student/enrol/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId">The ID of classroom to enrol.</param>
@@ -104,10 +108,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     DELETE /student/unenrol/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="enrolmentId">The ID of enrolment to be deleted.</param>
@@ -150,12 +158,19 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /student/enrolments
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// - <c>invoice.isPaid</c>: if <c>true</c>, <c>paymentDetail</c> will have value
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     student: null,
@@ -171,7 +186,7 @@ namespace COSC2640A3.Controllers {
         ///     invoice: {
         ///         id: string,
         ///         amount: number,
-        ///         isPaid: boolean, ---> if <c>true</c>, <c>paymentDetail</c> will have value
+        ///         isPaid: boolean,
         ///         paymentDetail: PaymentDetailVM | null
         ///     },
         ///     marksDetail: {
@@ -180,8 +195,12 @@ namespace COSC2640A3.Controllers {
         ///     },
         ///     enrolledOn: string
         /// }
+        /// </code>
+        /// -->
         ///
         /// where `<c>PaymentDetailVM</c>` has following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     paymentMethod: string,
         ///     paymentId: string,
@@ -190,8 +209,12 @@ namespace COSC2640A3.Controllers {
         ///     paymentStatus: string,
         ///     paidOn: string
         /// }
+        /// </code>
+        /// -->
         ///
         /// and `<c>MarkBreakdownVM</c>` has following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     taskName: string,
         ///     totalMarks: number,
@@ -199,6 +222,8 @@ namespace COSC2640A3.Controllers {
         ///     markedOn: string,
         ///     comment: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>

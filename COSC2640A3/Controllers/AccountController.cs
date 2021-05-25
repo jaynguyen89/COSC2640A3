@@ -45,6 +45,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/update-student
         ///     Headers
         ///         "AccountId": string
@@ -56,6 +58,8 @@ namespace COSC2640A3.Controllers {
         ///             "faculty": string
         ///             "personalUrl": string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="studentDetail">The required data to update Student.</param>
@@ -91,12 +95,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /account/student
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     email: string,
         ///     username: string,
@@ -113,6 +123,8 @@ namespace COSC2640A3.Controllers {
         ///     faculty: string,
         ///     personalUrl: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -143,6 +155,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/update-teacher
         ///     Headers
         ///         "AccountId": string
@@ -154,6 +168,8 @@ namespace COSC2640A3.Controllers {
         ///             "jobTitle": string
         ///             "personalUrl": string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="teacherDetail">The required data to update Teacher.</param>
@@ -189,12 +205,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /account/teacher
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     email: string,
         ///     username: string,
@@ -211,6 +233,8 @@ namespace COSC2640A3.Controllers {
         ///     jobTitle: string,
         ///     personalWebsite: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -241,16 +265,24 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/new-tfa
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     qrImageUrl: string,
         ///     manualEntryKey: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -278,10 +310,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/disable-tfa/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="recaptchaToken" type="string">The recaptcha confirmation, not required in testings.</param>
@@ -322,10 +358,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/set-phone-number/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="phoneNumber" type="string">The phone number to be added.</param>
@@ -356,10 +396,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/remove-phone-number
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>

@@ -12,7 +12,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task InsertRedisCacheEntry([NotNull] CacheEntry entry);
 
         /// <summary>
-        /// Generic method. Works with any object type <T>. The entry key must not be null.
+        /// Generic method. Works with any object type T. The entry key must not be null.
         /// </summary>
         Task<T> GetRedisCacheEntry<T>([NotNull] string entryKey);
         

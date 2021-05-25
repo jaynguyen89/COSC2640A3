@@ -1,7 +1,9 @@
 using System;
-using System.Linq;
+using System.IO;
+using System.Reflection;
 using AmazonLibrary;
 using AssistantLibrary;
+using COSC2640A3.Attributes;
 using COSC2640A3.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
@@ -37,6 +39,12 @@ namespace COSC2640A3 {
                     Description = "The documentation and testing tool for COSC2640 A3 Microservices API.",
                     Version = "v1.0"
                 });
+                
+                var xmlFile = $"{ Assembly.GetExecutingAssembly().GetName().Name }.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
+                
+                options.OperationFilter<SwaggerXmlFormatter>();
             });
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

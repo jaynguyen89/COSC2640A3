@@ -59,6 +59,11 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - <c>capacity</c>: lower than 32767 + 1
+        /// - <c>price</c>: lower than 9999.99
+        /// - <c>duration</c>: lower than 255 + 1
+        /// <!--
+        /// <code>
         ///     POST /classroom/create
         ///     Headers
         ///         "AccountId": string
@@ -66,12 +71,14 @@ namespace COSC2640A3.Controllers {
         ///     Body
         ///         {
         ///             className: string,
-        ///             capacity: number, ---> lower than 32767 + 1
-        ///             price: number, ---> lower than 9999.99
+        ///             capacity: number,
+        ///             price: number,
         ///             commencedOn: string,
-        ///             duration: number, ---> lower than 255 + 1
+        ///             duration: number,
         ///             durationUnit: 0 | 1 | 2 | 3 | 4
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroom">The required data to create new classroom.</param>
@@ -103,6 +110,11 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - <c>capacity</c>: lower than 32767 + 1
+        /// - <c>price</c>: lower than 9999.99
+        /// - <c>duration</c>: lower than 255 + 1
+        /// <!--
+        /// <code>
         ///     PUT /classroom/update
         ///     Headers
         ///         "AccountId": string
@@ -110,12 +122,14 @@ namespace COSC2640A3.Controllers {
         ///     Body
         ///         {
         ///             className: string,
-        ///             capacity: number, ---> lower than 32767 + 1
-        ///             price: number, ---> lower than 9999.99
+        ///             capacity: number,
+        ///             price: number,
         ///             commencedOn: string,
-        ///             duration: number, ---> lower than 255 + 1
+        ///             duration: number,
         ///             durationUnit: 0 | 1 | 2 | 3 | 4
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroom">The required data to update classroom.</param>
@@ -151,10 +165,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     DELETE /classroom/remove/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId">The ID of classroom to be deleted.</param>
@@ -186,18 +204,28 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /classroom/all-by-teacher/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     classrooms : [ClassroomVM],
         ///     completedClassrooms: [ClassroomVm]
         /// }
+        /// </code>
+        /// -->
         ///
         /// where `<c>ClassroomVM</c>` has the following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     teacherId: string,
@@ -207,6 +235,8 @@ namespace COSC2640A3.Controllers {
         ///     enrolmentsCount: number,
         ///     classroomDetail: null
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="teacherId">The ID of classroom to be deleted.</param>
@@ -241,6 +271,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /classroom/import
         ///     Headers
         ///         "AccountId": string
@@ -251,18 +283,26 @@ namespace COSC2640A3.Controllers {
         ///             importType: 0 | 1,
         ///             fileForImport: binary
         ///         }
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// - <c>fileSize</c> is in KB (integer)
+        /// - <c>uploadedOn</c> is a Unix timestamp
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     accountId: string,
         ///     fileId: string,
         ///     fileName: string,
-        ///     fileSize: number, ---> in KB
-        ///     uploadedOn: number, ---> Unix timestamp
+        ///     fileSize: number,
+        ///     uploadedOn: number,
         ///     status: 0 | 1 | 2 | 3 | 4,
         ///     isForClassroom: boolean
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="uploading">The uploaded JSON files required for importing data.</param>
@@ -301,10 +341,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /classroom/completed/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId">The ID of classroom to mark as completed.</param>
@@ -355,12 +399,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /classroom/all
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// [{
         ///     id: string,
         ///     teacherId: string,
@@ -370,6 +420,8 @@ namespace COSC2640A3.Controllers {
         ///     enrolmentsCount: number,
         ///     classroomDetail: null
         /// }]
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -398,12 +450,19 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /classroom/enrolments/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// - <c>invoice.isPaid</c>: if <c>true</c>, <c>paymentDetail</c> will have value
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     student: {
@@ -423,7 +482,7 @@ namespace COSC2640A3.Controllers {
         ///     invoice: {
         ///         id: string,
         ///         amount: number,
-        ///         isPaid: boolean, ---> if <c>true</c>, <c>paymentDetail</c> will have value
+        ///         isPaid: boolean,
         ///         paymentDetail: PaymentDetailVM | null
         ///     },
         ///     marksDetail: {
@@ -432,8 +491,12 @@ namespace COSC2640A3.Controllers {
         ///     },
         ///     enrolledOn: string
         /// }
+        /// </code>
+        /// -->
         ///
         /// where `<c>PaymentDetailVM</c>` has following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     paymentMethod: string,
         ///     paymentId: string,
@@ -442,8 +505,12 @@ namespace COSC2640A3.Controllers {
         ///     paymentStatus: string,
         ///     paidOn: string
         /// }
+        /// </code>
+        /// -->
         ///
         /// and `<c>MarkBreakdownVM</c>` has following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     taskName: string,
         ///     totalMarks: number,
@@ -451,6 +518,8 @@ namespace COSC2640A3.Controllers {
         ///     markedOn: string,
         ///     comment: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId" type="string">The ID of classrooms to get all enrolments.</param>
@@ -477,12 +546,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /classroom/details/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     teacherId: string,
@@ -500,8 +575,9 @@ namespace COSC2640A3.Controllers {
         ///         normalizedDuration: string
         ///     }
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
-        /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId" type="string">The ID of classroom to get all details.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
         /// <response code="200">The request was successfully processed.</response>

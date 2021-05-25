@@ -44,6 +44,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /teacher/add-marks
         ///     Headers
         ///         "AccountId": string
@@ -53,8 +55,12 @@ namespace COSC2640A3.Controllers {
         ///             enrolmentId: string,
         ///             markBreakdowns: [MarkBreakdownVM]
         ///         }
+        /// </code>
+        /// -->
         ///
         /// where `<c>MarkBreakdownVM</c>` has following schema:
+        /// <!--
+        /// <code>
         /// {
         ///     taskName: string,
         ///     totalMarks: number,
@@ -62,6 +68,8 @@ namespace COSC2640A3.Controllers {
         ///     markedOn: string,
         ///     comment: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="studentMarks">The details od marking to update enrolment.</param>
@@ -99,6 +107,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /teacher/export-classrooms
         ///     Headers
         ///         "AccountId": string
@@ -107,6 +117,8 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             classroomIds: [string]
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="dataExport">The IDs of classrooms to be exported.</param>
@@ -138,6 +150,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /teacher/export-students
         ///     Headers
         ///         "AccountId": string
@@ -146,6 +160,8 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             classroomIds: [string]
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="dataExport">The IDs of classrooms to be exported.</param>
@@ -177,22 +193,32 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /teacher/schedules
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// - <c>fileSize</c> is in KB (integer)
+        /// - <c>uploadedOn</c> is a Unix timestamp
+        /// <!--
+        /// <code>
         /// [{
         ///     id: string,
         ///     accountId: string,
         ///     fileId: string,
         ///     fileName: string,
-        ///     fileSize: number, ---> in KB
-        ///     uploadedOn: number, ---> Unix timestamp
+        ///     fileSize: number,
+        ///     uploadedOn: number,
         ///     status: 0 | 1 | 2 | 3 | 4,
         ///     isForClassroom: boolean
         /// }]
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
