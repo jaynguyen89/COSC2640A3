@@ -15,6 +15,7 @@ namespace AssistantLibrary {
             services.AddScoped<IGoogleService, GoogleService>();
             services.AddScoped<ISmsService, SmsService>();
             services.AddScoped<IPaymentService, PaymentService>();
+            services.AddScoped<IDictionaryService, DictionaryService>();
         }
     }
 }

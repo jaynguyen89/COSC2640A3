@@ -324,6 +324,15 @@ namespace COSC2640A3.Controllers {
                                  .SelectMany(task => task.Result)
                                  .ToArray();
 
+            if (extractedTexts.Length == 0)
+                extractedTexts = uploadedFileIds.Select(async fileId => await _textractService.DetectSimpleDocumentTexts(fileId))
+                                                .SelectMany(task => task.Result)
+                                                .ToArray();
+
+            _ = uploadedFileIds.Select(fileId => _s3Service.DeleteFileInS3Bucket(SharedConstants.TextractBucketName, fileId));
+            if (extractedTexts.Length == 0)
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Unable to get texts from the submitted image." } });
+
             var combinedText = extractedTexts
                                .Select(text => $"{ SharedConstants.ParaOpen }{ text }{ SharedConstants.ParaClose }")
                                .Aggregate((former, latter) => $"{ former }{ latter }");
@@ -462,7 +471,7 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
         ///             phrase: string,
-        ///             forSynonym: boolean
+        ///             forSynonyms: boolean
         ///         }
         /// </code>
         /// -->
@@ -498,7 +507,7 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
         ///             phrase: string,
-        ///             forSynonym: boolean
+        ///             forSynonyms: boolean
         ///         }
         /// </code>
         /// -->
@@ -548,7 +557,7 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
         ///             phrase: string,
-        ///             forSynonym: boolean
+        ///             forSynonyms: boolean
         ///         }
         /// </code>
         /// -->

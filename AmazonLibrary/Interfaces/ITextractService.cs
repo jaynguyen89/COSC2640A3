@@ -7,5 +7,7 @@ namespace AmazonLibrary.Interfaces {
         Task<string> StartTextDetectionJobForFile(string fileId);
         
         Task<string[]> GetExtractedTextsFromTextractJob(string jobId);
+
+        Task<string[]> DetectSimpleDocumentTexts(string fileId);
     }
 }
