@@ -1,0 +1,1677 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>COSC2640A3</name>
+    </assembly>
+    <members>
+        <member name="T:COSC2640A3.Bindings.TranslateIt">
+            <summary>
+            Used for translating sentences/paragraphs and words.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateStudentDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+            <summary>
+            For student. Update student data including school name, faculty, and personal URL.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /account/update-student
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        "id": string,
+                        "schoolName": string,
+                        "faculty": string
+                        "personalUrl": string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="studentDetail">The required data to update Student.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.GetStudentDetails(System.String)">
+            <summary>
+            For student. Get all student details including student data and account data.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /account/student
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            
+            Returned object signature:
+            <!--
+            <code>
+            {
+                email: string,
+                username: string,
+                phoneNumber: string,
+                phoneNumberConfirmed: boolean,
+                twoFaEnabled: boolean,
+                preferredName: string,
+                twoFa: {
+                    qrImageUrl: string,
+                    manualQrCode: string
+                },
+                studentId: string,
+                schoolName: string,
+                faculty: string,
+                personalUrl: string
+            }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateTeacherDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+            <summary>
+            For teacher. Update teacher data including company, jobTitle, and personal website.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /account/update-teacher
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        "id": string,
+                        "company": string,
+                        "jobTitle": string
+                        "personalUrl": string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="teacherDetail">The required data to update Teacher.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.GetTeacherDetails(System.String)">
+            <summary>
+            For teacher. Get all teacher details including teacher data and account data.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /account/teacher
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            
+            Returned object signature:
+            <!--
+            <code>
+            {
+                email: string,
+                username: string,
+                phoneNumber: string,
+                phoneNumberConfirmed: boolean,
+                twoFaEnabled: boolean,
+                preferredName: string,
+                twoFa: {
+                    qrImageUrl: string,
+                    manualQrCode: string
+                },
+                teacherId: string,
+                company: string,
+                jobTitle: string,
+                personalWebsite: string
+            }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.EnableOrRenewTwoFa(System.String)">
+             <summary>
+             For both. To turn on or renew Two-Factor Authentication protection.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 PUT /account/new-tfa
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 qrImageUrl: string,
+                 manualEntryKey: string
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.DisableTwoFa(System.String,System.String)">
+            <summary>
+            For both. To turn off Two-Factor Authentication protection.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /account/disable-tfa/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="recaptchaToken" type="string">The recaptcha confirmation, not required in testings.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdatePhoneNumber(System.String,System.String)">
+            <summary>
+            For both. To add a phone number for an account. An SMS will be sent to the phone number to confirm it so use a <b>REAL</b> phone number.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /account/set-phone-number/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="phoneNumber" type="string">The phone number to be added.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AccountController.RemovePhoneNumber(System.String)">
+            <summary>
+            For both. To remove phone number for an account.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /account/remove-phone-number
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AppController.GenerateNewAccountTokenFor(COSC2640A3.Models.Account,Helper.Shared.SharedEnums.NotificationType,AmazonLibrary.Models.EmailComposer)">
+            <summary>
+            Generates a random token and saves to Account.
+            <para>If <c>notificationType == NotificationType.Sms</c>, then <c>emailContent</c> can be `<c>null</c>` as it will be ignored.</para>
+            <para>If <c>notificationType == NotificationType.Email | NotificationType.Both</c>, then <c>emailContent</c> <b>MUST</b> not be `<c>null</c>`.</para>
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.Register(COSC2640A3.Bindings.Registration)">
+            <summary>
+            For guest. To create a new Account. The `<c>username</c>` and `<c>email</c>` must be unique. Email will be confirmed so use <b>REAL</b> email.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /authentication/register
+                Body
+                    {
+                        "email": string,
+                        "username": string,
+                        "password": string
+                        "passwordConfirm": string,
+                        "phoneNumber": string | null,
+                        "preferredName": string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="registration">The registration data required for creating new Account.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.ConfirmRegistration(COSC2640A3.Bindings.ConfirmRegistration)">
+            <summary>
+            For guest. To activate a newly created Account. If the account is activated elsewhere, additional data for Student and Teacher must be inserted manually.
+            </summary>
+            <remarks>
+            Request signature:
+            - Only provide `<c>username</c>` or `<c>email</c>` at once
+            - <c>confirmCode</c> can be obtained from the registration email
+            - <c>recaptchaToken</c> is not required for testings
+            <!--
+            <code>
+                PUT /authentication/confirm-registration
+                Body
+                    {
+                        "email": string | null,
+                        "username": string | null,
+                        "confirmCode": string,
+                        "recaptchaToken": string | null
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="confirmation">The confirmation data required for activating account.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.Authenticate(COSC2640A3.Bindings.LoginCredentials)">
+            <summary>
+            For guest. To perform a login and obtain the authentication data for authorized requests.
+            </summary>
+            <remarks>
+            Request signature:
+            - Only provide `<c>username</c>` or `<c>email</c>` at once
+            - <c>asStudent</c> sets `<c>true</c>` to login as Student role, `<c>false</c>` to login as Teacher role
+            - <c>recaptchaToken</c> not required in testings
+            <!--
+            <code>
+                POST /authentication/authenticate
+                Body
+                    {
+                        "email": string | null,
+                        "username": string | null,
+                        "password": string,
+                        "asStudent": boolean,
+                        "recaptchaToken": string | null
+                    }
+            </code>
+            -->
+            
+            Returned data signature:
+            <!--
+            <code>
+            {
+                authenticatedUser: {
+                    authToken: string,
+                    accountId: string,
+                    role: 0 | 1
+                },
+                shouldConfirmTfa: boolean
+            }
+            </code>
+            -->
+            </remarks>
+            <param name="credentials">The confirmation data required for activating account.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.Unauthenticate(System.String)">
+            <summary>
+            For both. To perform logout and clear all authentication data.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /authentication/unauthenticate
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.SwitchRoleForAuthenticatedUser(System.String)">
+             <summary>
+             For both. To switch role for the authenticated user without having to logout.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /authentication/switch-role
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returns the role that has been switched to.
+             </remarks>
+             <param name="accountId">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = 0 | 1 }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.AddFilesToClassroom(System.String,COSC2640A3.Bindings.FilesAdding)">
+            <summary>
+            For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.
+            Each request sent to this endpoint is to add files of 1 specified type.
+            Files will be uploaded to S3 and corresponding data will be saved in database.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /class-content/add-files
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                    "Content-Type": "multipart/form-data"
+                Body
+                    {
+                        classroomId: string,
+                        fileType: 0 | 1 | 2 | 3,
+                        uploadedFiles: [binary]
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="filesToAdd">The data containing files binary to be added.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.UpdateFilesForClassroom(System.String,COSC2640A3.Bindings.FilesUpdating)">
+            <summary>
+            For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.
+            Each request sent to this endpoint is to add files of 1 specified type. Request body can specify files to be removed, and files to be added more.
+            One or both of the 2 optional property in request body must have value, they can't be null at the same time.
+            </summary>
+            <remarks>
+            Request signature:
+            - <c>uploadedFiles</c> and <c>removedFiles</c> must not be empty nor null at once
+            - <c>uploadedFiles</c>: optional: select files to add if any
+            - <c>removedFiles</c>: optional: select files to remove if any
+            <!--
+            <code>
+                POST /class-content/update-files
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                    "Content-Type": "multipart/form-data"
+                Body
+                    {
+                        classroomId: string,
+                        fileType: 0 | 1 | 2 | 3,
+                        uploadedFiles: [binary],
+                        removedFiles: [string]
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="filesToUpdate">The data containing files binary and serialized data to be updated.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.AddContentToClassroom(System.String,COSC2640A3.Bindings.RichContent)">
+            <summary>
+            For teacher. To add rich-text content to classroom contents.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /class-content/add-rich-content
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        classroomId: string,
+                        htmlContent: string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="richContent">The required data to be added.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.ImportContentToClassroom(System.String,COSC2640A3.Bindings.RichContentImport)">
+            <summary>
+            For teacher. To add rich-text content to classroom contents by uploaded images containing texts to be extracted programmatically.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /class-content/import-rich-content
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                    "Content-Type": "multipart/form-data"
+                Body
+                    {
+                        classroomId: string,
+                        filesForImport: [binary]
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="richContent">The required data to be added.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.UpdateContentForClassroom(System.String,COSC2640A3.Bindings.RichContent)">
+            <summary>
+            For teacher. To update rich-text content for classroom contents.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /class-content/update-rich-content
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        classroomId: string,
+                        htmlContent: string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="richContent">The required data to be updated.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.GetClassroomContents(System.String,System.String)">
+             <summary>
+             For both. To get all data to display for classroom contents including all files and rich-text content.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /class-content/all/{string}
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 id: string,
+                 videos: [FileVM],
+                 audios: [FileVM],
+                 photos: [FileVM],
+                 attachments: [FileVM],
+                 htmlContent: string
+             }
+             </code>
+             -->
+            
+             where `<c>FileVM</c>` is an object:
+             - <c>uploadedOn</c>: is a Unix timestamp
+             <!--
+             <code>
+             {
+                 id: string,
+                 name: string,
+                 type: 0 | 1 | 2 | 3,
+                 extension: string,
+                 uploadedOn: number
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <param name="classroomId">The classroom ID to get contents for.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.TranslateSentences(COSC2640A3.Bindings.TranslateIt)">
+            <summary>
+            For both. To translate a sentence or paragraph from English to another language.
+            </summary>
+            <remarks>
+            Request signature:
+            - <c>forSynonym</c> is ignored
+            <!--
+            <code>
+                GET /class-content/translate-sentences
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+                        phrase: string,
+                        forSynonyms: boolean
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="translateIt" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.TranslateWord(COSC2640A3.Bindings.TranslateIt)">
+             <summary>
+             For both. To translate an English word to another language.
+             </summary>
+             <remarks>
+             Request signature:
+             - <c>forSynonym</c> is ignored
+             - <c>phrase</c> is a single word
+             <!--
+             <code>
+                 GET /class-content/translate-word
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+                 Body
+                     {
+                         targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+                         phrase: string,
+                         forSynonyms: boolean
+                     }
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 word: string,
+                 rootForm: string,
+                 wordTypes: [string],
+                 translations: { string: [string] },
+                 synonyms: null
+                 antonyms: null
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="translateIt" type="string">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassContentController.GetThesaurus(COSC2640A3.Bindings.TranslateIt)">
+             <summary>
+             For both. To get English thesaurus for an English word. If <c>translateIt.ForSynonyms == true</c>, returns the synonyms, otherwise, returns the antonyms.
+             </summary>
+             <remarks>
+             Request signature:
+             - <c>targetLanguage</c> is ignored
+             - <c>forSynonym</c>: true for synonyms, false for antonyms
+             <!--
+             <code>
+                 GET /class-content/get-thesaurus
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+                 Body
+                     {
+                         targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+                         phrase: string,
+                         forSynonyms: boolean
+                     }
+             </code>
+             -->
+            
+             Returned object signature:
+             - <c>synonym</c>: if <c>translateIt.forSynonyms == false, this property is null.</c>
+             - <c>antonyms</c>: if <c>translateIt.forSynonyms == true, this property is null.</c>
+             <!--
+             <code>
+             {
+                 word: string,
+                 rootForm: string,
+                 wordTypes: [string],
+                 translations: null,
+                 synonyms: { string: [string] } | null,
+                 antonyms: { string: [string] } | null 
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="translateIt" type="string">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.CreateClassroom(System.String,COSC2640A3.Models.Classroom)">
+            <summary>
+            For teacher. To create a new classroom. Returns ID of the newly created classroom.
+            </summary>
+            <remarks>
+            Request signature:
+            - <c>capacity</c>: lower than 32767 + 1
+            - <c>price</c>: lower than 9999.99
+            - <c>duration</c>: lower than 255 + 1
+            <!--
+            <code>
+                POST /classroom/create
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        className: string,
+                        capacity: number,
+                        price: number,
+                        commencedOn: string,
+                        duration: number,
+                        durationUnit: 0 | 1 | 2 | 3 | 4
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="classroom">The required data to create new classroom.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.UpdateClassroom(System.String,COSC2640A3.Models.Classroom)">
+            <summary>
+            For teacher. To update a classroom.
+            </summary>
+            <remarks>
+            Request signature:
+            - <c>capacity</c>: lower than 32767 + 1
+            - <c>price</c>: lower than 9999.99
+            - <c>duration</c>: lower than 255 + 1
+            <!--
+            <code>
+                PUT /classroom/update
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        className: string,
+                        capacity: number,
+                        price: number,
+                        commencedOn: string,
+                        duration: number,
+                        durationUnit: 0 | 1 | 2 | 3 | 4
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="classroom">The required data to update classroom.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.RemoveClassroom(System.String,System.String)">
+            <summary>
+            For teacher. To delete a classroom.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                DELETE /classroom/remove/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="classroomId">The ID of classroom to be deleted.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.GetAllClassroomsByTeacher(System.String,System.String)">
+             <summary>
+             For both. To get all classrooms owned by a teacher, with basic classroom data in Classroom table.
+             Situation 1: Students browse classrooms owned by a Teacher.
+             Situation 2: A Teacher browse all classrooms owned by themselves.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /classroom/all-by-teacher/{string}
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 classrooms : [ClassroomVM],
+                 completedClassrooms: [ClassroomVm]
+             }
+             </code>
+             -->
+            
+             where `<c>ClassroomVM</c>` has the following schema:
+             <!--
+             <code>
+             {
+                 id: string,
+                 teacherId: string,
+                 teacherName: string,
+                 className: string,
+                 price: number,
+                 enrolmentsCount: number,
+                 classroomDetail: null
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <param name="teacherId">The ID of classroom to be deleted.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.UploadFileForImports(System.String,COSC2640A3.Bindings.FileImportUpload)">
+             <summary>
+             For teacher. To upload JSON files for importing classroom and student data into database by Lambda apps.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 POST /classroom/import
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+                     "Content-Type": "multipart/form-data"
+                 Body
+                     {
+                         importType: 0 | 1,
+                         fileForImport: binary
+                     }
+             </code>
+             -->
+            
+             Returned object signature:
+             - <c>fileSize</c> is in KB (integer)
+             - <c>uploadedOn</c> is a Unix timestamp
+             <!--
+             <code>
+             {
+                 id: string,
+                 accountId: string,
+                 fileId: string,
+                 fileName: string,
+                 fileSize: number,
+                 uploadedOn: number,
+                 status: 0 | 1 | 2 | 3 | 4,
+                 isForClassroom: boolean
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <param name="uploading">The uploaded JSON files required for importing data.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.MarkClassroomAsCompleted(System.String,System.String)">
+            <summary>
+            For teacher. To mark a classroom as completed. Student's results and invoices will be finalized during the process.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                PUT /classroom/completed/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="classroomId">The ID of classroom to mark as completed.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.GetAllClassrooms(System.String)">
+             <summary>
+             For student. To get all classrooms for browsing, excluding the ones created by its teacher role, and the ones they already enrolled in.
+             Classrooms only have basic data from the Classroom table.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /classroom/all
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             [{
+                 id: string,
+                 teacherId: string,
+                 teacherName: string,
+                 className: string,
+                 price: number,
+                 enrolmentsCount: number,
+                 classroomDetail: null
+             }]
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.GetEnrolmentsByClassroom(System.String,System.String)">
+             <summary>
+             For teacher. To get all enrolments for a classroom created by themself.
+             Enrolments have all details from Enrolment table, Student table, and Invoice table.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /classroom/enrolments/{string}
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             - <c>invoice.isPaid</c>: if <c>true</c>, <c>paymentDetail</c> will have value
+             <!--
+             <code>
+             {
+                 id: string,
+                 student: {
+                     email: string,
+                     username: string,
+                     phoneNumber: string,
+                     phoneNumberConfirmed: false,
+                     twoFaEnabled: false,
+                     twoFa: null,
+                     preferredName: string,
+                     studentId: string,
+                     schoolName: string,
+                     faculty: string,
+                     personalUrl: string
+                 },
+                 classroom: null,
+                 invoice: {
+                     id: string,
+                     amount: number,
+                     isPaid: boolean,
+                     paymentDetail: PaymentDetailVM | null
+                 },
+                 marksDetail: {
+                     overallMarks: number | null,
+                     markBreakdowns: [MarkBreakdownVM]
+                 },
+                 enrolledOn: string
+             }
+             </code>
+             -->
+            
+             where `<c>PaymentDetailVM</c>` has following schema:
+             <!--
+             <code>
+             {
+                 paymentMethod: string,
+                 paymentId: string,
+                 transactionId: string,
+                 chargeId: string,
+                 paymentStatus: string,
+                 paidOn: string
+             }
+             </code>
+             -->
+            
+             and `<c>MarkBreakdownVM</c>` has following schema:
+             <!--
+             <code>
+             {
+                 taskName: string,
+                 totalMarks: number,
+                 rewardedMarks: number,
+                 markedOn: string,
+                 comment: string
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <param name="classroomId" type="string">The ID of classrooms to get all enrolments.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.ClassroomController.GetClassroomDetails(System.String)">
+             <summary>
+             For both. To get all details for a classroom.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /classroom/details/{string}
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 id: string,
+                 teacherId: string,
+                 teacherName: string,
+                 className: string,
+                 price: number,
+                 enrolmentsCount: number,
+                 classroomDetail: {
+                     capacity: number,
+                     commencedOn: string,
+                     duration: number,
+                     durationUnit: 0 | 1 | 2 | 3 | 4,
+                     isActive: boolean,
+                     createdOn: string,
+                     normalizedDuration: string
+                 }
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="classroomId" type="string">The ID of classroom to get all details.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.PaymentController.CapturePaypalPayment(System.String,AssistantLibrary.Models.PaypalAuthorization)">
+             <summary>
+             For student. To make a payment using <b>Paypal</b> for an enrolment's invoice.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 POST /payment/paypal/{string}
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+                 Body
+                     {
+                         paypalEmail: string,
+                         orderId: string,
+                         amount: number,
+                         authorizationId: string
+                     }
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 id: string,
+                 isPaid: boolean,
+                 paymentMethod: string,
+                 paymentId: string,
+                 transactionId: string,
+                 paymentStatus: string,
+                 paidOn: string
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="enrolmentId" type="string">The account's ID.</param>
+             <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.PaymentController.CaptureStripeCardPayment(System.String,AssistantLibrary.Models.StripeAuthorization)">
+            <summary>
+            For student. To make a payment using <b>Bank Card</b> for an enrolment's invoice.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /payment/card/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        cardType: string,
+                        last4Digits: string,
+                        tokenId: number,
+                        details: {
+                            classroomId: string,
+                            className: string,
+                            amount: number
+                        }
+                    }
+            </code>
+            -->
+            
+            Returned object signature:
+            <!--
+            <code>
+            {
+                id: string,
+                isPaid: boolean,
+                paymentMethod: string,
+                paymentId: string,
+                transactionId: string,
+                chargeId: string
+                paymentStatus: string,
+                paidOn: string
+            }
+            </code>
+            -->
+            </remarks>
+            <param name="enrolmentId" type="string">The account's ID.</param>
+            <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.PaymentController.CaptureStripeGooglePayment(System.String,AssistantLibrary.Models.StripeAuthorization)">
+            <summary>
+            For student. To make a payment using <b>Google Pay</b> for an enrolment's invoice.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /payment/card/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        cardType: string,
+                        last4Digits: string,
+                        tokenId: number,
+                        details: {
+                            classroomId: string,
+                            className: string,
+                            amount: number
+                        }
+                    }
+            </code>
+            -->
+            
+            Returned object signature:
+            <!--
+            <code>
+            {
+                id: string,
+                isPaid: boolean,
+                paymentMethod: string,
+                paymentId: string,
+                transactionId: string,
+                chargeId: string
+                paymentStatus: string,
+                paidOn: string
+            }
+            </code>
+            -->
+            </remarks>
+            <param name="enrolmentId" type="string">The account's ID.</param>
+            <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.SecurityController.ConfirmTwoFaPin(System.String,System.String)">
+            <summary>
+            For both. To verify Two-Factor Authentication after user performs login.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /security/confirm-tfa-pin/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="tfaPin">The Two-Factor PIN to verify.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.SecurityController.SendTwoFaPinToEmailAndSms(System.String)">
+            <summary>
+            For both. To send the Two-Factor PIN to user's phone number and email address.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /security/send-tfa-pin
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.SecurityController.VerifySmsTokenForPhoneNumberConfirmation(System.String,System.String)">
+            <summary>
+            For both. To verify token sent to user's phone number to confirm the phone number.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /security/verify-sms-token/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="smsToken">The SMS token to verify.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.SecurityController.RequestNewSmsTokenForPhoneNumberConfirmation(System.String,System.String)">
+            <summary>
+            For both. To request a new SMS token: send the token to user's phone number.
+            This service is necessary when the old SMS token is expired.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /security/request-sms-token/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="recaptchaToken">The token obtained from Google Recaptcha.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.SecurityController.RequestNewTokenForAccountRecovery(COSC2640A3.Bindings.Identity)">
+            <summary>
+            For guest. To request a new account recovery token: send the token to user's phone number and email address.
+            This service is necessary when user forgets their account's password.
+            </summary>
+            <remarks>
+            Request signature:
+            - Only provide `<c>username</c>` or `<c>email</c>` at once
+            - <c>recaptchaToken</c> is not required for testings
+            - <c></c>
+            <!--
+            <code>
+                POST /security/request-recovery-token
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        email: string,
+                        username: string,
+                        recaptchaToken: string
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="identity">The detail of forgotten account to send recovery data to.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.StudentController.EnrolIntoClassroom(System.String,System.String)">
+            <summary>
+            For student. To enrol into a classroom. The enrolment's invoice will be created in the process. Returns the enrolment's ID.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /student/enrol/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="classroomId">The ID of classroom to enrol.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.StudentController.UnenrolToClassroom(System.String,System.String)">
+            <summary>
+            For both. When student wants to drop a classroom or teacher wants to cancel an enrolment.
+            The student's enrolment and invoice will be deleted. Returns the ID of deleted enrolment.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                DELETE /student/unenrol/{string}
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="enrolmentId">The ID of enrolment to be deleted.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.StudentController.GetAllEnrolments(System.String)">
+             <summary>
+             For student. To get all enrolments for a student with all details from Enrolment table, Classroom table, and Invoice table.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /student/enrolments
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+             </code>
+             -->
+            
+             Returned object signature:
+             - <c>invoice.isPaid</c>: if <c>true</c>, <c>paymentDetail</c> will have value
+             <!--
+             <code>
+             {
+                 id: string,
+                 student: null,
+                 classroom: {
+                     id: string,
+                     teacherId: string,
+                     teacherName: string,
+                     className: string,
+                     price: number,
+                     enrolmentsCount: 0,
+                     classroomDetails: null
+                 },
+                 invoice: {
+                     id: string,
+                     amount: number,
+                     isPaid: boolean,
+                     paymentDetail: PaymentDetailVM | null
+                 },
+                 marksDetail: {
+                     overallMarks: number | null,
+                     markBreakdowns: [MarkBreakdownVM]
+                 },
+                 enrolledOn: string
+             }
+             </code>
+             -->
+            
+             where `<c>PaymentDetailVM</c>` has following schema:
+             <!--
+             <code>
+             {
+                 paymentMethod: string,
+                 paymentId: string,
+                 transactionId: string,
+                 chargeId: string,
+                 paymentStatus: string,
+                 paidOn: string
+             }
+             </code>
+             -->
+            
+             and `<c>MarkBreakdownVM</c>` has following schema:
+             <!--
+             <code>
+             {
+                 taskName: string,
+                 totalMarks: number,
+                 rewardedMarks: number,
+                 markedOn: string,
+                 comment: string
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.TeacherController.AddMarksToStudentEnrolment(System.String,COSC2640A3.Bindings.StudentMarks)">
+             <summary>
+             For teacher. To add or update marks for a student enrolment.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 POST /teacher/add-marks
+                 Headers
+                     "AccountId": string
+                     "Authorization": "Bearer token"
+                 Body
+                     {
+                         enrolmentId: string,
+                         markBreakdowns: [MarkBreakdownVM]
+                     }
+             </code>
+             -->
+            
+             where `<c>MarkBreakdownVM</c>` has following schema:
+             <!--
+             <code>
+             {
+                 taskName: string,
+                 totalMarks: number,
+                 rewardedMarks: number,
+                 markedOn: string,
+                 comment: string
+             }
+             </code>
+             -->
+             </remarks>
+             <param name="accountId" type="string">The account's ID.</param>
+             <param name="studentMarks">The details od marking to update enrolment.</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.TeacherController.ExportClassroomData(System.String,COSC2640A3.Bindings.DataExport)">
+            <summary>
+            For teacher. To export selected classrooms to a JSON file and download.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /teacher/export-classrooms
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        classroomIds: [string]
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="dataExport">The IDs of classrooms to be exported.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.TeacherController.ExportStudentsInClassroomData(System.String,COSC2640A3.Bindings.DataExport)">
+            <summary>
+            For teacher. To export student enrolment and invoice data from selected classroom to a JSON file and download.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /teacher/export-students
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+                Body
+                    {
+                        classroomIds: [string]
+                    }
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <param name="dataExport">The IDs of classrooms to be exported.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.TeacherController.GetImportSchedules(System.String)">
+            <summary>
+            For teacher. To get all Lambda schedules from DynamoDb.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /teacher/schedules
+                Headers
+                    "AccountId": string
+                    "Authorization": "Bearer token"
+            </code>
+            -->
+            
+            Returned object signature:
+            - <c>fileSize</c> is in KB (integer)
+            - <c>uploadedOn</c> is a Unix timestamp
+            <!--
+            <code>
+            [{
+                id: string,
+                accountId: string,
+                fileId: string,
+                fileName: string,
+                fileSize: number,
+                uploadedOn: number,
+                status: 0 | 1 | 2 | 3 | 4,
+                isForClassroom: boolean
+            }]
+            </code>
+            -->
+            </remarks>
+            <param name="accountId" type="string">The account's ID.</param>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+            <response code="200">The request was successfully processed.</response>
+            <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.IsUsernameAndEmailAvailable(COSC2640A3.Bindings.Registration)">
+            <summary>
+            Key == null: error, Key == true: available, Key == false: unavailable then Value == nameof(registration.Email) | nameof(registration.Username)
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.GetAccountByEmailOrUsername(System.String,System.String,System.Boolean)">
+            <summary>
+            Params `email` and `username` must not be null at once.
+            Returns an Account corresponding to `email` or `username`.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.InsertToDatabase(COSC2640A3.Models.Account)">
+            <summary>
+            Returns null if error, true if success, false if failed.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.CreateRolesForAccountById(System.String)">
+            <summary>
+            Returns null if error, true if success, false if failed.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.UpdateAccount(COSC2640A3.Models.Account)">
+            <summary>
+            Returns null if error, true if success, false if failed.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.UpdateStudent(COSC2640A3.Models.Student)">
+            <summary>
+            Returns null if error, true if success, false if failed.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.UpdateTeacher(COSC2640A3.Models.Teacher)">
+            <summary>
+            Returns null if error, true if success, false if failed.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAuthenticationService.InsertToUserPool(COSC2640A3.Bindings.Registration)">
+            <summary>
+            Returns null if error, otherwise returns the ID of the inserted account.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAuthenticationService.Authenticate(System.String,System.String)">
+            <summary>
+            Key == null if error, Key == false if request to AWS failed then Value holds the reason, Key == true then Value holds the authToken.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IAuthenticationService.ConfirmUserInPool(System.String,System.String)">
+            <summary>
+            Key == null if error then Value holds the message, Key == false if confirmation failed, otherwise Key == true.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IClassroomService.InsertNewClassroom(COSC2640A3.Models.Classroom)">
+            <summary>
+            Returns default if error, otherwise returns the ID of new classroom.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IClassroomService.UpdateClassroom(COSC2640A3.Models.Classroom)">
+            <summary>
+            Returns null if error, returns false if failed, returns true if success.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IClassroomService.IsClassroomBelongedToThisTeacherByAccountId(System.String,System.String)">
+            <summary>
+            Returns null if error, returns false if not belonged, returns true if belonged.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IClassroomService.DeleteClassroom(COSC2640A3.Models.Classroom)">
+            <summary>
+            Returns null if error, returns false if failed, returns true if success.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.InsertNewEnrolment(COSC2640A3.Models.Enrolment)">
+            <summary>
+            Returns default if error, otherwise returns the ID of new enrolment.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.InsertNewInvoice(COSC2640A3.Models.Invoice)">
+            <summary>
+            Returns default if error, otherwise returns the ID of new invoice.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.IsEnrolmentMadeByStudentByAccountId(System.String,System.String)">
+            <summary>
+            Returns null if error, returns false if not belonged, returns true if belonged.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.DeleteEnrolment(COSC2640A3.Models.Enrolment)">
+            <summary>
+            Returns null if error, returns false if failed, returns true if success.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.DeleteInvoice(COSC2640A3.Models.Invoice)">
+            <summary>
+            Returns null if error, returns false if failed, returns true if success.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.UpdateEnrolment(COSC2640A3.Models.Enrolment)">
+            <summary>
+            Returns null if error, returns false if failed, returns true if success.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IEnrolmentService.DoesEnrolmentRelateToAClassroomOfThisTeacher(System.String,System.String)">
+            <summary>
+            Returns null if error, returns false if not associated, returns true if associated.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IRedisCacheService.InsertRedisCacheEntry(COSC2640A3.Bindings.CacheEntry)">
+            <summary>
+            Void return. The cache entry must not be null.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IRedisCacheService.GetRedisCacheEntry``1(System.String)">
+            <summary>
+            Generic method. Works with any object type T. The entry key must not be null.
+            </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Interfaces.IRedisCacheService.RemoveCacheEntry(System.String)">
+            <summary>
+            Void return. The cache entry must not be null.
+            </summary>
+        </member>
+    </members>
+</doc>

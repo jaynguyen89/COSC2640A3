@@ -48,5 +48,12 @@
         public string StripeSecretKey { get; set; }
         
         public string StripeClientId { get; set; }
+        
+        // For Oxford Dictionary
+        public string OxfordDictionaryApiEndpoint { get; set; }
+        
+        public string OxfordDictionaryAppApiId { get; set; }
+        
+        public string OxfordDictionaryAppApiKey { get; set; }
     }
 }

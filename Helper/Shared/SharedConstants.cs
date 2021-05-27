@@ -34,5 +34,20 @@ namespace Helper.Shared {
         public static readonly List<string> ExpectedClassContentAudioTypes = new() { "mp3", "wav", "wma", "aac", "flac" };
         public static readonly List<string> ExpectedClassContentPhotoTypes = new() { "jpg", "jpeg", "png", "bmp", "tiff", "gif" };
         public static readonly List<string> ExpectedTextractFileTypes = new() { "jpg", "jpeg", "png", "pdf" };
+
+        public static readonly Dictionary<byte, string> LanguageCodes = new() {
+            { (byte) SharedEnums.Language.English, "en" },
+            { (byte) SharedEnums.Language.Chinese, "zh" },
+            { (byte) SharedEnums.Language.French, "fr" },
+            { (byte) SharedEnums.Language.German, "de" },
+            { (byte) SharedEnums.Language.Greek, "el" },
+            { (byte) SharedEnums.Language.Hindi, "hi" },
+            { (byte) SharedEnums.Language.Indonesian, "id" },
+            { (byte) SharedEnums.Language.Italian, "it" },
+            { (byte) SharedEnums.Language.Malay, "ms" },
+            { (byte) SharedEnums.Language.Portuguese, "pt" },
+            { (byte) SharedEnums.Language.Russian, "ru" },
+            { (byte) SharedEnums.Language.Spanish, "es" }
+        };
     }
 }

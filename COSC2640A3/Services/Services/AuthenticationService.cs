@@ -16,23 +16,22 @@ namespace COSC2640A3.Services.Services {
 
         private readonly ILogger<AuthenticationService> _logger;
         private readonly IAmazonCognitoIdentityProvider _identityProvider;
-        private readonly MainDbContext _dbContext;
 
         private readonly string _clientId;
         private readonly string _userPoolId;
 
         public AuthenticationService(
             ILogger<AuthenticationService> logger,
-            IOptions<MainOptions> options,
-            MainDbContext dbContext
+            IOptions<MainOptions> options
         ) {
             _logger = logger;
-            _identityProvider = new AmazonCognitoIdentityProviderClient(
-                RegionEndpoint.GetBySystemName(options.Value.AwsRegion)
-            );
             _clientId = options.Value.UserPoolAppClientId;
             _userPoolId = options.Value.CognitoUserPoolId;
-            _dbContext = dbContext;
+            
+            _identityProvider = new AmazonCognitoIdentityProviderClient(
+                "AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3",
+                RegionEndpoint.GetBySystemName(options.Value.AwsRegion)
+            );
         }
 
         public async Task<string> InsertToUserPool(Registration registration) {

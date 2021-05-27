@@ -45,6 +45,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /authentication/register
         ///     Body
         ///         {
@@ -55,6 +57,8 @@ namespace COSC2640A3.Controllers {
         ///             "phoneNumber": string | null,
         ///             "preferredName": string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="registration">The registration data required for creating new Account.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
@@ -90,14 +94,21 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - Only provide `<c>username</c>` or `<c>email</c>` at once
+        /// - <c>confirmCode</c> can be obtained from the registration email
+        /// - <c>recaptchaToken</c> is not required for testings
+        /// <!--
+        /// <code>
         ///     PUT /authentication/confirm-registration
         ///     Body
         ///         {
-        ///             "email": string | null, ---> Only provide `<c>username</c>` or `<c>email</c>` at once.
+        ///             "email": string | null,
         ///             "username": string | null,
-        ///             "confirmCode": string, ---> Obtained from email
-        ///             "recaptchaToken": string | null ---> Not required in testings
+        ///             "confirmCode": string,
+        ///             "recaptchaToken": string | null
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="confirmation">The confirmation data required for activating account.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
@@ -153,17 +164,26 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - Only provide `<c>username</c>` or `<c>email</c>` at once
+        /// - <c>asStudent</c> sets `<c>true</c>` to login as Student role, `<c>false</c>` to login as Teacher role
+        /// - <c>recaptchaToken</c> not required in testings
+        /// <!--
+        /// <code>
         ///     POST /authentication/authenticate
         ///     Body
         ///         {
-        ///             "email": string | null, ---> Only provide `<c>username</c>` or `<c>email</c>` at once.
+        ///             "email": string | null,
         ///             "username": string | null,
-        ///             "password": string, ---> Obtained from email
-        ///             "asStudent": boolean, ---> Set `<c>true</c>` to login as Student role, `<c>false</c>` to login as Teacher role
-        ///             "recaptchaToken": string | null ---> Not required in testings
+        ///             "password": string,
+        ///             "asStudent": boolean,
+        ///             "recaptchaToken": string | null
         ///         }
+        /// </code>
+        /// -->
         /// 
         /// Returned data signature:
+        /// <!--
+        /// <code>
         /// {
         ///     authenticatedUser: {
         ///         authToken: string,
@@ -172,6 +192,8 @@ namespace COSC2640A3.Controllers {
         ///     },
         ///     shouldConfirmTfa: boolean
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="credentials">The confirmation data required for activating account.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -211,10 +233,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /authentication/unauthenticate
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
@@ -234,10 +260,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /authentication/switch-role
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returns the role that has been switched to.
         /// </remarks>

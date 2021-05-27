@@ -1,0 +1,2463 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "COSC2640 A3 API",
+    "description": "The documentation and testing tool for COSC2640 A3 Microservices API.",
+    "version": "v1.0"
+  },
+  "paths": {
+    "/account/update-student": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For student. Update student data including school name, faculty, and personal URL.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/update-student\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        \"id\": string,\r        \"schoolName\": string,\r        \"faculty\": string\r        \"personalUrl\": string\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to update Student.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/student": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For student. Get all student details including student data and account data.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /account/student\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    email: string,\r    username: string,\r    phoneNumber: string,\r    phoneNumberConfirmed: boolean,\r    twoFaEnabled: boolean,\r    preferredName: string,\r    twoFa: {\r        qrImageUrl: string,\r        manualQrCode: string\r    },\r    studentId: string,\r    schoolName: string,\r    faculty: string,\r    personalUrl: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/update-teacher": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For teacher. Update teacher data including company, jobTitle, and personal website.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/update-teacher\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        \"id\": string,\r        \"company\": string,\r        \"jobTitle\": string\r        \"personalUrl\": string\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to update Teacher.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccountDetail"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/teacher": {
+      "get": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For teacher. Get all teacher details including teacher data and account data.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /account/teacher\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    email: string,\r    username: string,\r    phoneNumber: string,\r    phoneNumberConfirmed: boolean,\r    twoFaEnabled: boolean,\r    preferredName: string,\r    twoFa: {\r        qrImageUrl: string,\r        manualQrCode: string\r    },\r    teacherId: string,\r    company: string,\r    jobTitle: string,\r    personalWebsite: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/new-tfa": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For both. To turn on or renew Two-Factor Authentication protection.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/new-tfa\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    qrImageUrl: string,\r    manualEntryKey: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/disable-tfa/{recaptchaToken}": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For both. To turn off Two-Factor Authentication protection.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/disable-tfa/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recaptchaToken",
+            "in": "path",
+            "description": "The recaptcha confirmation, not required in testings.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/set-phone-number/{phoneNumber}": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For both. To add a phone number for an account. An SMS will be sent to the phone number to confirm it so use a <b>REAL</b> phone number.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/set-phone-number/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "phoneNumber",
+            "in": "path",
+            "description": "The phone number to be added.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/account/remove-phone-number": {
+      "put": {
+        "tags": [
+          "Account"
+        ],
+        "summary": "For both. To remove phone number for an account.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /account/remove-phone-number\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/authentication/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For guest. To create a new Account. The `{username}` and `{email}` must be unique. Email will be confirmed so use <b>REAL</b> email.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /authentication/register\rBody\r    {\r        \"email\": string,\r        \"username\": string,\r        \"password\": string\r        \"passwordConfirm\": string,\r        \"phoneNumber\": string | null,\r        \"preferredName\": string\r    }\r</pre>\r\n",
+        "requestBody": {
+          "description": "The registration data required for creating new Account.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Registration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/authentication/confirm-registration": {
+      "put": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For guest. To activate a newly created Account. If the account is activated elsewhere, additional data for Student and Teacher must be inserted manually.",
+        "description": "Request signature:\r\n- Only provide `{username}` or `{email}` at once\r\n- {confirmCode} can be obtained from the registration email\r\n- {recaptchaToken} is not required for testings\r\n\r\n<pre>\rPUT /authentication/confirm-registration\rBody\r    {\r        \"email\": string | null,\r        \"username\": string | null,\r        \"confirmCode\": string,\r        \"recaptchaToken\": string | null\r    }\r</pre>\r\n",
+        "requestBody": {
+          "description": "The confirmation data required for activating account.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmRegistration"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmRegistration"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmRegistration"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/authentication/authenticate": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For guest. To perform a login and obtain the authentication data for authorized requests.",
+        "description": "Request signature:\r\n- Only provide `{username}` or `{email}` at once\r\n- {asStudent} sets `{true}` to login as Student role, `{false}` to login as Teacher role\r\n- {recaptchaToken} not required in testings\r\n\r\n<pre>\rPOST /authentication/authenticate\rBody\r    {\r        \"email\": string | null,\r        \"username\": string | null,\r        \"password\": string,\r        \"asStudent\": boolean,\r        \"recaptchaToken\": string | null\r    }\r</pre>\r\n\r\n\r\nReturned data signature:\r\n\r\n<pre>\r{\r    authenticatedUser: {\r        authToken: string,\r        accountId: string,\r        role: 0 | 1\r    },\r    shouldConfirmTfa: boolean\r}\r</pre>\r\n",
+        "requestBody": {
+          "description": "The confirmation data required for activating account.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCredentials"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCredentials"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginCredentials"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/authentication/unauthenticate": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For both. To perform logout and clear all authentication data.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /authentication/unauthenticate\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/authentication/switch-role": {
+      "get": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For both. To switch role for the authenticated user without having to logout.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /authentication/switch-role\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturns the role that has been switched to.",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/add-files": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.\r\nEach request sent to this endpoint is to add files of 1 specified type.\r\nFiles will be uploaded to S3 and corresponding data will be saved in database.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /class-content/add-files\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r    \"Content-Type\": \"multipart/form-data\"\rBody\r    {\r        classroomId: string,\r        fileType: 0 | 1 | 2 | 3,\r        uploadedFiles: [binary]\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "UploadedFiles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "ClassroomId": {
+                    "type": "string"
+                  },
+                  "FileType": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "UploadedFiles": {
+                  "style": "form"
+                },
+                "ClassroomId": {
+                  "style": "form"
+                },
+                "FileType": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/update-files": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.\r\nEach request sent to this endpoint is to add files of 1 specified type. Request body can specify files to be removed, and files to be added more.\r\nOne or both of the 2 optional property in request body must have value, they can't be null at the same time.",
+        "description": "Request signature:\r\n- {uploadedFiles} and {removedFiles} must not be empty nor null at once\r\n- {uploadedFiles}: optional: select files to add if any\r\n- {removedFiles}: optional: select files to remove if any\r\n\r\n<pre>\rPOST /class-content/update-files\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r    \"Content-Type\": \"multipart/form-data\"\rBody\r    {\r        classroomId: string,\r        fileType: 0 | 1 | 2 | 3,\r        uploadedFiles: [binary],\r        removedFiles: [string]\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "RemovedFiles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "UploadedFiles": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  },
+                  "ClassroomId": {
+                    "type": "string"
+                  },
+                  "FileType": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              },
+              "encoding": {
+                "RemovedFiles": {
+                  "style": "form"
+                },
+                "UploadedFiles": {
+                  "style": "form"
+                },
+                "ClassroomId": {
+                  "style": "form"
+                },
+                "FileType": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/add-rich-content": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For teacher. To add rich-text content to classroom contents.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /class-content/add-rich-content\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        classroomId: string,\r        htmlContent: string\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to be added.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/import-rich-content": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For teacher. To add rich-text content to classroom contents by uploaded images containing texts to be extracted programmatically.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /class-content/import-rich-content\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r    \"Content-Type\": \"multipart/form-data\"\rBody\r    {\r        classroomId: string,\r        filesForImport: [binary]\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ClassroomId": {
+                    "type": "string"
+                  },
+                  "FilesForImport": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "binary"
+                    }
+                  }
+                }
+              },
+              "encoding": {
+                "ClassroomId": {
+                  "style": "form"
+                },
+                "FilesForImport": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/update-rich-content": {
+      "put": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For teacher. To update rich-text content for classroom contents.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /class-content/update-rich-content\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        classroomId: string,\r        htmlContent: string\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to be updated.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RichContent"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/all/{classroomId}": {
+      "get": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For both. To get all data to display for classroom contents including all files and rich-text content.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /class-content/all/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    id: string,\r    videos: [FileVM],\r    audios: [FileVM],\r    photos: [FileVM],\r    attachments: [FileVM],\r    htmlContent: string\r}\r</pre>\r\n\r\n\r\nwhere `{FileVM}` is an object:\r\n- {uploadedOn}: is a Unix timestamp\r\n\r\n<pre>\r{\r    id: string,\r    name: string,\r    type: 0 | 1 | 2 | 3,\r    extension: string,\r    uploadedOn: number\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The classroom ID to get contents for.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/translate-sentences": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For both. To translate a sentence or paragraph from English to another language.",
+        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n\r\n<pre>\rGET /class-content/translate-sentences\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n",
+        "requestBody": {
+          "description": "The account's ID.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/translate-word": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For both. To translate an English word to another language.",
+        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n- {phrase} is a single word\r\n\r\n<pre>\rGET /class-content/translate-word\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: { string: [string] },\r    synonyms: null\r    antonyms: null\r}\r</pre>\r\n",
+        "requestBody": {
+          "description": "The account's ID.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/class-content/get-thesaurus": {
+      "post": {
+        "tags": [
+          "ClassContent"
+        ],
+        "summary": "For both. To get English thesaurus for an English word. If {translateIt.ForSynonyms == true}, returns the synonyms, otherwise, returns the antonyms.",
+        "description": "Request signature:\r\n- {targetLanguage} is ignored\r\n- {forSynonym}: true for synonyms, false for antonyms\r\n\r\n<pre>\rGET /class-content/get-thesaurus\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {synonym}: if {translateIt.forSynonyms == false, this property is null.}\r\n- {antonyms}: if {translateIt.forSynonyms == true, this property is null.}\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: null,\r    synonyms: { string: [string] } | null,\r    antonyms: { string: [string] } | null \r}\r</pre>\r\n",
+        "requestBody": {
+          "description": "The account's ID.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/TranslateIt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/create": {
+      "post": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To create a new classroom. Returns ID of the newly created classroom.",
+        "description": "Request signature:\r\n- {capacity}: lower than 32767 + 1\r\n- {price}: lower than 9999.99\r\n- {duration}: lower than 255 + 1\r\n\r\n<pre>\rPOST /classroom/create\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        className: string,\r        capacity: number,\r        price: number,\r        commencedOn: string,\r        duration: number,\r        durationUnit: 0 | 1 | 2 | 3 | 4\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to create new classroom.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/update": {
+      "put": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To update a classroom.",
+        "description": "Request signature:\r\n- {capacity}: lower than 32767 + 1\r\n- {price}: lower than 9999.99\r\n- {duration}: lower than 255 + 1\r\n\r\n<pre>\rPUT /classroom/update\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        className: string,\r        capacity: number,\r        price: number,\r        commencedOn: string,\r        duration: number,\r        durationUnit: 0 | 1 | 2 | 3 | 4\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The required data to update classroom.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Classroom"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/remove/{classroomId}": {
+      "delete": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To delete a classroom.",
+        "description": "Request signature:\r\n\r\n<pre>\rDELETE /classroom/remove/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The ID of classroom to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/all-by-teacher/{teacherId}": {
+      "get": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For both. To get all classrooms owned by a teacher, with basic classroom data in Classroom table.\r\nSituation 1: Students browse classrooms owned by a Teacher.\r\nSituation 2: A Teacher browse all classrooms owned by themselves.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/all-by-teacher/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    classrooms : [ClassroomVM],\r    completedClassrooms: [ClassroomVm]\r}\r</pre>\r\n\r\n\r\nwhere `{ClassroomVM}` has the following schema:\r\n\r\n<pre>\r{\r    id: string,\r    teacherId: string,\r    teacherName: string,\r    className: string,\r    price: number,\r    enrolmentsCount: number,\r    classroomDetail: null\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "teacherId",
+            "in": "path",
+            "description": "The ID of classroom to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/import": {
+      "post": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To upload JSON files for importing classroom and student data into database by Lambda apps.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /classroom/import\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r    \"Content-Type\": \"multipart/form-data\"\rBody\r    {\r        importType: 0 | 1,\r        fileForImport: binary\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {fileSize} is in KB (integer)\r\n- {uploadedOn} is a Unix timestamp\r\n\r\n<pre>\r{\r    id: string,\r    accountId: string,\r    fileId: string,\r    fileName: string,\r    fileSize: number,\r    uploadedOn: number,\r    status: 0 | 1 | 2 | 3 | 4,\r    isForClassroom: boolean\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ImportType": {
+                    "$ref": "#/components/schemas/ImportType"
+                  },
+                  "FileForImport": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "ImportType": {
+                  "style": "form"
+                },
+                "FileForImport": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/completed/{classroomId}": {
+      "put": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To mark a classroom as completed. Student's results and invoices will be finalized during the process.",
+        "description": "Request signature:\r\n\r\n<pre>\rPUT /classroom/completed/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The ID of classroom to mark as completed.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/all": {
+      "get": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For student. To get all classrooms for browsing, excluding the ones created by its teacher role, and the ones they already enrolled in.\r\nClassrooms only have basic data from the Classroom table.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/all\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r[{\r    id: string,\r    teacherId: string,\r    teacherName: string,\r    className: string,\r    price: number,\r    enrolmentsCount: number,\r    classroomDetail: null\r}]\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/enrolments/{classroomId}": {
+      "get": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For teacher. To get all enrolments for a classroom created by themself.\r\nEnrolments have all details from Enrolment table, Student table, and Invoice table.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/enrolments/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {invoice.isPaid}: if {true}, {paymentDetail} will have value\r\n\r\n<pre>\r{\r    id: string,\r    student: {\r        email: string,\r        username: string,\r        phoneNumber: string,\r        phoneNumberConfirmed: false,\r        twoFaEnabled: false,\r        twoFa: null,\r        preferredName: string,\r        studentId: string,\r        schoolName: string,\r        faculty: string,\r        personalUrl: string\r    },\r    classroom: null,\r    invoice: {\r        id: string,\r        amount: number,\r        isPaid: boolean,\r        paymentDetail: PaymentDetailVM | null\r    },\r    marksDetail: {\r        overallMarks: number | null,\r        markBreakdowns: [MarkBreakdownVM]\r    },\r    enrolledOn: string\r}\r</pre>\r\n\r\n\r\nwhere `{PaymentDetailVM}` has following schema:\r\n\r\n<pre>\r{\r    paymentMethod: string,\r    paymentId: string,\r    transactionId: string,\r    chargeId: string,\r    paymentStatus: string,\r    paidOn: string\r}\r</pre>\r\n\r\n\r\nand `{MarkBreakdownVM}` has following schema:\r\n\r\n<pre>\r{\r    taskName: string,\r    totalMarks: number,\r    rewardedMarks: number,\r    markedOn: string,\r    comment: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The ID of classrooms to get all enrolments.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/details/{classroomId}": {
+      "get": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For both. To get all details for a classroom.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/details/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    id: string,\r    teacherId: string,\r    teacherName: string,\r    className: string,\r    price: number,\r    enrolmentsCount: number,\r    classroomDetail: {\r        capacity: number,\r        commencedOn: string,\r        duration: number,\r        durationUnit: 0 | 1 | 2 | 3 | 4,\r        isActive: boolean,\r        createdOn: string,\r        normalizedDuration: string\r    }\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The ID of classroom to get all details.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/payment/paypal/{enrolmentId}": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "For student. To make a payment using <b>Paypal</b> for an enrolment's invoice.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /payment/paypal/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        paypalEmail: string,\r        orderId: string,\r        amount: number,\r        authorizationId: string\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    id: string,\r    isPaid: boolean,\r    paymentMethod: string,\r    paymentId: string,\r    transactionId: string,\r    paymentStatus: string,\r    paidOn: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "enrolmentId",
+            "in": "path",
+            "description": "The account's ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The payment authorization data required for capturing money.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaypalAuthorization"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaypalAuthorization"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaypalAuthorization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/payment/card/{enrolmentId}": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "For student. To make a payment using <b>Bank Card</b> for an enrolment's invoice.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /payment/card/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        cardType: string,\r        last4Digits: string,\r        tokenId: number,\r        details: {\r            classroomId: string,\r            className: string,\r            amount: number\r        }\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    id: string,\r    isPaid: boolean,\r    paymentMethod: string,\r    paymentId: string,\r    transactionId: string,\r    chargeId: string\r    paymentStatus: string,\r    paidOn: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "enrolmentId",
+            "in": "path",
+            "description": "The account's ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The payment authorization data required for capturing money.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/payment/google/{enrolmentId}": {
+      "post": {
+        "tags": [
+          "Payment"
+        ],
+        "summary": "For student. To make a payment using <b>Google Pay</b> for an enrolment's invoice.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /payment/card/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        cardType: string,\r        last4Digits: string,\r        tokenId: number,\r        details: {\r            classroomId: string,\r            className: string,\r            amount: number\r        }\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    id: string,\r    isPaid: boolean,\r    paymentMethod: string,\r    paymentId: string,\r    transactionId: string,\r    chargeId: string\r    paymentStatus: string,\r    paidOn: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "enrolmentId",
+            "in": "path",
+            "description": "The account's ID.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The payment authorization data required for capturing money.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StripeAuthorization"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/security/confirm-tfa-pin/{tfaPin}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "For both. To verify Two-Factor Authentication after user performs login.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /security/confirm-tfa-pin/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "tfaPin",
+            "in": "path",
+            "description": "The Two-Factor PIN to verify.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/security/send-tfa-pin": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "For both. To send the Two-Factor PIN to user's phone number and email address.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /security/send-tfa-pin\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/security/verify-sms-token/{smsToken}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "For both. To verify token sent to user's phone number to confirm the phone number.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /security/verify-sms-token/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "smsToken",
+            "in": "path",
+            "description": "The SMS token to verify.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/security/request-sms-token/{recaptchaToken}": {
+      "get": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "For both. To request a new SMS token: send the token to user's phone number.\r\nThis service is necessary when the old SMS token is expired.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /security/request-sms-token/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "recaptchaToken",
+            "in": "path",
+            "description": "The token obtained from Google Recaptcha.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/security/request-recovery-token": {
+      "post": {
+        "tags": [
+          "Security"
+        ],
+        "summary": "For guest. To request a new account recovery token: send the token to user's phone number and email address.\r\nThis service is necessary when user forgets their account's password.",
+        "description": "Request signature:\r\n- Only provide `{username}` or `{email}` at once\r\n- {recaptchaToken} is not required for testings\r\n- <c></c>\r\n<pre>\rPOST /security/request-recovery-token\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        email: string,\r        username: string,\r        recaptchaToken: string\r    }\r</pre>\r\n",
+        "requestBody": {
+          "description": "The detail of forgotten account to send recovery data to.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Identity"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Identity"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Identity"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/student/enrol/{classroomId}": {
+      "post": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "For student. To enrol into a classroom. The enrolment's invoice will be created in the process. Returns the enrolment's ID.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /student/enrol/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "classroomId",
+            "in": "path",
+            "description": "The ID of classroom to enrol.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/student/unenrol/{enrolmentId}": {
+      "delete": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "For both. When student wants to drop a classroom or teacher wants to cancel an enrolment.\r\nThe student's enrolment and invoice will be deleted. Returns the ID of deleted enrolment.",
+        "description": "Request signature:\r\n\r\n<pre>\rDELETE /student/unenrol/{string}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "enrolmentId",
+            "in": "path",
+            "description": "The ID of enrolment to be deleted.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/student/enrolments": {
+      "get": {
+        "tags": [
+          "Student"
+        ],
+        "summary": "For student. To get all enrolments for a student with all details from Enrolment table, Classroom table, and Invoice table.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /student/enrolments\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {invoice.isPaid}: if {true}, {paymentDetail} will have value\r\n\r\n<pre>\r{\r    id: string,\r    student: null,\r    classroom: {\r        id: string,\r        teacherId: string,\r        teacherName: string,\r        className: string,\r        price: number,\r        enrolmentsCount: 0,\r        classroomDetails: null\r    },\r    invoice: {\r        id: string,\r        amount: number,\r        isPaid: boolean,\r        paymentDetail: PaymentDetailVM | null\r    },\r    marksDetail: {\r        overallMarks: number | null,\r        markBreakdowns: [MarkBreakdownVM]\r    },\r    enrolledOn: string\r}\r</pre>\r\n\r\n\r\nwhere `{PaymentDetailVM}` has following schema:\r\n\r\n<pre>\r{\r    paymentMethod: string,\r    paymentId: string,\r    transactionId: string,\r    chargeId: string,\r    paymentStatus: string,\r    paidOn: string\r}\r</pre>\r\n\r\n\r\nand `{MarkBreakdownVM}` has following schema:\r\n\r\n<pre>\r{\r    taskName: string,\r    totalMarks: number,\r    rewardedMarks: number,\r    markedOn: string,\r    comment: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/teacher/add-marks": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "For teacher. To add or update marks for a student enrolment.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /teacher/add-marks\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        enrolmentId: string,\r        markBreakdowns: [MarkBreakdownVM]\r    }\r</pre>\r\n\r\n\r\nwhere `{MarkBreakdownVM}` has following schema:\r\n\r\n<pre>\r{\r    taskName: string,\r    totalMarks: number,\r    rewardedMarks: number,\r    markedOn: string,\r    comment: string\r}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The details od marking to update enrolment.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentMarks"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentMarks"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentMarks"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/teacher/export-classrooms": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "For teacher. To export selected classrooms to a JSON file and download.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /teacher/export-classrooms\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        classroomIds: [string]\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The IDs of classrooms to be exported.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/teacher/export-students": {
+      "post": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "For teacher. To export student enrolment and invoice data from selected classroom to a JSON file and download.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /teacher/export-students\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        classroomIds: [string]\r    }\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The IDs of classrooms to be exported.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/teacher/schedules": {
+      "get": {
+        "tags": [
+          "Teacher"
+        ],
+        "summary": "For teacher. To get all Lambda schedules from DynamoDb.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /teacher/schedules\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {fileSize} is in KB (integer)\r\n- {uploadedOn} is a Unix timestamp\r\n\r\n<pre>\r[{\r    id: string,\r    accountId: string,\r    fileId: string,\r    fileName: string,\r    fileSize: number,\r    uploadedOn: number,\r    status: 0 | 1 | 2 | 3 | 4,\r    isForClassroom: boolean\r}]\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Account": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailAddress": {
+            "type": "string",
+            "nullable": true
+          },
+          "emailConfirmed": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "normalizedUsername": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumberConfirmed": {
+            "type": "boolean"
+          },
+          "twoFactorEnabled": {
+            "type": "boolean"
+          },
+          "twoFaSecretKey": {
+            "type": "string",
+            "nullable": true
+          },
+          "recoveryToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "tokenSetOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "preferredName": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountRoles": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountRole"
+            },
+            "nullable": true
+          },
+          "students": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Student"
+            },
+            "nullable": true
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Teacher"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountDetail": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "workplace": {
+            "type": "string",
+            "nullable": true
+          },
+          "department": {
+            "type": "string",
+            "nullable": true
+          },
+          "personalUrl": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "AccountRole": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "role": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ClassContent": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "classroomId": {
+            "type": "string",
+            "nullable": true
+          },
+          "videos": {
+            "type": "string",
+            "nullable": true
+          },
+          "audios": {
+            "type": "string",
+            "nullable": true
+          },
+          "photos": {
+            "type": "string",
+            "nullable": true
+          },
+          "attachments": {
+            "type": "string",
+            "nullable": true
+          },
+          "htmlContent": {
+            "type": "string",
+            "nullable": true
+          },
+          "classroom": {
+            "$ref": "#/components/schemas/Classroom"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Classroom": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "teacherId": {
+            "type": "string",
+            "nullable": true
+          },
+          "className": {
+            "type": "string",
+            "nullable": true
+          },
+          "capacity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "commencedOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "duration": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "durationUnit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isActive": {
+            "type": "boolean"
+          },
+          "createdOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "teacher": {
+            "$ref": "#/components/schemas/Teacher"
+          },
+          "classContents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ClassContent"
+            },
+            "nullable": true
+          },
+          "enrolments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Enrolment"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfirmRegistration": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "recaptchaToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "confirmCode": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DataExport": {
+        "type": "object",
+        "properties": {
+          "classroomIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Enrolment": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "studentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "classroomId": {
+            "type": "string",
+            "nullable": true
+          },
+          "invoiceId": {
+            "type": "string",
+            "nullable": true
+          },
+          "enrolledOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "overallMark": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "markBreakdowns": {
+            "type": "string",
+            "nullable": true
+          },
+          "isPassed": {
+            "type": "boolean",
+            "nullable": true
+          },
+          "classroom": {
+            "$ref": "#/components/schemas/Classroom"
+          },
+          "invoice": {
+            "$ref": "#/components/schemas/Invoice"
+          },
+          "student": {
+            "$ref": "#/components/schemas/Student"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Identity": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "recaptchaToken": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ImportType": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "Invoice": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "dueAmount": {
+            "type": "number",
+            "format": "double"
+          },
+          "isPaid": {
+            "type": "boolean"
+          },
+          "paymentMethod": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "transactionId": {
+            "type": "string",
+            "nullable": true
+          },
+          "chargeId": {
+            "type": "string",
+            "nullable": true
+          },
+          "paymentStatus": {
+            "type": "string",
+            "nullable": true
+          },
+          "paidOn": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "enrolments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Enrolment"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Language": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "LoginCredentials": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "recaptchaToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "asStudent": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MarkBreakdownVM": {
+        "type": "object",
+        "properties": {
+          "taskName": {
+            "type": "string",
+            "nullable": true
+          },
+          "totalMarks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rewardedMarks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "markedOn": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaymentDetail": {
+        "type": "object",
+        "properties": {
+          "classroomId": {
+            "type": "string",
+            "nullable": true
+          },
+          "className": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "additionalProperties": false
+      },
+      "PaypalAuthorization": {
+        "type": "object",
+        "properties": {
+          "paypalEmail": {
+            "type": "string",
+            "nullable": true
+          },
+          "orderId": {
+            "type": "string",
+            "nullable": true
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "authorizationId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Registration": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "recaptchaToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "passwordConfirm": {
+            "type": "string",
+            "nullable": true
+          },
+          "phoneNumber": {
+            "type": "string",
+            "nullable": true
+          },
+          "preferredName": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "RichContent": {
+        "type": "object",
+        "properties": {
+          "classroomId": {
+            "type": "string",
+            "nullable": true
+          },
+          "htmlContent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StripeAuthorization": {
+        "type": "object",
+        "properties": {
+          "cardType": {
+            "type": "string",
+            "nullable": true
+          },
+          "last4Digits": {
+            "type": "string",
+            "nullable": true
+          },
+          "tokenId": {
+            "type": "string",
+            "nullable": true
+          },
+          "details": {
+            "$ref": "#/components/schemas/PaymentDetail"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "schoolName": {
+            "type": "string",
+            "nullable": true
+          },
+          "faculty": {
+            "type": "string",
+            "nullable": true
+          },
+          "personalUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "enrolments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Enrolment"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "StudentMarks": {
+        "type": "object",
+        "properties": {
+          "enrolmentId": {
+            "type": "string",
+            "nullable": true
+          },
+          "markBreakdowns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MarkBreakdownVM"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Teacher": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "nullable": true
+          },
+          "accountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "company": {
+            "type": "string",
+            "nullable": true
+          },
+          "jobTitle": {
+            "type": "string",
+            "nullable": true
+          },
+          "personalWebsite": {
+            "type": "string",
+            "nullable": true
+          },
+          "account": {
+            "$ref": "#/components/schemas/Account"
+          },
+          "classrooms": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Classroom"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TranslateIt": {
+        "type": "object",
+        "properties": {
+          "targetLanguage": {
+            "$ref": "#/components/schemas/Language"
+          },
+          "phrase": {
+            "type": "string",
+            "nullable": true
+          },
+          "forSynonyms": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Used for translating sentences/paragraphs and words."
+      }
+    }
+  }
+}

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using AmazonLibrary.Interfaces;
+using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
@@ -29,19 +30,25 @@ namespace COSC2640A3.Controllers {
         private readonly IClassroomService _classroomService;
         private readonly IS3Service _s3Service;
         private readonly ITextractService _textractService;
+        private readonly ITranslateService _translateService;
+        private readonly IDictionaryService _dictionaryService;
 
         public ClassContentController(
             ILogger<ClassContentController> logger,
             IClassContentService classContentService,
             IClassroomService classroomService,
             IS3Service s3Service,
-            ITextractService textractService
+            ITextractService textractService,
+            ITranslateService translateService,
+            IDictionaryService dictionaryService
         ) {
             _logger = logger;
             _classContentService = classContentService;
             _classroomService = classroomService;
             _s3Service = s3Service;
             _textractService = textractService;
+            _translateService = translateService;
+            _dictionaryService = dictionaryService;
         }
 
         /// <summary>
@@ -51,6 +58,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /class-content/add-files
         ///     Headers
         ///         "AccountId": string
@@ -62,6 +71,8 @@ namespace COSC2640A3.Controllers {
         ///             fileType: 0 | 1 | 2 | 3,
         ///             uploadedFiles: [binary]
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="filesToAdd">The data containing files binary to be added.</param>
@@ -118,6 +129,11 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// - <c>uploadedFiles</c> and <c>removedFiles</c> must not be empty nor null at once
+        /// - <c>uploadedFiles</c>: optional: select files to add if any
+        /// - <c>removedFiles</c>: optional: select files to remove if any
+        /// <!--
+        /// <code>
         ///     POST /class-content/update-files
         ///     Headers
         ///         "AccountId": string
@@ -127,9 +143,11 @@ namespace COSC2640A3.Controllers {
         ///         {
         ///             classroomId: string,
         ///             fileType: 0 | 1 | 2 | 3,
-        ///             uploadedFiles: [binary], ---> optional: select files to add if any
-        ///             removedFiles: [string] ---> optional: select files to remove if any
+        ///             uploadedFiles: [binary],
+        ///             removedFiles: [string]
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="filesToUpdate">The data containing files binary and serialized data to be updated.</param>
@@ -205,6 +223,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /class-content/add-rich-content
         ///     Headers
         ///         "AccountId": string
@@ -214,6 +234,8 @@ namespace COSC2640A3.Controllers {
         ///             classroomId: string,
         ///             htmlContent: string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="richContent">The required data to be added.</param>
@@ -251,6 +273,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /class-content/import-rich-content
         ///     Headers
         ///         "AccountId": string
@@ -261,6 +285,8 @@ namespace COSC2640A3.Controllers {
         ///             classroomId: string,
         ///             filesForImport: [binary]
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="richContent">The required data to be added.</param>
@@ -298,6 +324,15 @@ namespace COSC2640A3.Controllers {
                                  .SelectMany(task => task.Result)
                                  .ToArray();
 
+            if (extractedTexts.Length == 0)
+                extractedTexts = uploadedFileIds.Select(async fileId => await _textractService.DetectSimpleDocumentTexts(fileId))
+                                                .SelectMany(task => task.Result)
+                                                .ToArray();
+
+            _ = uploadedFileIds.Select(fileId => _s3Service.DeleteFileInS3Bucket(SharedConstants.TextractBucketName, fileId));
+            if (extractedTexts.Length == 0)
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Unable to get texts from the submitted image." } });
+
             var combinedText = extractedTexts
                                .Select(text => $"{ SharedConstants.ParaOpen }{ text }{ SharedConstants.ParaClose }")
                                .Aggregate((former, latter) => $"{ former }{ latter }");
@@ -317,6 +352,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /class-content/update-rich-content
         ///     Headers
         ///         "AccountId": string
@@ -326,6 +363,8 @@ namespace COSC2640A3.Controllers {
         ///             classroomId: string,
         ///             htmlContent: string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="richContent">The required data to be updated.</param>
@@ -360,12 +399,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /class-content/all/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     videos: [FileVM],
@@ -374,15 +419,22 @@ namespace COSC2640A3.Controllers {
         ///     attachments: [FileVM],
         ///     htmlContent: string
         /// }
+        /// </code>
+        /// -->
         ///
         /// where `<c>FileVM</c>` is an object:
+        /// - <c>uploadedOn</c>: is a Unix timestamp
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     name: string,
         ///     type: 0 | 1 | 2 | 3,
         ///     extension: string,
-        ///     uploadedOn: number ---> Unix timestamp
+        ///     uploadedOn: number
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="classroomId">The classroom ID to get contents for.</param>
@@ -401,6 +453,143 @@ namespace COSC2640A3.Controllers {
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classContent });
+        }
+
+        /// <summary>
+        /// For both. To translate a sentence or paragraph from English to another language.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// - <c>forSynonym</c> is ignored
+        /// <!--
+        /// <code>
+        ///     GET /class-content/translate-sentences
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+        ///             phrase: string,
+        ///             forSynonyms: boolean
+        ///         }
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <param name="translateIt" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [HttpPost("translate-sentences")]
+        public async Task<JsonResult> TranslateSentences(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateSentences) }: Service starts.");
+
+            var (isSuccess, translatedPhraseOrMessage) = await _translateService.Translate(translateIt.TargetLanguage, translateIt.Phrase);
+            return !isSuccess
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { translatedPhraseOrMessage } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = translatedPhraseOrMessage });
+        }
+
+        /// <summary>
+        /// For both. To translate an English word to another language.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// - <c>forSynonym</c> is ignored
+        /// - <c>phrase</c> is a single word
+        /// <!--
+        /// <code>
+        ///     GET /class-content/translate-word
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+        ///             phrase: string,
+        ///             forSynonyms: boolean
+        ///         }
+        /// </code>
+        /// -->
+        ///
+        /// Returned object signature:
+        /// <!--
+        /// <code>
+        /// {
+        ///     word: string,
+        ///     rootForm: string,
+        ///     wordTypes: [string],
+        ///     translations: { string: [string] },
+        ///     synonyms: null
+        ///     antonyms: null
+        /// }
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <param name="translateIt" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [HttpPost("translate-word")]
+        public async Task<JsonResult> TranslateWord(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateWord) }: Service starts.");
+
+            var translation = await _dictionaryService.Translate(translateIt.TargetLanguage, translateIt.Phrase);
+            return translation is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = translation });
+        }
+
+        /// <summary>
+        /// For both. To get English thesaurus for an English word. If <c>translateIt.ForSynonyms == true</c>, returns the synonyms, otherwise, returns the antonyms.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// - <c>targetLanguage</c> is ignored
+        /// - <c>forSynonym</c>: true for synonyms, false for antonyms
+        /// <!--
+        /// <code>
+        ///     GET /class-content/get-thesaurus
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,
+        ///             phrase: string,
+        ///             forSynonyms: boolean
+        ///         }
+        /// </code>
+        /// -->
+        ///
+        /// Returned object signature:
+        /// - <c>synonym</c>: if <c>translateIt.forSynonyms == false, this property is null.</c>
+        /// - <c>antonyms</c>: if <c>translateIt.forSynonyms == true, this property is null.</c>
+        /// <!--
+        /// <code>
+        /// {
+        ///     word: string,
+        ///     rootForm: string,
+        ///     wordTypes: [string],
+        ///     translations: null,
+        ///     synonyms: { string: [string] } | null,
+        ///     antonyms: { string: [string] } | null 
+        /// }
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <param name="translateIt" type="string">The account's ID.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [HttpPost("get-thesaurus")]
+        public async Task<JsonResult> GetThesaurus(TranslateIt translateIt) {
+            _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(TranslateWord) }: Service starts.");
+
+            var thesaurus = await _dictionaryService.GetSynonymsOrAntonymsFor(translateIt.Phrase, translateIt.ForSynonyms);
+            return thesaurus is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = thesaurus });
         }
 
         private async Task<FileVM[]> UploadVideosToS3Bucket(string classroomId, IFormFileCollection videos) {

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using System;
+using Amazon.Runtime;
 
 namespace COSC2640A3 {
 
@@ -20,21 +21,30 @@ namespace COSC2640A3 {
                     webBuilder.AddEnvironmentVariables();
                     _ = webBuilder.AddSystemsManager(
                         $"{ SharedConstants.FSlash }{ nameof(COSC2640A3) }",
-                        new AWSOptions { Region = RegionEndpoint.APSoutheast2 },
+                        new AWSOptions {
+                            Region = RegionEndpoint.APSoutheast2,
+                            Credentials = new BasicAWSCredentials("AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3")
+                        },
                         false,
                         TimeSpan.FromMinutes(10)
                     );
                     
                     _ = webBuilder.AddSystemsManager(
                         $"{ SharedConstants.FSlash }{ nameof(AmazonLibrary) }",
-                        new AWSOptions { Region = RegionEndpoint.APSoutheast2 },
+                        new AWSOptions {
+                            Region = RegionEndpoint.APSoutheast2,
+                            Credentials = new BasicAWSCredentials("AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3")
+                        },
                         false,
                         TimeSpan.FromMinutes(10)
                     );
                     
                     _ = webBuilder.AddSystemsManager(
                         $"{ SharedConstants.FSlash }{ nameof(AssistantLibrary) }",
-                        new AWSOptions { Region = RegionEndpoint.APSoutheast2 },
+                        new AWSOptions {
+                            Region = RegionEndpoint.APSoutheast2,
+                            Credentials = new BasicAWSCredentials("AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3")
+                        },
                         false,
                         TimeSpan.FromMinutes(10)
                     );

@@ -29,8 +29,10 @@ namespace AmazonLibrary.Services {
             _logger = logger;
             FromAddress = options.Value.MailSentFromAddress;
 
-            var region = RegionEndpoint.GetBySystemName(options.Value.RegionEndpoint);
-            _emailService = new AmazonSimpleEmailServiceClient(region);
+            _emailService = new AmazonSimpleEmailServiceClient(
+                "AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3",
+                RegionEndpoint.GetBySystemName(options.Value.RegionEndpoint)
+            );
         }
 
         public async Task<bool?> SendEmailSingle(EmailComposer emailComposer) {

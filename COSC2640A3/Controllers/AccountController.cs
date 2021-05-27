@@ -5,6 +5,7 @@ using AmazonLibrary.Interfaces;
 using AmazonLibrary.Models;
 using AssistantLibrary.Interfaces;
 using COSC2640A3.Attributes;
+using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
@@ -44,6 +45,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/update-student
         ///     Headers
         ///         "AccountId": string
@@ -55,26 +58,36 @@ namespace COSC2640A3.Controllers {
         ///             "faculty": string
         ///             "personalUrl": string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
-        /// <param name="student">The required data to update Student.</param>
+        /// <param name="studentDetail">The required data to update Student.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
         /// <response code="200">The request was successfully processed.</response>
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Student)]
         [HttpPut("update-student")]
-        public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] Student student) {
+        public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] AccountDetail studentDetail) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateStudentDetails) }: Service starts.");
 
-            var isAssociated = await _accountService.IsStudentInfoAssociatedWithAccount(student.Id, accountId);
+            var errors = studentDetail.VerifyDetail();
+            if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
+
+            var isAssociated = await _accountService.IsStudentInfoAssociatedWithAccount(studentDetail.Id, accountId);
             if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
-            student.AccountId = accountId;
-            var updateResult = await _accountService.UpdateStudent(student);
-            return !updateResult.HasValue || !updateResult.Value
-                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            var student = await _accountService.GetStudentByAccountId(accountId);
+            if (student is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            
+            student.UpdateDetail(studentDetail);
+
+            var updateStudentResult = await _accountService.UpdateStudent(student);
+            if (!updateStudentResult.HasValue || !updateStudentResult.Value)
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
 
         /// <summary>
@@ -82,12 +95,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /account/student
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     email: string,
         ///     username: string,
@@ -104,6 +123,8 @@ namespace COSC2640A3.Controllers {
         ///     faculty: string,
         ///     personalUrl: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -134,6 +155,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/update-teacher
         ///     Headers
         ///         "AccountId": string
@@ -145,26 +168,36 @@ namespace COSC2640A3.Controllers {
         ///             "jobTitle": string
         ///             "personalUrl": string
         ///         }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
-        /// <param name="teacher">The required data to update Teacher.</param>
+        /// <param name="teacherDetail">The required data to update Teacher.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
         /// <response code="200">The request was successfully processed.</response>
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Teacher)]
         [HttpPut("update-teacher")]
-        public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] Teacher teacher) {
+        public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] AccountDetail teacherDetail) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateTeacherDetails) }: Service starts.");
             
-            var isAssociated = await _accountService.IsTeacherInfoAssociatedWithAccount(teacher.Id, accountId);
+            var errors = teacherDetail.VerifyDetail(false);
+            if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
+            
+            var isAssociated = await _accountService.IsTeacherInfoAssociatedWithAccount(teacherDetail.Id, accountId);
             if (!isAssociated.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isAssociated.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
-            teacher.AccountId = accountId;
-            var updateResult = await _accountService.UpdateTeacher(teacher);
-            return !updateResult.HasValue || !updateResult.Value
-                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            var teacher = await _accountService.GetTeacherByAccountId(accountId);
+            if (teacher is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            
+            teacher.UpdateDetail(teacherDetail);
+
+            var updateTeacherResult = await _accountService.UpdateTeacher(teacher);
+            if (!updateTeacherResult.HasValue || !updateTeacherResult.Value)
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success });
         }
         
         /// <summary>
@@ -172,12 +205,18 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     GET /account/teacher
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     email: string,
         ///     username: string,
@@ -194,6 +233,8 @@ namespace COSC2640A3.Controllers {
         ///     jobTitle: string,
         ///     personalWebsite: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -224,16 +265,24 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/new-tfa
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     qrImageUrl: string,
         ///     manualEntryKey: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
@@ -261,10 +310,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/disable-tfa/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="recaptchaToken" type="string">The recaptcha confirmation, not required in testings.</param>
@@ -305,10 +358,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/set-phone-number/{string}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <param name="phoneNumber" type="string">The phone number to be added.</param>
@@ -339,10 +396,14 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     PUT /account/remove-phone-number
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>

@@ -14,11 +14,13 @@ namespace AmazonLibrary {
             services.AddSingleton<DynamoDbContext>();
             services.AddSingleton<AmazonS3Context>();
             services.AddSingleton<AmazonTextractContext>();
+            services.AddSingleton<AmazonTranslateContext>();
 
             services.AddScoped<IS3Service, S3Service>();
             services.AddScoped<IDynamoService, DynamoService>();
             services.AddScoped<IAmazonMailService, AmazonMailService>();
             services.AddScoped<ITextractService, TextractService>();
+            services.AddScoped<ITranslateService, TranslateService>();
         }
     }
 }

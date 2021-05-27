@@ -38,6 +38,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /payment/paypal/{string}
         ///     Headers
         ///         "AccountId": string
@@ -49,8 +51,12 @@ namespace COSC2640A3.Controllers {
         ///             amount: number,
         ///             authorizationId: string
         ///         }
+        /// </code>
+        /// -->
         ///
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     isPaid: boolean,
@@ -60,6 +66,8 @@ namespace COSC2640A3.Controllers {
         ///     paymentStatus: string,
         ///     paidOn: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="enrolmentId" type="string">The account's ID.</param>
         /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
@@ -99,6 +107,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /payment/card/{string}
         ///     Headers
         ///         "AccountId": string
@@ -114,8 +124,12 @@ namespace COSC2640A3.Controllers {
         ///                 amount: number
         ///             }
         ///         }
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     isPaid: boolean,
@@ -126,6 +140,8 @@ namespace COSC2640A3.Controllers {
         ///     paymentStatus: string,
         ///     paidOn: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="enrolmentId" type="string">The account's ID.</param>
         /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>
@@ -161,6 +177,8 @@ namespace COSC2640A3.Controllers {
         /// </summary>
         /// <remarks>
         /// Request signature:
+        /// <!--
+        /// <code>
         ///     POST /payment/card/{string}
         ///     Headers
         ///         "AccountId": string
@@ -176,8 +194,12 @@ namespace COSC2640A3.Controllers {
         ///                 amount: number
         ///             }
         ///         }
+        /// </code>
+        /// -->
         /// 
         /// Returned object signature:
+        /// <!--
+        /// <code>
         /// {
         ///     id: string,
         ///     isPaid: boolean,
@@ -188,6 +210,8 @@ namespace COSC2640A3.Controllers {
         ///     paymentStatus: string,
         ///     paidOn: string
         /// }
+        /// </code>
+        /// -->
         /// </remarks>
         /// <param name="enrolmentId" type="string">The account's ID.</param>
         /// <param name="paymentAuthorization">The payment authorization data required for capturing money.</param>

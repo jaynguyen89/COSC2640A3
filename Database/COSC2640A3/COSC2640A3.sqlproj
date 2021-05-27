@@ -69,5 +69,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="publish\COSC2640A3.local.publish.xml" />
+    <None Include="publish\COSC2640A3.stagging.publish.xml" />
   </ItemGroup>
 </Project>

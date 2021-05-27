@@ -10,8 +10,8 @@ namespace AmazonLibrary.Contexts {
 
         public AmazonTextractContext(IOptions<AmazonOptions> options) {
             _textractContext = new AmazonTextractClient(
-                options.Value.AwsAccessKeyId,
-                options.Value.AwsSecretKey,
+                options.Value.AwsAccessKeyId ?? "AKIAJSENDXCAPZWGB6HQ",
+                options.Value.AwsSecretKey ?? "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",
                 RegionEndpoint.GetBySystemName(options.Value.RegionEndpoint)
             );
         }
