@@ -20,7 +20,7 @@ export const sendRequestForResult = (
         }
         : {};
 
-    const acceptHeaders = { 'Accept': 'application/json' };
+    const acceptHeaders = { 'Accept': 'application/json' , "Access-Control-Allow-Origin": "*"};
     const contentHeaders = formData
         ? { 'Content-Type': 'multipart/form-data' }
         : { 'Content-Type': 'application/json' };

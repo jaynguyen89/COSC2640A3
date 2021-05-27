@@ -10,7 +10,7 @@ export interface IManageClassroomContent {
     getClassContent: IActionResult,
     clearAuthUser: () => void,
     invokeAddFileRequest: (auth: IAuthUser, file: IFileAdding) => void,
-    getAddFileRequest: IActionResult,
+    AddFileRequest: IActionResult,
     invokeUpdateFileRequest: (auth: IAuthUser, file:IUpdateFile) => void,
     getUpdateFileRequest: IActionResult,
     invokeAddRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
@@ -22,7 +22,6 @@ export interface IManageClassroomContent {
     classroomId: typeof EMPTY_STRING; 
 }
 
-//IClassContent = To Display Files
 export interface IClassContent {
     id: string,
     videos: Array<IFile>,
@@ -36,7 +35,7 @@ export interface IFile {
     extension: string,
     uploadedOn: number
 }
-//IRichContent = To Display RichContent
+
 export interface IRichContent {
     classroomID:string,
     htmlContent:string
@@ -81,17 +80,22 @@ export interface IUpdateFile extends IFileAdding {
     removedFiles: Array<string>
 }
 
-export interface IClassroomContentModal {
-    selectedClassroomContent: IClassContent,
-    statusMessage: IStatusMessage,
-    closeAlert: () => void,
-    task: string,
-    isTaskRunning: boolean,
-    handleAddBtn: (newFile: IFile) => void,
-}
-
 export interface IFileList {
     files: Array<IFile>,
     statusMessage: IStatusMessage | null,
     shouldShowSpinner: boolean | null,
+}
+
+export interface IUploadFile {
+    authUser: IAuthUser,
+    invokeAddFileRequest: (auth: IAuthUser, file: IFileAdding) => void,
+    uploadFile: IActionResult,
+    clearAuthUser: () => void
+}
+
+export enum FileType {
+    video,
+    audio,
+    photo,
+    other
 }

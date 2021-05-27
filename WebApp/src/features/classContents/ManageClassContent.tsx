@@ -6,13 +6,12 @@ import M from 'materialize-css';
 import Spinner from "../../shared/Spinner";
 import Alert from "../../shared/Alert";
 import { clearAuthUser } from "../authentication/redux/actions";
-import { IClassContent, IFile, IManageClassroomContent, defaultRichContent} from "./redux/interfaces";
+import { IClassContent, IFile, IManageClassroomContent, defaultRichContent, IUploadFile, FileType, IFileAdding} from "./redux/interfaces";
 import {
     invokeAddFileRequest, invokeUpdateFileRequest,
     invokeAddRichContentRequest, invokeImportRichContentRequest,
     invokeUpdateRichContentRequest, invokeGetClassContent
 } from "./redux/actions";
-import * as classro from "./redux/constants";
 import {
     checkSession,
     EMPTY_STATUS,
@@ -22,11 +21,11 @@ import {
     TASK_VIEW
 } from "../../providers/helpers";
 import moment from "moment";
-import ClassContentModel from '../classContents/components/ClassContentModel';
 import FileList from '../classContents/components/FileList';
 import HeaderNav from "../../shared/HeaderNav";
 import { Editor, EditorState } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import * as classContentConstants from "./redux/constants";
 
 
 
@@ -56,25 +55,33 @@ const ManageClassContent = (props: IManageClassroomContent) => {
     const [Updatefiles, setUpdateFiles] = React.useState(Array<IFile>());
     const [addRichContent, setAddRichContent] = React.useState(defaultRichContent); 
 
-    React.useEffect(() => {
-        props.invokeGetClassContent(props.authUser, props.classroomId);
-        M.Modal.init($('.modal'), {
-            ...modalOptions,
-            onCloseStart: () => {
-                // setSelectedClassroomId(EMPTY_STRING);
-                // setSelectedClassroom(defaultClassroom);
-                // setIsTaskRunning(false);
-                // setModalTask(TASK_VIEW);
-                // setStatusMessage(EMPTY_STATUS);
-            }
-        });
-    }, []);
+//Write a const that handles the upload button function. 
 
- 
-    const AddFileBtnClicked = () => {
-    }
+    const [fileType, setFileType] = React.useState(FileType.photo)
+
     
 
+    // const UploadFileForImport = () => {
+    //     if (addfiles.uploadedFiles === null) {
+    //         alert('You have selected no file to upload.');
+    //         return;
+    //     }
+
+    //     setFileFieldsEnabled(false);
+    //     props.invokeUploadFileForImportRequest(props.authUser, selectedFile);
+    // }
+
+    // React.useEffect(() => {
+    //     if (props.AddFileRequest.action === classContentConstants.ADD_FILE_CLASSCONTENT_REQUEST_FAILED)
+    //         checkSession(props.clearAuthUser, props.AddFileRequest.error?.message);
+
+     
+    //     setFileFieldsEnabled(true);
+    // }, [props.AddFileRequest]);
+
+    const attemptUploadingFiles = () => {
+        props.invokeAddFileRequest (props.authUser, {classroomID:props.classroomId , fileType:FileType.photo, uploadedFiles:addfiles} as IFileAdding )
+    }
 
     return (
         <div className='container' style={{ marginTop: '2.5em' }}>
@@ -101,9 +108,11 @@ const ManageClassContent = (props: IManageClassroomContent) => {
                     </div>
                     <div className="file-path-wrapper">
                         <input className="file-path validate"
-                               type="text"
+                               type="file"
+                               multiple
+                               //TODO: Add the new file types to this
+                               //accept={(fileType === FileType.photo && ".jpg, .jpeg, .png, .bmp, .tiff, .gif") || fileType === FileType.audio && ".mp3, .wav" || fileType === FileType.video && "mp4" || ".zip, .exe" }  
                                readOnly
-                               
                                placeholder='Select Audio/Photo/Document to Upload'
                         />
                     </div>
@@ -111,8 +120,7 @@ const ManageClassContent = (props: IManageClassroomContent) => {
                     files={addfiles}
                     shouldShowSpinner={null }
                     statusMessage={ null }
-                
-                     />
+                    />
                      </div>
                     </div>
                 </div>
@@ -136,7 +144,7 @@ const ManageClassContent = (props: IManageClassroomContent) => {
                                placeholder='Select 1 PDF file'
                         />
                     </div>
-                    <p className='small-text'>Upload a File to automatically convery it to RichTextContent</p>
+                    <p className='small-text'>Upload a File to automatically convert it to RichTextContent</p>
                 </div>
                     <div>
                     <br></br>
