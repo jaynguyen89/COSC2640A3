@@ -23,7 +23,7 @@ namespace COSC2640A3.Controllers {
     [MainAuthorize]
     [TwoFaAuthorize]
     [Route("class-content")]
-    public sealed class ClassContentController {
+    public sealed class ClassContentController : AppController {
 
         private readonly ILogger<ClassContentController> _logger;
         private readonly IClassContentService _classContentService;
@@ -181,7 +181,7 @@ namespace COSC2640A3.Controllers {
                 var fileIdsToDelete = contentFiles.Where(file => filesToUpdate.RemovedFiles.Contains(file.Id)).Select(file => file.Id).ToArray();
                 
                 var bucketName = GetBucketNameForFileType(filesToUpdate.ClassroomId, filesToUpdate.FileType);
-                _ = fileIdsToDelete.Select(async fileId => await _s3Service.DeleteFileInS3Bucket(bucketName, fileId));
+                _ = fileIdsToDelete.Select(async fileId => await _s3Service.DeleteClassroomContentFileInS3Bucket(bucketName, fileId));
                 
                 contentFiles = contentFiles.Where(file => !filesToUpdate.RemovedFiles.Contains(file.Id)).ToArray();
             }
@@ -329,7 +329,7 @@ namespace COSC2640A3.Controllers {
                                                 .SelectMany(task => task.Result)
                                                 .ToArray();
 
-            _ = uploadedFileIds.Select(fileId => _s3Service.DeleteFileInS3Bucket(SharedConstants.TextractBucketName, fileId));
+            _ = uploadedFileIds.Select(fileId => _s3Service.DeleteClassroomContentFileInS3Bucket(SharedConstants.TextractBucketName, fileId));
             if (extractedTexts.Length == 0)
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Unable to get texts from the submitted image." } });
 
@@ -702,16 +702,6 @@ namespace COSC2640A3.Controllers {
                        UploadedOn = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                    })
                    .ToArray();
-        }
-
-        private string GetBucketNameForFileType(string classroomId, byte fileType) {
-            return fileType switch {
-                (byte) FileType.video => $"{ classroomId }.{ nameof(FileType.video) }s",
-                (byte) FileType.audio => $"{ classroomId }.{ nameof(FileType.audio) }s",
-                (byte) FileType.photo => $"{ classroomId }.{ nameof(FileType.photo) }s",
-                (byte) FileType.other => $"{ classroomId }.{ nameof(FileType.other) }s",
-                _ => default
-            };
         }
     }
 }

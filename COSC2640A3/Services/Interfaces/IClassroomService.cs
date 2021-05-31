@@ -1,6 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using COSC2640A3.Models;
-using COSC2640A3.ViewModels;
 using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 
@@ -45,5 +45,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task<bool?> AreTheseClassroomsBelongedTo(string accountId);
         
         Task<ClassroomExportVM[]> GetClassroomDataForExportBy(string[] classroomIds);
+        
+        Task<KeyValuePair<bool?, bool>> DoesClassroomHaveAnyEnrolment(string classroomId);
     }
 }

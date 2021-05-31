@@ -4,7 +4,7 @@ import { IAuthUser } from "../features/authentication/redux/interfaces";
 //axios.defaults.withCredentials = true; //include all cookies
 
 const LOCAL_ENDPOINT = 'https://localhost:5001/';
-const PRODUCTION_ENDPOINT = 'https://cosc2640-307005.ts.r.appspot.com/';
+const PRODUCTION_ENDPOINT = 'http://cosc2649a3test.ap-southeast-2.elasticbeanstalk.com/';
 
 export const sendRequestForResult = (
     action: string,

@@ -21,6 +21,8 @@ namespace COSC2640A3.Controllers {
         private readonly ISmsService _smsService;
         private readonly IAmazonMailService _mailService;
 
+        protected AppController() { }
+
         protected AppController(
             IContextService contextService,
             IAccountService accountService,
@@ -92,6 +94,16 @@ namespace COSC2640A3.Controllers {
             await _redisCache.RemoveCacheEntry($"{ SharedConstants.TwoFaCacheName }_{ accountId }");
             
             HttpContext.Response.Cookies.Delete("AuthToken");
+        }
+        
+        protected string GetBucketNameForFileType(string classroomId, byte fileType) {
+            return fileType switch {
+                (byte) FileType.video => $"{ classroomId }.{ nameof(FileType.video) }s".ToLower(),
+                (byte) FileType.audio => $"{ classroomId }.{ nameof(FileType.audio) }s".ToLower(),
+                (byte) FileType.photo => $"{ classroomId }.{ nameof(FileType.photo) }s".ToLower(),
+                (byte) FileType.other => $"{ classroomId }.{ nameof(FileType.other) }s".ToLower(),
+                _ => default
+            };
         }
     }
 }

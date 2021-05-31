@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
@@ -225,6 +226,21 @@ namespace COSC2640A3.Services.Services {
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetClassroomDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
+            }
+        }
+
+        public async Task<KeyValuePair<bool?, bool>> DoesClassroomHaveAnyEnrolment(string classroomId) {
+            try {
+                var enrolments = await GetEnrolmentsByClassroomId(classroomId);
+                if (enrolments is null) return new KeyValuePair<bool?, bool>(default, default);
+                if (enrolments.Length == 0) return new KeyValuePair<bool?, bool>(false, default);
+
+                var hasPaidEnrolment = await _dbContext.Enrolments.AnyAsync(enrolment => enrolment.Invoice.IsPaid && enrolments.Select(e => e.Id).Contains(enrolment.Id));
+                return new KeyValuePair<bool?, bool>(true, hasPaidEnrolment);
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(DoesClassroomHaveAnyEnrolment) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool?, bool>(default, default);
             }
         }
     }

@@ -7,6 +7,8 @@ namespace AmazonLibrary.Interfaces {
     public interface IS3Service {
         
         Task<string> UploadFileForImportToS3Bucket(Stream fileStream, SharedEnums.ImportType importType);
+
+        Task<bool?> DeleteFileImportScheduleFromS3Bucket(string fileId, SharedEnums.ImportType importType);
         
         Task<bool> CreateBucketWithNameIfNeeded(string bucketName);
         
@@ -15,6 +17,6 @@ namespace AmazonLibrary.Interfaces {
         /// </summary>
         Task<string> UploadFileToBucket(string bucketName, Stream fileStream);
         
-        Task<bool> DeleteFileInS3Bucket(string bucketName, string fileId);
+        Task<bool> DeleteClassroomContentFileInS3Bucket(string bucketName, string fileId);
     }
 }

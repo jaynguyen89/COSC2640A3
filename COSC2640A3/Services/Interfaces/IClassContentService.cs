@@ -5,8 +5,6 @@ using COSC2640A3.ViewModels.ClassContent;
 namespace COSC2640A3.Services.Interfaces {
 
     public interface IClassContentService {
-
-        //Task<bool?> InsertOrSuplementFilesContentByClassroomId(string classroomId, FileVM[] uploadResults);
         
         Task<ClassContent> GetClassContentByClassroomId(string classroomId);
         
@@ -15,5 +13,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task<string> InsertNewContent(ClassContent classContent);
         
         Task<ClassContentVM> GetClassContentVmByClassroomId(string classroomId);
+        
+        Task<bool?> DeleteContentById(string contentId);
     }
 }

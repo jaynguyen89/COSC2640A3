@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using AmazonLibrary.Interfaces;
 using AmazonLibrary.Models;
@@ -20,15 +21,13 @@ namespace COSC2640A3.Controllers {
     [MainAuthorize]
     [TwoFaAuthorize]
     [Route("classroom")]
-    public sealed class ClassroomController {
+    public sealed class ClassroomController : AppController {
         
         private readonly ILogger<ClassroomController> _logger;
         private readonly IOptions<MainOptions> _options;
-        private readonly IContextService _contextService;
         private readonly IClassroomService _classroomService;
-        private readonly IAccountService _accountService;
+        private readonly IClassContentService _classContentService;
         private readonly IEnrolmentService _enrolmentService;
-        private readonly IRedisCacheService _redisCache;
         private readonly IS3Service _s3Service;
         private readonly IDynamoService _dynamoService;
 
@@ -37,19 +36,18 @@ namespace COSC2640A3.Controllers {
             IOptions<MainOptions> options,
             IContextService contextService,
             IClassroomService classroomService,
+            IClassContentService classContentService,
             IAccountService accountService,
             IEnrolmentService enrolmentService,
             IRedisCacheService redisCache,
             IS3Service s3Service,
             IDynamoService dynamoService
-        ) {
+        ) : base(contextService, accountService, redisCache, null, null) {
             _logger = logger;
             _options = options;
-            _contextService = contextService;
             _classroomService = classroomService;
-            _accountService = accountService;
+            _classContentService = classContentService;
             _enrolmentService = enrolmentService;
-            _redisCache = redisCache;
             _s3Service = s3Service;
             _dynamoService = dynamoService;
         }
@@ -187,14 +185,53 @@ namespace COSC2640A3.Controllers {
             var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
-
+            
             var classroom = await _classroomService.GetClassroomById(classroomId);
             if (classroom is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             
-            var removeResult = await _classroomService.DeleteClassroom(classroom);
-            return !removeResult.HasValue || !removeResult.Value
+            var (hasEnrolment, hasPaidEnrolment) = await _classroomService.DoesClassroomHaveAnyEnrolment(classroomId);
+            if (!hasEnrolment.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (!hasEnrolment.Value) {
+                await _contextService.StartTransaction();
+                
+                var removeClassroomResult = await _classroomService.DeleteClassroom(classroom);
+                if (!removeClassroomResult.HasValue || !removeClassroomResult.Value) {
+                    await _contextService.RevertTransaction();
+                    return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+                }
+
+                var schedules = await _dynamoService.GetAllSchedulesDataFor(accountId);
+                _ = schedules.Select(async schedule => await _s3Service.DeleteFileImportScheduleFromS3Bucket(schedule.FileId, schedule.IsForClassroom ? ImportType.Classroom : ImportType.Students));
+
+                var classroomContent = await _classContentService.GetClassContentVmByClassroomId(classroomId);
+                if (classroomContent is null) {
+                    await _contextService.RevertTransaction();
+                    return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+                }
+
+                _ = classroomContent.Videos.Select(async video => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.video), video.Id));
+                _ = classroomContent.Audios.Select(async audio => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.audio), audio.Id));
+                _ = classroomContent.Photos.Select(async photo => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.photo), photo.Id));
+                _ = classroomContent.Attachments.Select(async attachment => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.other), attachment.Id));
+                
+                var removeContentResult = await _classContentService.DeleteContentById(classroomContent.Id);
+                if (!removeContentResult.HasValue || !removeContentResult.Value) {
+                    await _contextService.RevertTransaction();
+                    return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+                }
+                
+                await _contextService.ConfirmTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            }
+
+            if (hasPaidEnrolment) return new JsonResult(new JsonResponse {Result = RequestResult.Failed, Messages = new[] {"Your classroom has paid enrolment. It could not be deleted or deactivated."}});
+            
+            classroom.IsActive = false;
+            var updateResult = await _classroomService.UpdateClassroom(classroom);
+            return !updateResult.HasValue || !updateResult.Value 
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success });
+
         }
         
         /// <summary>

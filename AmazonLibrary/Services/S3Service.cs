@@ -52,6 +52,16 @@ namespace AmazonLibrary.Services {
             }
         }
 
+        public async Task<bool?> DeleteFileImportScheduleFromS3Bucket(string fileId, SharedEnums.ImportType importType) {
+            _logger.LogInformation($"{ nameof(S3Service) }.{ nameof(DeleteFileImportScheduleFromS3Bucket) }: Service starts.");
+            
+            var bucketName = importType == SharedEnums.ImportType.Classroom
+                ? _options.Value.S3BucketTeacherImportingClassrooms
+                : _options.Value.S3BucketTeacherImportingStudentsToClassroom;
+
+            return await DeleteClassroomContentFileInS3Bucket(bucketName, fileId);
+        }
+
         public async Task<bool> CreateBucketWithNameIfNeeded(string bucketName) {
             _logger.LogInformation($"{ nameof(S3Service) }.{ nameof(CreateBucketWithNameIfNeeded) }: Service starts.");
             
@@ -90,7 +100,7 @@ namespace AmazonLibrary.Services {
             }
         }
 
-        public async Task<bool> DeleteFileInS3Bucket(string bucketName, string fileId) {
+        public async Task<bool> DeleteClassroomContentFileInS3Bucket(string bucketName, string fileId) {
             var deleteFileRequest = new DeleteObjectRequest {
                 BucketName = bucketName,
                 Key = fileId

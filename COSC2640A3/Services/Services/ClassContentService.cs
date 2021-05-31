@@ -78,5 +78,19 @@ namespace COSC2640A3.Services.Services {
                 return default;
             }
         }
+
+        public async Task<bool?> DeleteContentById(string contentId) {
+            var classroomContent = await _dbContext.ClassContents.FindAsync(contentId);
+            _dbContext.ClassContents.Remove(classroomContent);
+
+            try {
+                var result = await _dbContext.SaveChangesAsync();
+                return result != 0;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(ClassContentService) }.{ nameof(DeleteContentById) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
     }
 }
