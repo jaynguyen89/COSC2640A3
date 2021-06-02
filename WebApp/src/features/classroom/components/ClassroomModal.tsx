@@ -1,17 +1,17 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import _ from 'lodash';
 import {defaultClassroom, IClassroomData, IClassroomModal} from "../redux/interfaces";
 import {
     DurationUnits,
     EMPTY_STRING,
-    normalizeDt,
     TASK_CREATE,
     TASK_UPDATE,
     TASK_VIEW
 } from "../../../providers/helpers";
 import Spinner from "../../../shared/Spinner";
 import Alert from "../../../shared/Alert";
+import M from 'materialize-css';
+import moment from "moment";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser
@@ -21,16 +21,29 @@ const mapActionsToProps = {};
 
 const ClassroomModal = (props: IClassroomModal) => {
     const [classroom, setClassroom] = React.useState(defaultClassroom);
+    const [backup] = React.useState(props.selectedClassroom);
 
     React.useEffect(() => {
         setClassroom(props.selectedClassroom);
+
+        M.Datepicker.init($('#commenceDate'), {
+            onSelect : (selectedDate: Date) => updateClassroom('commenceDate', selectedDate),
+            minDate : moment().toDate(),
+            maxDate : moment().add(365, 'day').toDate()
+        });
+
+        M.Timepicker.init($('#commenceTime'), {
+            onSelect : (hour: number, minute: number) => updateClassroom('commenceTime', `${ hour }:${ minute }`),
+            twelveHour: false
+        });
     }, [props.selectedClassroom]);
 
-    const updateClassroom = (field: string, value: string) => {
+    const updateClassroom = (field: string, value: string | Date) => {
+        if (field === 'commenceDate') props.datetime.setDateTime(moment(value).format('DD MMM YYYY'), 'date');
+        if (field === 'commenceTime') props.datetime.setDateTime(value as string, 'time');
         if (field === 'className') setClassroom({ ...classroom, className: value } as IClassroomData);
         if (field === 'price') setClassroom({ ...classroom, price: (value && Number(value)) || 0 } as IClassroomData);
         if (field === 'capacity') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, capacity: (value && Number(value)) || 0 } } as IClassroomData);
-        if (field === 'commenceDate') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, commencedOn: value } } as IClassroomData);
         if (field === 'duration') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, duration: (value && Number(value)) || 0 } } as IClassroomData);
         if (field === 'durationUnit') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, durationUnit: Number(value) } } as IClassroomData);
     }
@@ -74,7 +87,7 @@ const ClassroomModal = (props: IClassroomModal) => {
                     <label htmlFor='className'>Classroom Name</label>
                 </div>
 
-                <div className='input-field col m4 s12'>
+                <div className='input-field col m6 s12'>
                     <i className='material-icons prefix'>account_circle</i>
                     <input id='price' min='0' max='9999.99' type='number' className='validate' step='0.01'
                            value={ classroom.price || EMPTY_STRING }
@@ -83,7 +96,7 @@ const ClassroomModal = (props: IClassroomModal) => {
                     <label htmlFor='price'>Price</label>
                 </div>
 
-                <div className='input-field col m4 s12'>
+                <div className='input-field col m6 s12'>
                     <i className='material-icons prefix'>account_circle</i>
                     <input id='capacity' min='1' max='32767' type='number' className='validate'
                            value={ classroom.classroomDetail.capacity || EMPTY_STRING }
@@ -92,13 +105,20 @@ const ClassroomModal = (props: IClassroomModal) => {
                     <label htmlFor='capacity'>Classroom Capacity</label>
                 </div>
 
-                <div className='input-field col m4 s12'>
+                <div className='input-field col m6 s12'>
                     <i className='material-icons prefix'>account_circle</i>
-                    <input id='commenceDate' type='text' className='validate'
-                           value={ normalizeDt(classroom.classroomDetail.commencedOn) || EMPTY_STRING }
-                           onChange={ e => updateClassroom('commenceDate', e.target.value) }
+                    <input id='commenceDate' type='text' className='date'
+                           value={ props.datetime.date || (props.task === TASK_CREATE ? EMPTY_STRING : moment(classroom.classroomDetail.commencedOn).format('DD MMM YYYY')) }
                     />
                     <label htmlFor='commenceDate'>Commence Date</label>
+                </div>
+
+                <div className='input-field col m6 s12'>
+                    <i className='material-icons prefix'>account_circle</i>
+                    <input id='commenceTime' type='text' className='time'
+                           value={ props.datetime.time || (props.task === TASK_CREATE ? EMPTY_STRING : moment(classroom.classroomDetail.commencedOn).format('HH:mm')) }
+                    />
+                    <label htmlFor='commenceTime'>Commence Time</label>
                 </div>
 
                 <div className='input-field col m6 s12'>
@@ -166,7 +186,7 @@ const ClassroomModal = (props: IClassroomModal) => {
 
                     <button className='btn waves-effect waves-light right'
                             onClick={ () => {
-                                localStorage.setItem('classroom_ManageEnrolments', JSON.stringify(classroom));
+                                localStorage.setItem('classroom_ManageEnrolments', JSON.stringify(backup));
                                 window.location.href = '/manage-enrolments'
                             }}
                     >

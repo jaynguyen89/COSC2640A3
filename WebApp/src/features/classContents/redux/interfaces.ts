@@ -1,5 +1,5 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {EMPTY_STATUS, EMPTY_STRING, IActionResult} from "../../../providers/helpers";
+import {EMPTY_STRING, IActionResult} from "../../../providers/helpers";
 
 export interface IManageClassContent {
     authUser: IAuthUser,

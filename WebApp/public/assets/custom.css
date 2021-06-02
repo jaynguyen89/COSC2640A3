@@ -146,3 +146,108 @@ hr {
     cursor: pointer;
     width: 125px;
 }
+
+.horizontal-scroller {
+    overflow-x: scroll;
+    width: 100%;
+    white-space: nowrap;
+}
+
+.horizontal-item {
+    width: 150px;
+    text-align: center;
+    margin: 2px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.horizontal-item:hover {
+    cursor: pointer;
+    background-color: #e0e0e0;
+}
+
+.horizontal-item-active {
+    border: 1px solid #de781f;
+    background-color: #fff8f2;
+}
+
+.attachment:hover {
+    cursor: pointer;
+    color: #50a8c0;
+}
+
+.icon-list {
+    width: 120px;
+    margin: 1em auto;
+    display: inline-block;
+}
+
+.rte-wrapper {
+    margin-bottom: 1em;
+}
+
+.rte-editor {
+    border: 1px solid #b3b3b3;
+    border-radius: 4px;
+    padding: 0.5em;
+    min-height: 15em;
+}
+
+.popover {
+    display: none;
+    position: fixed;
+    z-index: 999999999;
+    width: 400px;
+    margin: 0;
+    padding: 0.5em;
+    font-size: medium;
+    border: 1px solid lightgray;
+    border-radius: 4px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    overflow: visible;
+    background-color: whitesmoke;
+}
+
+.popover h6 {
+    font-size: medium;
+    font-weight: bold;
+    margin-bottom: 0.5em;
+}
+
+.popover p {
+    margin: 0;
+    width: 100%;
+    text-align: justify;
+}
+
+@media only screen and (min-width: 1201px) {
+    .popover { width: 400px; }
+}
+
+@media only screen and (max-width: 993px) {
+    .popover { width: 300px; }
+}
+
+@media only screen and (max-width: 601px) {
+    .popover { width: 200px; }
+}
+
+.btn-mini {
+    height: 25px !important;
+    color: #FFF;
+    font-size: 0.7rem;
+    text-align: center;
+    border: none;
+    border-radius: 2px;
+    padding: 0 5px;
+    line-height: 25px;
+    text-transform: uppercase;
+    vertical-align: middle;
+    -webkit-tap-highlight-color: transparent;
+    background-clip: padding-box;
+    box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}
+
+.btn-mini :hover :active {
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+}

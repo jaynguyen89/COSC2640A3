@@ -8,14 +8,14 @@ export interface IManageClassroom {
     getTeacherClassrooms: IActionResult,
     clearAuthUser: () => void,
     invokeRemoveClassroomsRequest: (auth: IAuthUser, classroomId: string) => void,
-    removeClassroom: IActionResult,
     invokeCompletedClassroomsRequest: (auth: IAuthUser, classroomId: string) => void,
+    removeClassroom: IActionResult,
     completedClassroom: IActionResult,
     invokeGetClassroomDetailRequest: (auth: IAuthUser, classroomId: string) => void,
     getClassroomDetail: IActionResult,
     invokeCreateClassroomsRequest: (auth: IAuthUser, classroom: IClassroom) => void,
-    createClassroom: IActionResult,
     invokeUpdateClassroomsRequest: (auth: IAuthUser, classroom: IClassroom) => void,
+    createClassroom: IActionResult,
     updateClassroom: IActionResult
 }
 
@@ -85,6 +85,10 @@ export interface IClassroomModal {
     closeAlert: () => void,
     task: string,
     isTaskRunning: boolean,
+    datetime: {
+        date: string, time: string
+        setDateTime: (dt: string, field: string) => void
+    },
     handleCreateBtn: (newClassroom: IClassroomData) => void,
     handleUpdateBtn: (updatedClassroom: IClassroomData) => void
 }

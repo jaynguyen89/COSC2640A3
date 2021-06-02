@@ -10,7 +10,7 @@ import {defaultClassroom, getClassroom, IClassroomData, IManageClassroom} from "
 import {
     invokeCompletedClassroomsRequest, invokeCreateClassroomsRequest,
     invokeGetAllTeacherClassroomsRequest, invokeGetClassroomDetailRequest,
-    invokeRemoveClassroomsRequest, invokeUpdateClassroomsRequest 
+    invokeRemoveClassroomsRequest, invokeUpdateClassroomsRequest
 } from "./redux/actions";
 import {
     checkSession,
@@ -23,6 +23,7 @@ import {
 import {clearAuthUser} from "../authentication/redux/actions";
 import ClassroomCard from "./components/ClassroomCard";
 import ClassroomModal from "./components/ClassroomModal";
+import moment from "moment";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -52,6 +53,8 @@ const ManageClassrooms = (props: IManageClassroom) => {
     const [selectedClassroom, setSelectedClassroom] = React.useState(defaultClassroom);
     const [modalTask, setModalTask] = React.useState(TASK_VIEW);
     const [isTaskRunning, setIsTaskRunning] = React.useState(false);
+    const [selectedDate, setSelectedDate] = React.useState(EMPTY_STRING);
+    const [selectedTime, setSelectedTime] = React.useState(EMPTY_STRING);
 
     React.useEffect(() => {
         props.invokeGetAllTeacherClassroomsRequest(props.authUser, null);
@@ -63,6 +66,8 @@ const ManageClassrooms = (props: IManageClassroom) => {
                 setIsTaskRunning(false);
                 setModalTask(TASK_VIEW);
                 setStatusMessage(EMPTY_STATUS);
+                setSelectedDate(EMPTY_STRING);
+                setSelectedTime(EMPTY_STRING);
             }
         });
     }, []);
@@ -118,8 +123,19 @@ const ManageClassrooms = (props: IManageClassroom) => {
         props.invokeCompletedClassroomsRequest(props.authUser, classroomId);
     }
 
+    const handleDateTimeSelection = (dt: string, field: string) => {
+        if (field === 'date') setSelectedDate(dt);
+        if (field === 'time') setSelectedTime(dt);
+    }
+
     const attemptCreateClassroom = (newClassroom: IClassroomData) => {
+        if (selectedDate === EMPTY_STRING) {
+            alert('Please select a Commence Date for this classroom.');
+            return;
+        }
+
         const classroom = getClassroom(newClassroom);
+        classroom.commencedOn = moment(`${ selectedDate } ${ selectedTime }`.trim()).format();
 
         setIsTaskRunning(true);
         setSelectedClassroom(newClassroom);
@@ -129,6 +145,8 @@ const ManageClassrooms = (props: IManageClassroom) => {
     const attemptUpdateClassroom = (updatedClassroom: IClassroomData) => {
         const classroom = getClassroom(updatedClassroom);
         classroom.id = updatedClassroom.id;
+
+        if (selectedDate !== EMPTY_STRING) classroom.commencedOn = moment(`${ selectedDate } ${ selectedTime }`.trim()).format();
 
         setIsTaskRunning(true);
         setSelectedClassroom(updatedClassroom);
@@ -316,6 +334,10 @@ const ManageClassrooms = (props: IManageClassroom) => {
                 closeAlert={ () => setStatusMessage(EMPTY_STATUS) }
                 task={ modalTask }
                 isTaskRunning={ isTaskRunning }
+                datetime={{
+                    date: selectedDate, time: selectedTime,
+                    setDateTime: handleDateTimeSelection
+                }}
                 handleCreateBtn={ attemptCreateClassroom }
                 handleUpdateBtn={ attemptUpdateClassroom }
             />

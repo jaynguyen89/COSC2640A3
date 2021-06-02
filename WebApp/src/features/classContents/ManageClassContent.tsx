@@ -40,6 +40,7 @@ import M from "materialize-css";
 import $ from "jquery";
 import AddFilesInput from "./components/AddFilesInput";
 import ContentEditor from "./components/ContentEditor";
+import ContextTranslation from "../translation/ContextTranslation";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -427,19 +428,21 @@ const ManageClassContent = (props: IManageClassContent) => {
                             </h5>
 
                             <div className='row'>
-                                <div className='col s12'>
-                                    {
-                                        (
-                                            classroomContent.htmlContent && (
-                                                (
-                                                    !isUpdatingRichContent && parse(classroomContent.htmlContent)
-                                                ) ||
-                                                <ContentEditor content={ richContent.htmlContent } informChanges={ getNewRichTextContent } />
-                                            )
-                                        ) ||
-                                        <ContentEditor content={ richContent.htmlContent } informChanges={ getNewRichTextContent } />
-                                    }
-                                </div>
+                                <ContextTranslation>
+                                    <div className='col s12' style={{ textAlign: 'justify' }}>
+                                        {
+                                            (
+                                                classroomContent.htmlContent && (
+                                                    (
+                                                        !isUpdatingRichContent && parse(classroomContent.htmlContent)
+                                                    ) ||
+                                                    <ContentEditor content={ richContent.htmlContent } informChanges={ getNewRichTextContent } />
+                                                )
+                                            ) ||
+                                            <ContentEditor content={ richContent.htmlContent } informChanges={ getNewRichTextContent } />
+                                        }
+                                    </div>
+                                </ContextTranslation>
 
                                 {
                                     props.authUser.role === 1 &&
