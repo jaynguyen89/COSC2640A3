@@ -1,6 +1,7 @@
 import _ from 'lodash';
 import {IEnrolment, IMarkBreakdown} from "../features/student/redux/interfaces";
 import * as studentConstants from '../features/student/redux/constants';
+import {IFile} from "../features/classContents/redux/interfaces";
 
 export const EMPTY_STRING = '';
 export const TASK_VIEW = 'view';
@@ -57,6 +58,14 @@ export interface IStatusMessage {
 export const EMPTY_STATUS: IStatusMessage = {
     messages: [],
     type: EMPTY_STRING
+}
+
+export const TimeUnits = ['Hour', 'Day', 'Week', 'Month', 'Year'];
+export const FileTypes = ['video', 'audio', 'image', 'other'];
+export const BaseFileUrl = 'https://s3-ap-southeast-2.amazonaws.com/';
+
+export const createFileUrl = (file: IFile, classroomId: string) => {
+    return `${ BaseFileUrl }${ classroomId.toLowerCase() }.${ FileTypes[file.type] }s/${ file.id }`;
 }
 
 export const isProperString = (item: string): boolean => {
@@ -131,4 +140,20 @@ export const checkUnenrolmentResult = (
         }
 
     return undefined;
+}
+
+export const verifyFileTypeForSelectedFiles = (files: FileList, fileType: number): string | null => {
+    if (fileType === 3) return null;
+
+    let clone: Array<{ name: string, type: number }> = [];
+    for (let i = 0; i < files.length; i++)
+        clone.push({
+            name: files[i].name,
+            type: FileTypes.indexOf(files[i].type.split('/')[0])
+        });
+
+    const oddFiles = _.remove(clone, (file: { name: string, type: number }) => file.type !== fileType);
+    if (oddFiles.length === 0) return null;
+
+    return `The following files are not of type ${ FileTypes[fileType] }: ${ oddFiles.map(file => `${ file.name }`).join(', ') }`;
 }

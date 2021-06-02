@@ -35,6 +35,11 @@ const ClassroomModal = (props: IClassroomModal) => {
         if (field === 'durationUnit') setClassroom({ ...classroom, classroomDetail: { ...classroom.classroomDetail, durationUnit: Number(value) } } as IClassroomData);
     }
 
+    const goToClassroomContent = () => {
+        localStorage.setItem('classroomDetailsItem', JSON.stringify(classroom));
+        window.location.href = '/manage-classroom-contents';
+    }
+
     return (
         <div className='modal' id='classroomModal'>
             <div className='row'>
@@ -131,7 +136,7 @@ const ClassroomModal = (props: IClassroomModal) => {
 
                             <button className='btn waves-effect waves-light right'
                                     style={{ marginLeft: '1em' }}
-                                    onClick={ () => window.location.href = '/manage-classroom-contents' }
+                                    onClick={ () => goToClassroomContent() }
                             >
                                 <i className="fas fa-pencil-ruler" />
                                 &nbsp; Manage Contents
@@ -152,7 +157,7 @@ const ClassroomModal = (props: IClassroomModal) => {
                     {
                         props.task === TASK_VIEW &&
                         <button className='btn waves-effect waves-light'
-                                onClick={ () => window.location.href = '/manage-classroom-contents' }
+                                onClick={ () => goToClassroomContent() }
                         >
                             <i className="fas fa-pencil-ruler" />
                             &nbsp; { (props.selectedClassroom.classroomDetail.isActive && 'Manage') || 'View' } Contents

@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {IAccountDetail, ITeacherDetail} from "../redux/interfaces";
+import {IAccountDetail} from "../redux/interfaces";
 import {
     invokeAddPhoneNumberRequest,
     invokeConfirmPhoneNumberRequest,

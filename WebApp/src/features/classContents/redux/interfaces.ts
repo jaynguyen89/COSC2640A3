@@ -1,31 +1,39 @@
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {EMPTY_STRING, IActionResult, IStatusMessage} from "../../../providers/helpers";
+import {EMPTY_STATUS, EMPTY_STRING, IActionResult} from "../../../providers/helpers";
 
-export const EMPTY_NUMBER = -1;
-
-
-export interface IManageClassroomContent {
+export interface IManageClassContent {
     authUser: IAuthUser,
-    invokeGetClassContent: (auth: IAuthUser, classroomId: string) => void,
-    getClassContent: IActionResult,
     clearAuthUser: () => void,
-    invokeAddFileRequest: (auth: IAuthUser, file: IFileAdding) => void,
-    AddFileRequest: IActionResult,
-    invokeUpdateFileRequest: (auth: IAuthUser, file:IUpdateFile) => void,
-    getUpdateFileRequest: IActionResult,
+    getContent: IActionResult,
+    addFiles: IActionResult,
+    updateFiles: IActionResult,
+    addRichContent: IActionResult,
+    importRichContent: IActionResult,
+    updateRichContent: IActionResult,
+    invokeGetClassroomContentRequest: (auth: IAuthUser, classroomId: string) => void,
+    invokeAddFilesRequest: (auth: IAuthUser, filesData: IFileAdding) => void,
+    invokeUpdateFilesRequest: (auth: IAuthUser, filesData: IFileUpdating) => void,
     invokeAddRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
-    getAddRichContentRequest: IActionResult,
-    invokeUpdateRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
-    getUpdateRichContentRequest: IActionResult,
-    invokeImportRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void,
-    getupdateRichContentRequest: IActionResult,
-    classroomId: typeof EMPTY_STRING; 
+    invokeImportRichContentRequest: (auth: IAuthUser, richContentImport: IRichContentImport) => void,
+    invokeUpdateRichContentRequest: (auth: IAuthUser, richContent: IRichContent) => void
 }
 
 export interface IClassContent {
     id: string,
     videos: Array<IFile>,
-    audios: Array<IFile>
+    audios: Array<IFile>,
+    photos: Array<IFile>,
+    attachments: Array<IFile>,
+    htmlContent: string
+}
+
+export const defaultClassroomContent: IClassContent = {
+    id: EMPTY_STRING,
+    videos: Array<IFile>(),
+    audios: Array<IFile>(),
+    photos: Array<IFile>(),
+    attachments: Array<IFile>(),
+    htmlContent: EMPTY_STRING
 }
 
 export interface IFile {
@@ -33,69 +41,82 @@ export interface IFile {
     name: string,
     type: number,
     extension: string,
-    uploadedOn: number
+    uploadedOn: string
 }
 
-export interface IRichContent {
-    classroomID:string,
-    htmlContent:string
-}
-
-export const defaultRichContent : IRichContent = {
-    classroomID:EMPTY_STRING,
-    htmlContent:EMPTY_STRING
-}
-
-export const defaultFileContent: IFile = {
+export const emptyFile: IFile = {
     id: EMPTY_STRING,
     name: EMPTY_STRING,
-    type: EMPTY_NUMBER,
+    type: 0,
     extension: EMPTY_STRING,
-    uploadedOn: EMPTY_NUMBER
+    uploadedOn: EMPTY_STRING
 }
 
-export const EMPTY_IFILE = [defaultFileContent];
-
-export const defaultClassroomContent : IClassContent = {
-    id: EMPTY_STRING,
-    videos: EMPTY_IFILE,
-    audios: EMPTY_IFILE
-}
-
-export interface IRichContentImport {
-    classroomID:string,
-    filesForImport: Array<any>
-}
-
-export interface IContentBinding {
-    classroomID:string,
+interface ClassroomBinding {
+    classroomId: string,
     fileType: number
 }
 
-export interface IFileAdding extends IContentBinding{
-    uploadedFiles: Array<any>
+export interface IFileAdding extends ClassroomBinding {
+    uploadedFiles: FileList
 }
 
-export interface IUpdateFile extends IFileAdding {
+export const defaultAddedFiles: IFileAdding = {
+    classroomId: EMPTY_STRING,
+    fileType: 0,
+    uploadedFiles: null as unknown as FileList
+}
+
+export interface IFileUpdating extends IFileAdding {
     removedFiles: Array<string>
 }
 
-export interface IFileList {
+export const defaultUpdatedFiles: IFileUpdating = {
+    classroomId: EMPTY_STRING,
+    fileType: 0,
+    removedFiles: Array<string>(),
+    uploadedFiles: null as unknown as FileList
+}
+
+export interface IRichContent {
+    classroomId: string,
+    htmlContent: string
+}
+
+export const defaultContent: IRichContent = {
+    classroomId: EMPTY_STRING,
+    htmlContent: EMPTY_STRING
+}
+
+export interface IRichContentImport {
+    classroomId: string,
+    filesForImport: FileList
+}
+
+export const defaultContentImport: IRichContentImport = {
+    classroomId: EMPTY_STRING,
+    filesForImport: null as unknown as FileList
+}
+
+export interface IUpdateFilesModal {
+    classroomId: string,
     files: Array<IFile>,
-    statusMessage: IStatusMessage | null,
-    shouldShowSpinner: boolean | null,
+    fileType: number,
+    selectedFiles: Array<string>,
+    handleFilesInput: (files: FileList) => void,
+    removeBtnClick: (fileId: string) => void,
+    unselectBtnClick: (fileId: string) => void,
+    updateBtnClick: () => void
 }
 
-export interface IUploadFile {
-    authUser: IAuthUser,
-    invokeAddFileRequest: (auth: IAuthUser, file: IFileAdding) => void,
-    uploadFile: IActionResult,
-    clearAuthUser: () => void
+export interface IAddFilesInput {
+    files: FileList,
+    fileType: number,
+    handleFilesInput: (files: FileList, fileType: number) => void,
+    confirmAdding: () => void
 }
 
-export enum FileType {
-    video,
-    audio,
-    photo,
-    other
+export interface IContentEditor {
+    content: string,
+    informChanges: (newContent: any) => void
 }

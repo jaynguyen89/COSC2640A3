@@ -1,36 +1,51 @@
+import * as contentConstants from './constants';
+import * as contentServices from './services';
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import * as classcontentConstants from "./constants";
-import * as classcontentServices from "./services";
-import {IClassContent, IFileAdding, IRichContent,IUpdateFile} from "./interfaces";
+import {IFileAdding, IFileUpdating, IRichContent, IRichContentImport} from "./interfaces";
 
-
-export const invokeAddFileRequest = (auth: IAuthUser, file:IFileAdding) => {
+export const invokeGetClassroomContentRequest = (auth: IAuthUser, classroomId: string) => {
     return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.ADD_FILE_CLASSCONTENT_REQUEST_SENT });
+        dispatch({ type: contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_SENT });
 
-        classcontentServices.sendAddFileRequest(auth, file)
+        contentServices.sendGetClassroomContentRequest(auth, classroomId)
             .then(response => dispatch({
-                type: classcontentConstants.ADD_FILE_CLASSCONTENT_REQUEST_SUCCESS,
+                type: contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_SUCCESS,
                 payload: response
             }))
             .catch(error => dispatch({
-                type: classcontentConstants.ADD_FILE_CLASSCONTENT_REQUEST_FAILED,
+                type: contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_FAILED,
                 error
             }))
     };
 }
 
-export const invokeUpdateFileRequest = (auth: IAuthUser, file:IUpdateFile) => {
+export const invokeAddFilesRequest = (auth: IAuthUser, filesData: IFileAdding) => {
     return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_SENT });
+        dispatch({ type: contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT });
 
-        classcontentServices.sendUpdateFileRequest(auth, file)
+        contentServices.sendAddFilesRequest(auth, filesData)
             .then(response => dispatch({
-                type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_SUCCESS,
+                type: contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SUCCESS,
                 payload: response
             }))
             .catch(error => dispatch({
-                type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_FAILED,
+                type: contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeUpdateFilesRequest = (auth: IAuthUser, filesData: IFileUpdating) => {
+    return (dispatch: any) => {
+        dispatch({ type: contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT });
+
+        contentServices.sendUpdateFilesRequest(auth, filesData)
+            .then(response => dispatch({
+                type: contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_FAILED,
                 error
             }))
     };
@@ -38,65 +53,48 @@ export const invokeUpdateFileRequest = (auth: IAuthUser, file:IUpdateFile) => {
 
 export const invokeAddRichContentRequest = (auth: IAuthUser, richContent: IRichContent) => {
     return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.CREATE_RICHCONTENT_CLASSCONTENT_REQUEST_SENT});
+        dispatch({ type: contentConstants.ADD_RICH_CONTENT_REQUEST_SENT });
 
-        classcontentServices.sendRichContentRequest(auth,richContent)
-            .then(response => dispatch({ 
-                type: classcontentConstants.CREATE_RICHCONTENT_CLASSCONTENT_REQUEST_SUCCESS,
+        contentServices.sendAddRichContentRequest(auth, richContent)
+            .then(response => dispatch({
+                type: contentConstants.ADD_RICH_CONTENT_REQUEST_SUCCESS,
                 payload: response
             }))
-            .catch(error => dispatch({ 
-                type: classcontentConstants.CREATE_RICHCONTENT_CLASSCONTENT_REQUEST_FAILED,
+            .catch(error => dispatch({
+                type: contentConstants.ADD_RICH_CONTENT_REQUEST_FAILED,
                 error
-        }))
-    }
+            }))
+    };
 }
 
-export const invokeImportRichContentRequest = (auth: IAuthUser, richContent: IRichContent) => {
+export const invokeImportRichContentRequest = (auth: IAuthUser, richContentImport: IRichContentImport) => {
     return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.IMPORT_RICHCONTENT_CLASSCONTENT_REQUEST_SENT});
+        dispatch({ type: contentConstants.IMPORT_RICH_CONTENT_REQUEST_SENT });
 
-        classcontentServices.sendUpdateRichContentRequest(auth,richContent)
-            .then(response => dispatch({ 
-                type: classcontentConstants.IMPORT_RICHCONTENT_CLASSCONTENT_REQUEST_SUCCESS,
+        contentServices.sendImportRichContentRequest(auth, richContentImport)
+            .then(response => dispatch({
+                type: contentConstants.IMPORT_RICH_CONTENT_REQUEST_SUCCESS,
                 payload: response
             }))
-            .catch(error => dispatch({ 
-                type: classcontentConstants.IMPORT_RICHCONTENT_CLASSCONTENT_REQUEST_FAILED,
+            .catch(error => dispatch({
+                type: contentConstants.IMPORT_RICH_CONTENT_REQUEST_FAILED,
                 error
-        }))
-    }
+            }))
+    };
 }
 
 export const invokeUpdateRichContentRequest = (auth: IAuthUser, richContent: IRichContent) => {
     return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.UPDATE_RICHCONTENT_CLASSCONTENT_REQUEST_SENT});
+        dispatch({ type: contentConstants.UPDATE_RICH_CONTENT_REQUEST_SENT });
 
-        classcontentServices.sendUpdateRichContentRequest(auth,richContent)
-            .then(response => dispatch({ 
-                type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_SUCCESS,
+        contentServices.sendUpdateRichContentRequest(auth, richContent)
+            .then(response => dispatch({
+                type: contentConstants.UPDATE_RICH_CONTENT_REQUEST_SUCCESS,
                 payload: response
             }))
-            .catch(error => dispatch({ 
-                type: classcontentConstants.UPDATE_FILE_CLASSCONTENT_REQUEST_FAILED,
+            .catch(error => dispatch({
+                type: contentConstants.UPDATE_RICH_CONTENT_REQUEST_FAILED,
                 error
-        }))
-    }
-}
-
-export const invokeGetClassContent = (auth: IAuthUser,  classroomId: string) => {
-    return (dispatch: any) => {
-        dispatch({ type: classcontentConstants.GET_CLASSCONTENT_REQUEST_SENT});
-
-        classcontentServices.sendAllRequest(auth,classroomId)
-            .then(response => dispatch({ 
-                type: classcontentConstants.GET_CLASSCONTENT_REQUEST_SUCCESS,
-                payload: response
             }))
-            .catch(error => dispatch({ 
-                type: classcontentConstants.GET_CLASSCONTENT_REQUEST_FAILED,
-                error
-        }))
-    }
+    };
 }
-
