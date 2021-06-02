@@ -20,7 +20,7 @@ export const sendRequestForResult = (
         }
         : {};
 
-    const acceptHeaders = { 'Accept': 'application/json' };
+    const acceptHeaders = { 'Accept': 'application/json'};
     const contentHeaders = formData
         ? { 'Content-Type': 'multipart/form-data' }
         : { 'Content-Type': 'application/json' };
@@ -28,7 +28,7 @@ export const sendRequestForResult = (
     const headers = {
         ...authHeaders,
         ...contentHeaders,
-        ...acceptHeaders
+        ...acceptHeaders,
     };
 
     const body = method === 'POST' || method === 'PUT'
@@ -40,7 +40,7 @@ export const sendRequestForResult = (
     const requestOptions : any = {
         timeout: 180000, // 3 minutes
         method: method,
-        url: LOCAL_ENDPOINT + action,
+        url: PRODUCTION_ENDPOINT + action,
         headers: headers,
         data: body
     };

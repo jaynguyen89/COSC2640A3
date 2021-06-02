@@ -21,7 +21,21 @@ export const DurationUnits = [
     { index: 2, text: 'Weeks' },
     { index: 3, text: 'Months' },
     { index: 4, text: 'Years' }
-]
+];
+
+export const Languages = [
+    { index: 1, text: 'Chinese' },
+    { index: 2, text: 'French' },
+    { index: 3, text: 'German' },
+    { index: 4, text: 'Greek' },
+    { index: 5, text: 'Hindi' },
+    { index: 6, text: 'Indonesian' },
+    { index: 7, text: 'Italian' },
+    { index: 8, text: 'Malay' },
+    { index: 9, text: 'Portuguese' },
+    { index: 10, text: 'Russian' },
+    { index: 11, text: 'Spanish' }
+];
 
 export interface IResponse {
     result: number,

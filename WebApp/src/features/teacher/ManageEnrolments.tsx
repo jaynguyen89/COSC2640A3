@@ -18,7 +18,6 @@ import {
 } from "../../providers/helpers";
 import * as classroomConstants from '../classroom/redux/constants';
 import * as teacherConstants from './redux/constants';
-import * as studentConstants from "../student/redux/constants";
 import {defaultClassroom, IClassroomData} from "../classroom/redux/interfaces";
 import ClassroomInfo from "../classroom/components/ClassroomInfo";
 import EnrolmentInfo from "../student/EnrolmentInfo";

@@ -8,14 +8,14 @@ export interface IManageClassroom {
     getTeacherClassrooms: IActionResult,
     clearAuthUser: () => void,
     invokeRemoveClassroomsRequest: (auth: IAuthUser, classroomId: string) => void,
-    invokeCompletedClassroomsRequest: (auth: IAuthUser, classroomId: string) => void,
     removeClassroom: IActionResult,
+    invokeCompletedClassroomsRequest: (auth: IAuthUser, classroomId: string) => void,
     completedClassroom: IActionResult,
     invokeGetClassroomDetailRequest: (auth: IAuthUser, classroomId: string) => void,
     getClassroomDetail: IActionResult,
     invokeCreateClassroomsRequest: (auth: IAuthUser, classroom: IClassroom) => void,
-    invokeUpdateClassroomsRequest: (auth: IAuthUser, classroom: IClassroom) => void,
     createClassroom: IActionResult,
+    invokeUpdateClassroomsRequest: (auth: IAuthUser, classroom: IClassroom) => void,
     updateClassroom: IActionResult
 }
 

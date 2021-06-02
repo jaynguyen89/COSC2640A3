@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 
 namespace COSC2640A3.Bindings {
 
-    public class ContentBinding {
+    public class  ContentBinding {
         
         public string ClassroomId { get; set; }
         
