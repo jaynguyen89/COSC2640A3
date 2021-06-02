@@ -100,7 +100,7 @@ namespace COSC2640A3.Controllers {
             return fileType switch {
                 (byte) FileType.video => $"{ classroomId }.{ nameof(FileType.video) }s".ToLower(),
                 (byte) FileType.audio => $"{ classroomId }.{ nameof(FileType.audio) }s".ToLower(),
-                (byte) FileType.photo => $"{ classroomId }.{ nameof(FileType.photo) }s".ToLower(),
+                (byte) FileType.image => $"{ classroomId }.{ nameof(FileType.image) }s".ToLower(),
                 (byte) FileType.other => $"{ classroomId }.{ nameof(FileType.other) }s".ToLower(),
                 _ => default
             };

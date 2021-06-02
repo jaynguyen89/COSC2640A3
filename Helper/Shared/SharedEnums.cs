@@ -49,7 +49,7 @@
         public enum FileType {
             video,
             audio,
-            photo,
+            image,
             other // must always be at bottom
         }
         

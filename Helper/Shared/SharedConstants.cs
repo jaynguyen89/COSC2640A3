@@ -30,9 +30,6 @@ namespace Helper.Shared {
         public static readonly List<string> SpecialChars = new() { "!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "_", "-", "+", "=", "{", "[", "}", "]", ":", ";", "<", ",", ">", ".", "?", "|", "~" };
 
         public static readonly List<string> ExpectedClassroomAndStudentImportFileTypes = new() { "json", "csv" };
-        public static readonly List<string> ExpectedClassContentVideoTypes = new() { "mp4", "mov", "wmv", "flv", "avi", "mkv" };
-        public static readonly List<string> ExpectedClassContentAudioTypes = new() { "mp3", "wav", "wma", "aac", "flac" };
-        public static readonly List<string> ExpectedClassContentPhotoTypes = new() { "jpg", "jpeg", "png", "bmp", "tiff", "gif" };
         public static readonly List<string> ExpectedTextractFileTypes = new() { "jpg", "jpeg", "png", "pdf" };
 
         public static readonly Dictionary<byte, string> LanguageCodes = new() {

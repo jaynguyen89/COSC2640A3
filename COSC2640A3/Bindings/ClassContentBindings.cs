@@ -4,6 +4,7 @@ using System.Linq;
 using Helper;
 using Helper.Shared;
 using Microsoft.AspNetCore.Http;
+using Newtonsoft.Json;
 
 namespace COSC2640A3.Bindings {
 
@@ -28,16 +29,16 @@ namespace COSC2640A3.Bindings {
             foreach (var uploadedFile in UploadedFiles)
                 switch (FileType) {
                     case (byte) SharedEnums.FileType.video:
-                        if (!SharedConstants.ExpectedClassContentVideoTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.video) }.");
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.video)))
+                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.video) } file.");
                         break;
                     case (byte) SharedEnums.FileType.audio:
-                        if (!SharedConstants.ExpectedClassContentAudioTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.audio) }.");
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.audio)))
+                            errors.Add($"File { uploadedFile.FileName } is not an { nameof(SharedEnums.FileType.audio) } file.");
                         break;
-                    case (byte) SharedEnums.FileType.photo:
-                        if (!SharedConstants.ExpectedClassContentPhotoTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.photo) }.");
+                    case (byte) SharedEnums.FileType.image:
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.image)))
+                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.image) } file.");
                         break;
                 }
 
@@ -51,6 +52,11 @@ namespace COSC2640A3.Bindings {
 
         public string[] VerifyUpdatedFiles() {
             var errors = new List<string>();
+
+            RemovedFiles = RemovedFiles
+                           .Select(JsonConvert.DeserializeObject<string[]>)
+                           .SelectMany(z => z)
+                           .ToArray();
             
             if (FileType is < 0 or > (byte) SharedEnums.FileType.other) errors.Add($"{ nameof(FileType).ToHumanStyled() } is not recognized.");
             if (UploadedFiles is null || UploadedFiles.Count == 0) return errors.ToArray();
@@ -58,16 +64,16 @@ namespace COSC2640A3.Bindings {
             foreach (var uploadedFile in UploadedFiles)
                 switch (FileType) {
                     case (byte) SharedEnums.FileType.video:
-                        if (!SharedConstants.ExpectedClassContentVideoTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.video) }.");
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.video)))
+                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.video) } file.");
                         break;
                     case (byte) SharedEnums.FileType.audio:
-                        if (!SharedConstants.ExpectedClassContentAudioTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.audio) }.");
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.audio)))
+                            errors.Add($"File { uploadedFile.FileName } is not an { nameof(SharedEnums.FileType.audio) } file.");
                         break;
-                    case (byte) SharedEnums.FileType.photo:
-                        if (!SharedConstants.ExpectedClassContentPhotoTypes.Any(uploadedFile.ContentType.Contains))
-                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.photo) }.");
+                    case (byte) SharedEnums.FileType.image:
+                        if (!uploadedFile.ContentType.Contains(nameof(SharedEnums.FileType.image)))
+                            errors.Add($"File { uploadedFile.FileName } is not a { nameof(SharedEnums.FileType.image) } file.");
                         break;
                 }
 
@@ -100,7 +106,7 @@ namespace COSC2640A3.Bindings {
                 from uploadedFile in FilesForImport
                 where !SharedConstants.ExpectedTextractFileTypes
                                       .Any(uploadedFile.ContentType.Contains)
-                select $"File {uploadedFile.FileName} is not a {nameof(SharedEnums.FileType.photo)}."
+                select $"File {uploadedFile.FileName} is not a {nameof(SharedEnums.FileType.image)}."
             );
 
             return errors.ToArray();

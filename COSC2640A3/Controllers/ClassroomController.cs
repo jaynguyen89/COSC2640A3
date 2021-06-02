@@ -211,7 +211,7 @@ namespace COSC2640A3.Controllers {
 
                 _ = classroomContent.Videos.Select(async video => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.video), video.Id));
                 _ = classroomContent.Audios.Select(async audio => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.audio), audio.Id));
-                _ = classroomContent.Photos.Select(async photo => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.photo), photo.Id));
+                _ = classroomContent.Photos.Select(async photo => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.image), photo.Id));
                 _ = classroomContent.Attachments.Select(async attachment => await _s3Service.DeleteClassroomContentFileInS3Bucket(GetBucketNameForFileType(classroomId, (byte) FileType.other), attachment.Id));
                 
                 var removeContentResult = await _classContentService.DeleteContentById(classroomContent.Id);

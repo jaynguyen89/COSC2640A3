@@ -97,7 +97,7 @@ namespace COSC2640A3.Controllers {
             var addFilesExpression = filesToAdd.FileType switch {
                 (byte) FileType.video => (Func<Task<FileVM[]>>)(async () => await UploadVideosToS3Bucket(filesToAdd.ClassroomId, filesToAdd.UploadedFiles)),
                 (byte) FileType.audio => async () => await UploadAudiosToS3Bucket(filesToAdd.ClassroomId, filesToAdd.UploadedFiles),
-                (byte) FileType.photo => async () => await UploadPhotosToS3Bucket(filesToAdd.ClassroomId, filesToAdd.UploadedFiles),
+                (byte) FileType.image => async () => await UploadPhotosToS3Bucket(filesToAdd.ClassroomId, filesToAdd.UploadedFiles),
                 (byte) FileType.other => async () => await UploadAttachmentsToS3Bucket(filesToAdd.ClassroomId, filesToAdd.UploadedFiles),
                 _ => default
             };
@@ -108,7 +108,7 @@ namespace COSC2640A3.Controllers {
             _ = filesToAdd.FileType switch {
                 (byte) FileType.video => classContent.Videos = JsonConvert.SerializeObject(uploadResults),
                 (byte) FileType.audio => classContent.Audios = JsonConvert.SerializeObject(uploadResults),
-                (byte) FileType.photo => classContent.Photos = JsonConvert.SerializeObject(uploadResults),
+                (byte) FileType.image => classContent.Photos = JsonConvert.SerializeObject(uploadResults),
                 (byte) FileType.other => classContent.Attachments = JsonConvert.SerializeObject(uploadResults),
                 _ => default
             };
@@ -172,7 +172,7 @@ namespace COSC2640A3.Controllers {
             var contentFiles = filesToUpdate.FileType switch {
                 (byte) FileType.video => JsonConvert.DeserializeObject<FileVM[]>(classContent.Videos),
                 (byte) FileType.audio => JsonConvert.DeserializeObject<FileVM[]>(classContent.Audios),
-                (byte) FileType.photo => JsonConvert.DeserializeObject<FileVM[]>(classContent.Photos),
+                (byte) FileType.image => JsonConvert.DeserializeObject<FileVM[]>(classContent.Photos),
                 (byte) FileType.other => JsonConvert.DeserializeObject<FileVM[]>(classContent.Attachments),
                 _ => default
             };
@@ -192,7 +192,7 @@ namespace COSC2640A3.Controllers {
                 var addFilesExpression = filesToUpdate.FileType switch {
                     (byte) FileType.video => (Func<Task<FileVM[]>>)(async () => await UploadVideosToS3Bucket(filesToUpdate.ClassroomId, filesToUpdate.UploadedFiles)),
                     (byte) FileType.audio => async () => await UploadAudiosToS3Bucket(filesToUpdate.ClassroomId, filesToUpdate.UploadedFiles),
-                    (byte) FileType.photo => async () => await UploadPhotosToS3Bucket(filesToUpdate.ClassroomId, filesToUpdate.UploadedFiles),
+                    (byte) FileType.image => async () => await UploadPhotosToS3Bucket(filesToUpdate.ClassroomId, filesToUpdate.UploadedFiles),
                     (byte) FileType.other => async () => await UploadAttachmentsToS3Bucket(filesToUpdate.ClassroomId, filesToUpdate.UploadedFiles),
                     _ => default
                 };
@@ -207,7 +207,7 @@ namespace COSC2640A3.Controllers {
             _ = filesToUpdate.FileType switch {
                 (byte) FileType.video => classContent.Videos = hasContent ? JsonConvert.SerializeObject(contentFiles) : default,
                 (byte) FileType.audio => classContent.Audios = hasContent ? JsonConvert.SerializeObject(contentFiles) : default,
-                (byte) FileType.photo => classContent.Photos = hasContent ? JsonConvert.SerializeObject(contentFiles) : default,
+                (byte) FileType.image => classContent.Photos = hasContent ? JsonConvert.SerializeObject(contentFiles) : default,
                 (byte) FileType.other => classContent.Attachments = hasContent ? JsonConvert.SerializeObject(contentFiles) : default,
                 _ => default
             };
@@ -651,7 +651,7 @@ namespace COSC2640A3.Controllers {
         private async Task<FileVM[]> UploadPhotosToS3Bucket(string classroomId, IFormFileCollection photos) {
             _logger.LogInformation($"private { nameof(ClassContentController) }.{ nameof(UploadPhotosToS3Bucket) }: Service starts.");
 
-            var photoBucketName = GetBucketNameForFileType(classroomId, (byte) FileType.photo);
+            var photoBucketName = GetBucketNameForFileType(classroomId, (byte) FileType.image);
             var isBucketCreated = await _s3Service.CreateBucketWithNameIfNeeded(photoBucketName);
             if (!isBucketCreated) return default;
 
@@ -669,7 +669,7 @@ namespace COSC2640A3.Controllers {
                    .Select(result => new FileVM {
                        Id = result.Id,
                        Name = result.Name,
-                       Type = (byte) FileType.photo,
+                       Type = (byte) FileType.image,
                        Extension = result.Type,
                        UploadedOn = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
                    })
