@@ -21,10 +21,11 @@ const mapActionsToProps = {};
 
 const ClassroomModal = (props: IClassroomModal) => {
     const [classroom, setClassroom] = React.useState(defaultClassroom);
-    const [backup] = React.useState(props.selectedClassroom);
+    const [backup, setBackup] = React.useState(defaultClassroom);
 
     React.useEffect(() => {
         setClassroom(props.selectedClassroom);
+        setBackup(props.selectedClassroom);
 
         M.Datepicker.init($('#commenceDate'), {
             onSelect : (selectedDate: Date) => updateClassroom('commenceDate', selectedDate),
@@ -184,15 +185,18 @@ const ClassroomModal = (props: IClassroomModal) => {
                         </button>
                     }
 
-                    <button className='btn waves-effect waves-light right'
-                            onClick={ () => {
-                                localStorage.setItem('classroom_ManageEnrolments', JSON.stringify(backup));
-                                window.location.href = '/manage-enrolments'
-                            }}
-                    >
-                        <i className="fas fa-user-graduate" />
-                        &nbsp; View Students
-                    </button>
+                    {
+                        props.task !== TASK_CREATE &&
+                        <button className='btn waves-effect waves-light right'
+                                onClick={() => {
+                                    localStorage.setItem('classroom_ManageEnrolments', JSON.stringify(backup));
+                                    window.location.href = '/manage-enrolments'
+                                }}
+                        >
+                            <i className="fas fa-user-graduate"/>
+                            &nbsp; View Students
+                        </button>
+                    }
                 </div>
             </div>
         </div>

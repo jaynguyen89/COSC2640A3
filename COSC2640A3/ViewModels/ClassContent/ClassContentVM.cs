@@ -24,7 +24,7 @@ namespace COSC2640A3.ViewModels.ClassContent {
                 Audios = classContent.Audios is null ? Array.Empty<FileVM>() : JsonConvert.DeserializeObject<FileVM[]>(classContent.Audios),
                 Photos = classContent.Photos is null ? Array.Empty<FileVM>() : JsonConvert.DeserializeObject<FileVM[]>(classContent.Photos),
                 Attachments = classContent.Attachments is null ? Array.Empty<FileVM>() : JsonConvert.DeserializeObject<FileVM[]>(classContent.Attachments),
-                HtmlContent = classContent.HtmlContent
+                HtmlContent = classContent.HtmlContent ?? string.Empty
             };
         }
     }

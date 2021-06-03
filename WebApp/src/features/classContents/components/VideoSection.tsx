@@ -6,7 +6,7 @@ const VideoSection = (props: { videos: Array<IFile>, selectedVideo: IFile, class
         <>
             {
                 (
-                    props.videos && props.videos.map(video =>
+                    props.videos.length !== 0 && props.videos.map(video =>
                         <div className={ (props.selectedVideo.id === video.id && 'horizontal-item horizontal-item-active') || 'horizontal-item' }
                              key={ video.id } onClick={ () => props.onSelectVideo(video.id) }
                         >
@@ -17,7 +17,10 @@ const VideoSection = (props: { videos: Array<IFile>, selectedVideo: IFile, class
                         </div>
                     )
                 ) ||
-                <p>You haven't added any video.</p>
+                <p style={{ marginLeft: '1em' }}>
+                    <i className="far fa-meh" />&nbsp;
+                    No video has been added.
+                </p>
             }
         </>
     );

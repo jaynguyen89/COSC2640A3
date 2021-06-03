@@ -7,7 +7,7 @@ const AttachmentSection = (props: { attachments: Array<IFile>, classroomId: stri
         <>
             {
                 (
-                    props.attachments && props.attachments.map(attachment =>
+                    props.attachments.length !== 0 && props.attachments.map(attachment =>
                         <div key={ attachment.id }
                              className='col m6 s2 center-align attachment'
                              style={{ marginBottom: '0.5em' }}
@@ -26,7 +26,10 @@ const AttachmentSection = (props: { attachments: Array<IFile>, classroomId: stri
                         </div>
                     )
                 ) ||
-                <p>You haven't added any attachment.</p>
+                <p style={{ marginLeft: '1em' }}>
+                    <i className="far fa-meh" />&nbsp;
+                    No attachment has been added.
+                </p>
             }
         </>
     );

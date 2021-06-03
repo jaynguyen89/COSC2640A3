@@ -7,14 +7,17 @@ const PhotoSection = (props: { photos: Array<IFile>, classroomId: string }) => {
         <>
             {
                 (
-                    props.photos && props.photos.map(photo =>
+                    props.photos.length !== 0 && props.photos.map(photo =>
                         <div key={ photo.id } className='col s3 center-align'>
                             <img src={ createFileUrl(photo, props.classroomId) } className='responsive-img' />
                             <span>{ photo.name }</span>
                         </div>
                     )
                 ) ||
-                <p>You haven't added any photo.</p>
+                <p style={{ marginLeft: '1em' }}>
+                    <i className="far fa-meh" />&nbsp;
+                    No photo has been added.
+                </p>
             }
         </>
     );

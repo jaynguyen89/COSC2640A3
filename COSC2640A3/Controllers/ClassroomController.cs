@@ -96,11 +96,24 @@ namespace COSC2640A3.Controllers {
 
             classroom.TeacherId = teacher.Id;
             classroom.IsActive = true;
-            var classroomId = await _classroomService.InsertNewClassroom(classroom);
 
-            return !Helpers.IsProperString(classroomId)
-                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomId });
+            await _contextService.StartTransaction();
+            var classroomId = await _classroomService.InsertNewClassroom(classroom);
+            if (!Helpers.IsProperString(classroomId)) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+
+            var classroomContent = new ClassContent { ClassroomId = classroomId };
+            
+            var classContentId = await _classContentService.InsertNewContent(classroomContent);
+            if (!Helpers.IsProperString(classContentId)) {
+                await _contextService.RevertTransaction();
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            }
+
+            await _contextService.ConfirmTransaction();
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomId });
         }
         
         /// <summary>

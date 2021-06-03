@@ -7,7 +7,7 @@ const AudioSection = (props: { audios: Array<IFile>, classroomId: string }) => {
         <>
             {
                 (
-                    props.audios && props.audios.map(audio =>
+                    props.audios.length !== 0 && props.audios.map(audio =>
                         <div className='row' key={ audio.id } >
                             <div className='col s12'>
                                 <audio controls style={{ width: '100%' }}>
@@ -18,9 +18,10 @@ const AudioSection = (props: { audios: Array<IFile>, classroomId: string }) => {
                         </div>
                     )
                 ) ||
-                <div className='card horizontal center'>
-                    <p>You haven't added any audio file.</p>
-                </div>
+                <p style={{ marginLeft: '1em' }}>
+                    <i className="far fa-meh" />&nbsp;
+                    No audio has been added.
+                </p>
             }
         </>
     );

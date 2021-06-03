@@ -397,7 +397,7 @@ const ManageClassContent = (props: IManageClassContent) => {
                                 <div className='col s12'>
                                     {
                                         (
-                                            classroomContent.videos &&
+                                            classroomContent.videos.length !== 0 &&
                                             <button className='btn waves-effect waves-light' style={{ marginLeft: '1em' }}
                                                     onClick={ () => handleUpdateButtonsClicked(FileTypes[0]) }
                                             >
@@ -533,7 +533,7 @@ const ManageClassContent = (props: IManageClassContent) => {
                                     <div className='col s12'>
                                         {
                                             (
-                                                classroomContent.attachments &&
+                                                classroomContent.attachments.length !== 0 &&
                                                 <button className='btn waves-effect waves-light' style={{ marginLeft: '1em' }}
                                                         onClick={ () => handleUpdateButtonsClicked(FileTypes[3]) }
                                                 >
@@ -569,7 +569,7 @@ const ManageClassContent = (props: IManageClassContent) => {
                                     <div className='col s12'>
                                         {
                                             (
-                                                classroomContent.photos &&
+                                                classroomContent.photos.length !== 0 &&
                                                 <button className='btn waves-effect waves-light' style={{ marginLeft: '1em' }}
                                                         onClick={ () => handleUpdateButtonsClicked(FileTypes[2]) }
                                                 >
@@ -604,7 +604,7 @@ const ManageClassContent = (props: IManageClassContent) => {
                                         <div className='col s12'>
                                             {
                                                 (
-                                                    classroomContent.audios &&
+                                                    classroomContent.audios.length !== 0 &&
                                                     <button className='btn waves-effect waves-light' style={{ marginLeft: '1em' }}
                                                             onClick={ () => handleUpdateButtonsClicked(FileTypes[1]) }
                                                     >
