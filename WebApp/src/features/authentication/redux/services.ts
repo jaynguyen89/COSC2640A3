@@ -69,7 +69,7 @@ export const sendConfirmTfaPinRequest = (authUser: IAuthUser, pin: string): Prom
 
 export const sendAccountActivationRequest = (activationData: IActivationData): Promise<IResponse | IIssue> => {
     return sendRequestForResult(
-        `${ AUTHENTICATION_ENDPOINT }unauthenticate`,
+        `${ AUTHENTICATION_ENDPOINT }confirm-registration`,
         null,
         activationData,
         null,
