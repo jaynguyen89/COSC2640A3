@@ -12,7 +12,8 @@ interface IAuthenticationStore {
     activateAccount: IActionResult,
     sendPin: IActionResult,
     forgotPassword: IActionResult,
-    switchRole: IActionResult
+    switchRole: IActionResult,
+    resetPassword: IActionResult
 }
 
 const initialState: IAuthenticationStore = {
@@ -24,7 +25,8 @@ const initialState: IAuthenticationStore = {
     activateAccount: DEFAULT_ACTION_RESULT,
     sendPin: DEFAULT_ACTION_RESULT,
     forgotPassword: DEFAULT_ACTION_RESULT,
-    switchRole: DEFAULT_ACTION_RESULT
+    switchRole: DEFAULT_ACTION_RESULT,
+    resetPassword: DEFAULT_ACTION_RESULT
 };
 
 const reducer = produce((state, action) => {
@@ -169,6 +171,21 @@ const reducer = produce((state, action) => {
             state.switchRole.action = authenticationConstants.SWITCH_ROLE_REQUEST_FAILED;
             state.switchRole.payload = null;
             state.switchRole.error = action.error;
+            return;
+        case authenticationConstants.RESET_PASSWORD_REQUEST_SENT:
+            state.resetPassword.action = authenticationConstants.RESET_PASSWORD_REQUEST_SENT;
+            state.resetPassword.payload = null;
+            state.resetPassword.error = null;
+            return;
+        case authenticationConstants.RESET_PASSWORD_REQUEST_SUCCESS:
+            state.resetPassword.action = authenticationConstants.RESET_PASSWORD_REQUEST_SUCCESS;
+            state.resetPassword.payload = action.payload;
+            state.resetPassword.error = null;
+            return;
+        case authenticationConstants.RESET_PASSWORD_REQUEST_FAILED:
+            state.resetPassword.action = authenticationConstants.RESET_PASSWORD_REQUEST_FAILED;
+            state.resetPassword.payload = null;
+            state.resetPassword.error = action.error;
             return;
         default:
             return;

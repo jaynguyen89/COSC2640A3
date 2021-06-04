@@ -5,6 +5,8 @@ namespace Helper.Shared {
 
     public static class SharedConstants {
 
+        public const string ClientUrl = @"http://ec2-3-25-62-10.ap-southeast-2.compute.amazonaws.com";
+
         public const string ProjectName = "COSC2640A2API";
         public const string TwoFaCacheName = "IsTwoFaConfirmed";
         public const string TextractBucketName = "class.content.textract.imports";
@@ -20,7 +22,9 @@ namespace Helper.Shared {
         public const string ParaOpen = "<p>";
         public const string ParaClose = "<p/>";
         
-        public static readonly string EmailTemplateFolderPath = Path.GetDirectoryName(Directory.GetCurrentDirectory()) + $"\\AmazonLibrary\\Templates\\";
+        public static readonly string EmailTemplateFolderPath =
+            Path.GetDirectoryName(Directory.GetCurrentDirectory()) +
+            $"/cosc2640a3/AmazonLibrary/Templates/";
         
         public static readonly List<string> InvalidTokens = new() {
             "--", "_@", "-@", ".-", "-.", "._", "_.", "@_", "@-", "__", "..", "_-", "-_"

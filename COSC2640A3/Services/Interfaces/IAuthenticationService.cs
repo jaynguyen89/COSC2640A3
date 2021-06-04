@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
+using COSC2640A3.Models;
 
 namespace COSC2640A3.Services.Interfaces {
 
@@ -20,5 +21,9 @@ namespace COSC2640A3.Services.Interfaces {
         /// Key == null if error then Value holds the message, Key == false if confirmation failed, otherwise Key == true.
         /// </summary>
         Task<KeyValuePair<bool?, string>> ConfirmUserInPool(string username, string code);
+
+        Task<KeyValuePair<bool, string>> SendForgotPasswordToCognito(Account account);
+        
+        Task<KeyValuePair<bool, string>> ConfirmPasswordReset(PasswordReset passwordReset, string username);
     }
 }

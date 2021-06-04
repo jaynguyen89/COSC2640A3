@@ -109,3 +109,32 @@ export interface IForgotPassword {
     invokeForgotPasswordRequest: (identity: IIdentity) => void,
     forgotPassword: IActionResult
 }
+
+export interface IResetPassword {
+    resetPassword: IActionResult,
+    invokePasswordResetRequest: (data: IPasswordReset) => void
+}
+
+export interface IPasswordReset {
+    accountId: string,
+    recoveryToken: string,
+    password: string,
+    passwordConfirm: string,
+    recaptchaToken: string
+}
+
+export const defaultPasswordReset: IPasswordReset = {
+    accountId: EMPTY_STRING,
+    recoveryToken: EMPTY_STRING,
+    password: EMPTY_STRING,
+    passwordConfirm: EMPTY_STRING,
+    recaptchaToken: EMPTY_STRING
+}
+
+export const verifyPasswordReset = (data: IPasswordReset): boolean => {
+    return data.accountId.length !== 0 &&
+        data.password.length !== 0 &&
+        data.passwordConfirm.length !== 0 &&
+        data.recoveryToken.length !== 0 &&
+        data.recaptchaToken.length !== 0;
+}

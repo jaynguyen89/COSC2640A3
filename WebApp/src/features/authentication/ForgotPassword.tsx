@@ -45,8 +45,11 @@ const ForgotPassword = (props: IForgotPassword) => {
                 setStatusMessage({ messages: ['Failed to send request to server. Please try again.'], type: 'error' } as IStatusMessage);
             else if (props.forgotPassword.payload.result === 0)
                 setStatusMessage({ messages: props.forgotPassword.payload.messages, type: 'error' } as IStatusMessage);
-            else
-                setStatusMessage({ messages: ['An email and/or SMS has been sent to you to let you reset your password.'], type: 'success' } as IStatusMessage);
+            else {
+                setGlobalMessage({ messages: ['An email and/or SMS has been sent to you to let you reset your password.'], type: 'success' } as IStatusMessage);
+                localStorage.setItem('recoverPassword_accountId', props.forgotPassword.payload.data as unknown as string);
+                window.location.href = '/recover';
+            }
     }, [props.forgotPassword]);
 
     if (props.authUser.isAuthenticated)

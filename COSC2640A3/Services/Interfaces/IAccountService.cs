@@ -17,7 +17,7 @@ namespace COSC2640A3.Services.Interfaces {
         /// Params `email` and `username` must not be null at once.
         /// Returns an Account corresponding to `email` or `username`.
         /// </summary>
-        Task<Account> GetAccountByEmailOrUsername([MaybeNull] string email,[MaybeNull] string username = default, bool isConfirmed = true);
+        Task<Account> GetAccountByEmailOrUsername([MaybeNull] string email,[MaybeNull] string username = default, bool? isConfirmed = true);
 
         /// <summary>
         /// Returns null if error, true if success, false if failed.

@@ -44,11 +44,11 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<Account> GetAccountByEmailOrUsername(string email, string username, bool isConfirmed = true) {
+        public async Task<Account> GetAccountByEmailOrUsername(string email, string username, bool? isConfirmed = true) {
             try {
                 return !Helpers.IsProperString(username)
-                    ? await _dbContext.Accounts.SingleOrDefaultAsync(account => account.EmailAddress.Equals(email) && account.EmailConfirmed == isConfirmed)
-                    : await _dbContext.Accounts.SingleOrDefaultAsync(account => account.NormalizedUsername.Equals(username.ToUpper()) && account.EmailConfirmed == isConfirmed);
+                    ? await _dbContext.Accounts.SingleOrDefaultAsync(account => account.EmailAddress.Equals(email) && (!isConfirmed.HasValue || account.EmailConfirmed == isConfirmed))
+                    : await _dbContext.Accounts.SingleOrDefaultAsync(account => account.NormalizedUsername.Equals(username.ToUpper()) && (!isConfirmed.HasValue || account.EmailConfirmed == isConfirmed));
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(AccountService) }.{ nameof(GetAccountByEmailOrUsername) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");

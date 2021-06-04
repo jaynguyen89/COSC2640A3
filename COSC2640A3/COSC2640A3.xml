@@ -382,6 +382,33 @@
              <response code="200">The request was successfully processed.</response>
              <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         </member>
+        <member name="M:COSC2640A3.Controllers.AuthenticationController.ResetPassword(COSC2640A3.Bindings.PasswordReset)">
+             <summary>
+             For guest. To set a new password for their account after requesting a password recovery token.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 POST /authentication/reset-password
+                 Body
+                     {
+                         accountId: string,
+                         recoveryToken: string,
+                         password: string,
+                         passwordConfirm: string,
+                         recaptchaToken: string
+                     }
+             </code>
+             -->
+            
+             Returns boolean result together with status message on failure.
+             </remarks>
+             <param name="passwordReset">The required data to reset password..</param>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = 0 | 1 }</returns>
+             <response code="200">The request was successfully processed.</response>
+             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        </member>
         <member name="M:COSC2640A3.Controllers.ClassContentController.AddFilesToClassroom(System.String,COSC2640A3.Bindings.FilesAdding)">
             <summary>
             For teacher. To upload files for classroom contents. Supports videos, audios, images and any other types as specified in request body by Enum value.
@@ -1300,7 +1327,7 @@
             -->
             </remarks>
             <param name="identity">The detail of forgotten account to send recovery data to.</param>
-            <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
             <response code="200">The request was successfully processed.</response>
             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         </member>
@@ -1557,7 +1584,7 @@
             Key == null: error, Key == true: available, Key == false: unavailable then Value == nameof(registration.Email) | nameof(registration.Username)
             </summary>
         </member>
-        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.GetAccountByEmailOrUsername(System.String,System.String,System.Boolean)">
+        <member name="M:COSC2640A3.Services.Interfaces.IAccountService.GetAccountByEmailOrUsername(System.String,System.String,System.Nullable{System.Boolean})">
             <summary>
             Params `email` and `username` must not be null at once.
             Returns an Account corresponding to `email` or `username`.

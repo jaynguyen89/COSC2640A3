@@ -22,6 +22,7 @@ namespace COSC2640A3.Controllers {
 
         private readonly ILogger<SecurityController> _logger;
         private readonly IGoogleService _googleService;
+        private readonly IAuthenticationService _authenticationService;
 
         private readonly int _tokenDuration;
 
@@ -33,12 +34,14 @@ namespace COSC2640A3.Controllers {
             ISmsService smsService,
             IAmazonMailService mailService,
             IContextService contextService,
+            IAuthenticationService authenticationService,
             IOptions<MainOptions> options
         ) : base(
             contextService, accountService, redisCache, smsService, mailService
         ) {
             _logger = logger;
             _googleService = googleService;
+            _authenticationService = authenticationService;
             _tokenDuration = int.Parse(options.Value.TokenValidityDuration);
         }
 
@@ -228,7 +231,7 @@ namespace COSC2640A3.Controllers {
         /// -->
         /// </remarks>
         /// <param name="identity">The detail of forgotten account to send recovery data to.</param>
-        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = string }</returns>
         /// <response code="200">The request was successfully processed.</response>
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [HttpPost("request-recovery-token")]
@@ -238,23 +241,26 @@ namespace COSC2640A3.Controllers {
             var isHuman = await _googleService.IsHumanInteraction(identity.RecaptchaToken);
             if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
 
-            var account = await _accountService.GetAccountByEmailOrUsername(identity.Email, identity.Username);
+            var account = await _accountService.GetAccountByEmailOrUsername(identity.Email, identity.Username, null);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var (result, message) = await _authenticationService.SendForgotPasswordToCognito(account);
+            if (!result) return message is null
+                ? new JsonResult(new JsonResponse {Result = RequestResult.Failed, Messages = new[] {"An issue happened while processing your request."}})
+                : new JsonResult(new JsonResponse {Result = RequestResult.Failed, Messages = new[] {$"{message}"}});
             
-            return await GenerateNewAccountTokenFor(
-                account,
-                account.PhoneNumberConfirmed ? NotificationType.Both : NotificationType.Email,
-                new EmailComposer {
-                    EmailType = EmailType.PasswordRecovery,
-                    Subject = $"{ nameof(COSC2640A3) } - Recover your password",
-                    ReceiverEmail = account.EmailAddress,
-                    Contents = new Dictionary<string, string> {
-                        { "USER_NAME_PLACEHOLDER", account.Username },
-                        { "WEBSITE_URL_PLACEHOLDER", "http://localhost:3000" },
-                        { "ACCOUNT_ID_PLACEHOLDER", account.Id }
-                    }
+            _ = await SendEmail(new EmailComposer {
+                EmailType = EmailType.PasswordRecovery,
+                ReceiverEmail = account.EmailAddress,
+                Subject = $"{ nameof(COSC2640A3) } - Reset Password",
+                Contents = new Dictionary<string, string> {
+                    { "USER_NAME_PLACEHOLDER", account.Username },
+                    { "WEBSITE_URL_PLACEHOLDER", SharedConstants.ClientUrl },
+                    { "ACCOUNT_ID_PLACEHOLDER", account.Id }
                 }
-            );
+            });
+                
+            return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = account.Id });
         }
     }
 }

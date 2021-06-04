@@ -152,7 +152,7 @@ namespace COSC2640A3.Controllers {
                 EmailType = EmailType.AccountActivationConfirmation,
                 Contents = new Dictionary<string, string> {
                     { "USER_NAME_PLACEHOLDER", account.Username },
-                    { "WEBSITE_URL_PLACEHOLDER", "http://localhost:3000" }
+                    { "WEBSITE_URL_PLACEHOLDER", SharedConstants.ClientUrl }
                 }
             });
             
@@ -210,6 +210,9 @@ namespace COSC2640A3.Controllers {
             
             var account = await _accountService.GetAccountByEmailOrUsername(credentials.Email, credentials.Username);
             if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            if (Helpers.IsProperString(account.RecoveryToken))
+                return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new[] { "A password reset request is pending on this account. Please reset password first." } });
 
             var (isSuccess, authTokenOrMessage) = await _authenticationService.Authenticate(account.Username, credentials.Password);
             if (!isSuccess.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
@@ -287,6 +290,49 @@ namespace COSC2640A3.Controllers {
             await _redisCache.InsertRedisCacheEntry(new CacheEntry { EntryKey = $"{ nameof(AuthenticatedUser) }_{ accountId }", Data = authenticatedUser });
 
             return new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = authenticatedUser.Role });
+        }
+
+        /// <summary>
+        /// For guest. To set a new password for their account after requesting a password recovery token.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     POST /authentication/reset-password
+        ///     Body
+        ///         {
+        ///             accountId: string,
+        ///             recoveryToken: string,
+        ///             password: string,
+        ///             passwordConfirm: string,
+        ///             recaptchaToken: string
+        ///         }
+        /// </code>
+        /// -->
+        ///
+        /// Returns boolean result together with status message on failure.
+        /// </remarks>
+        /// <param name="passwordReset">The required data to reset password..</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = 0 | 1 }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [HttpPost("reset-password")]
+        public async Task<JsonResult> ResetPassword(PasswordReset passwordReset) {
+            _logger.LogInformation($"{ nameof(AuthenticationController) }.{ nameof(ResetPassword) }: service starts.");
+            
+            var isHuman = await _googleService.IsHumanInteraction(passwordReset.RecaptchaToken);
+            if (!isHuman.Result) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "Recaptcha verification failed." } });
+
+            var account = await _accountService.GetAccountById(passwordReset.AccountId);
+            if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var (result, message) = await _authenticationService.ConfirmPasswordReset(passwordReset, account.Username);
+            if (result) return new JsonResult(new JsonResponse { Result = RequestResult.Success });
+            
+            return message is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { $"{ message }" } });
         }
     }
 }

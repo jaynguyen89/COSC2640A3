@@ -344,7 +344,7 @@ namespace COSC2640A3.Controllers {
                 Subject = $"{ nameof(COSC2640A3) } - Two FA Disabled",
                 Contents = new Dictionary<string, string> {
                     { "USER_NAME_PLACEHOLDER", account.Username },
-                    { "WEBSITE_URL_PLACEHOLDER", "http://localhost:3000" }
+                    { "WEBSITE_URL_PLACEHOLDER", Helper.Shared.SharedConstants.ClientUrl }
                 }
             });
 

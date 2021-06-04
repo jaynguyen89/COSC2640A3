@@ -7,6 +7,7 @@ import Registration from "../features/authentication/Registration";
 import ConfirmTfa from "../features/authentication/ConfirmTfa";
 import ActivateAccount from "../features/authentication/ActivateAccount";
 import ForgotPassword from "../features/authentication/ForgotPassword";
+import ResetPassword from "../features/authentication/ResetPassword";
 import GenericHome from "../features/homepage/GenericHome";
 import ManageClassrooms from "../features/classroom/ManageClassrooms";
 import ManageClassContent from "../features/classContents/ManageClassContent";
@@ -25,6 +26,7 @@ function App() {
                     <Route path='/confirm-tfa' component={ ConfirmTfa } />
                     <Route path='/activate' component={ ActivateAccount } />
                     <Route path='/forgot-password' component={ ForgotPassword } />
+                    <Route path='/recover' component={ ResetPassword } />
                     <Route path='/home' component={ GenericHome } />
                     <Route path='/manage-classrooms' component={ ManageClassrooms } />
                     <Route path='/manage-classroom-contents' component={ ManageClassContent } />

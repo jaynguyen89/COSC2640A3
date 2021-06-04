@@ -4,11 +4,14 @@ using System.Threading.Tasks;
 using Amazon;
 using Amazon.CognitoIdentityProvider;
 using Amazon.CognitoIdentityProvider.Model;
+using Amazon.SimpleEmail.Model;
 using COSC2640A3.Bindings;
 using COSC2640A3.DbContexts;
+using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using LimitExceededException = Amazon.CognitoIdentityProvider.Model.LimitExceededException;
 
 namespace COSC2640A3.Services.Services {
 
@@ -184,6 +187,144 @@ namespace COSC2640A3.Services.Services {
             catch (TooManyRequestsException e) {
                 _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmUserInPool) } - { nameof(TooManyRequestsException) }: { e.Message }\n\n{ e.StackTrace }");
                 return new KeyValuePair<bool?, string>(default, default);
+            }
+        }
+
+        public async Task<KeyValuePair<bool, string>> SendForgotPasswordToCognito(Account account) {
+            var forgotPasswordRequest = new ForgotPasswordRequest {
+                ClientId = _clientId,
+                Username = account.Username
+            };
+
+            try {
+                var response = await _identityProvider.ForgotPasswordAsync(forgotPasswordRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalErrorException("Request to AWS Cognito failed.");
+
+                return new KeyValuePair<bool, string>(true, default);
+            }
+            catch (UserNotConfirmedException) {
+                return new KeyValuePair<bool, string>(default, "Your account has not been confirmed. Unable to recover password. Please register another account.");
+            }
+            catch (UserNotFoundException) {
+                return new KeyValuePair<bool, string>(default, "Unable to find your account with the provided data.");
+            }
+            catch (CodeDeliveryFailureException) {
+                return new KeyValuePair<bool, string>(default, "An issue that prevents us to send recovery email to you. Please try again.");
+            }
+            catch (InternalErrorException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InternalErrorException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidEmailRoleAccessPolicyException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InvalidEmailRoleAccessPolicyException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidLambdaResponseException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InvalidLambdaResponseException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidParameterException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InvalidParameterException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidSmsRoleAccessPolicyException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InvalidSmsRoleAccessPolicyException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidSmsRoleTrustRelationshipException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(InvalidSmsRoleTrustRelationshipException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (LimitExceededException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(LimitExceededException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (NotAuthorizedException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(NotAuthorizedException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (ResourceNotFoundException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(ResourceNotFoundException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (TooManyRequestsException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(TooManyRequestsException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (UnexpectedLambdaException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(UnexpectedLambdaException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (UserLambdaValidationException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(SendForgotPasswordToCognito) } - { nameof(UserLambdaValidationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+        }
+
+        public async Task<KeyValuePair<bool, string>> ConfirmPasswordReset(PasswordReset passwordReset, string username) {
+            var confirmPasswordRequest = new ConfirmForgotPasswordRequest {
+                ClientId = _clientId,
+                ConfirmationCode = passwordReset.RecoveryToken,
+                Password = passwordReset.Password,
+                Username = username
+            };
+
+            try {
+                var response = await _identityProvider.ConfirmForgotPasswordAsync(confirmPasswordRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalErrorException("Request to AWS Cognito failed.");
+                
+                return new KeyValuePair<bool, string>(true, default);
+            }
+            catch (UserNotConfirmedException) {
+                return new KeyValuePair<bool, string>(default, "Your account has not been confirmed. Unable to recover password. Please register another account.");
+            }
+            catch (UserNotFoundException) {
+                return new KeyValuePair<bool, string>(default, "Unable to find your account with the provided data.");
+            }
+            catch (CodeMismatchException) {
+                return new KeyValuePair<bool, string>(default, "The confirmation token does not match our record. Please try again.");
+            }
+            catch (ExpiredCodeException) {
+                return new KeyValuePair<bool, string>(default, "The confirmation token is expired. Please attempt Forgot Password again.");
+            }
+            catch (InvalidPasswordException) {
+                return new KeyValuePair<bool, string>(default, "The new password does not match our security constraints. Please use a stronger password.");
+            }
+            catch (InternalErrorException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(InternalErrorException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (InvalidParameterException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(InvalidParameterException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (LimitExceededException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(LimitExceededException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (NotAuthorizedException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(NotAuthorizedException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (ResourceNotFoundException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(ResourceNotFoundException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (TooManyFailedAttemptsException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(TooManyFailedAttemptsException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (TooManyRequestsException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(TooManyRequestsException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (UnexpectedLambdaException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(UnexpectedLambdaException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
+            }
+            catch (UserLambdaValidationException e) {
+                _logger.LogError($"{ nameof(AuthenticationService) }.{ nameof(ConfirmPasswordReset) } - { nameof(UserLambdaValidationException) }: { e.Message }\n\n{ e.StackTrace }");
+                return new KeyValuePair<bool, string>(default, default);
             }
         }
     }

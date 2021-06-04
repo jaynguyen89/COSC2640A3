@@ -2,7 +2,6 @@ import React from 'react';
 import {connect} from 'react-redux';
 import $ from 'jquery';
 import M from 'materialize-css';
-import moment from 'moment';
 import Spinner from "../../shared/Spinner";
 import Alert from "../../shared/Alert";
 import HeaderNav from "../../shared/HeaderNav";
@@ -116,7 +115,7 @@ const AllClassrooms = (props: IAllClassrooms) => {
                 setStatusMessage({ messages: props.enrolClassroom.payload.messages, type: 'error' } as IStatusMessage);
             else {
                 setStatusMessage(EMPTY_STATUS);
-                setGlobalMessage({ messages: ['You have successfully enrolled into the classroom, view it in your home page.'], type: 'error' } as IStatusMessage);
+                setGlobalMessage({ messages: ['You have successfully enrolled into the classroom, view it in your home page.'], type: 'success' } as IStatusMessage);
                 props.invokeGetAllClassroomsRequest(props.authUser);
             }
     }, [props.enrolClassroom]);

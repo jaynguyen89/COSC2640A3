@@ -23,25 +23,5 @@
         
         // For AWS Simple Mail Service
         public string MailSentFromAddress { get; set; }
-        
-        // For Paypal
-        public string PaypalClientId { get; set; }
-        
-        public string PaypalSecret { get; set; }
-        
-        public string PaypalGetAccessTokenUrl { get; set; }
-        
-        public string PaypalVerifyPaymentAuthorizationUrl { get; set; }
-        
-        public string PaypalCapturePaymentUrl { get; set; }
-        
-        public string PaypalUrlPlaceholder { get; set; }
-        
-        //For Stripe
-        public string StripeSecretKey { get; set; }
-        
-        public string StripePaymentSuccessCallback { get; set; }
-        
-        public string StripePaymentCancelCallback { get; set; }
     }
 }

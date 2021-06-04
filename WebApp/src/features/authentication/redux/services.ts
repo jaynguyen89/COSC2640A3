@@ -1,5 +1,13 @@
 import { sendRequestForResult } from '../../../providers/serviceProvider';
-import {DEFAULT_AUTH_USER, IAccountData, IActivationData, IAuthUser, ICredentials, IIdentity} from "./interfaces";
+import {
+    DEFAULT_AUTH_USER,
+    IAccountData,
+    IActivationData,
+    IAuthUser,
+    ICredentials,
+    IIdentity,
+    IPasswordReset
+} from "./interfaces";
 import {IIssue, IResponse, isProperString} from "../../../providers/helpers";
 
 const AUTHENTICATION_ENDPOINT = 'authentication/';
@@ -102,5 +110,13 @@ export const sendSwitchRoleRequest = (auth: IAuthUser): Promise<IResponse | IIss
         null,
         null,
         'GET'
+    );
+}
+
+export const sendPasswordResetRequest = (data: IPasswordReset): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ AUTHENTICATION_ENDPOINT }reset-password`,
+        null,
+        data
     );
 }

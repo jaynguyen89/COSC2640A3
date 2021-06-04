@@ -142,14 +142,22 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                 <div id="marks" className='row' style={{ marginBottom: 0 }}>
                     <div className='col s12 center-align'>
                         <span>Overall Mark:&nbsp;</span>
-                        <span>{ props.enrolment.marksDetail.overallMarks }</span>
+                        <span>{ (props.enrolment.marksDetail && props.enrolment.marksDetail.overallMarks) || 'N/A' }</span>
                     </div>
                     <div className='clearfix' />
 
                     {
-                        (props.enrolment.marksDetail.markBreakdowns.length === 0 && <p>No marks have been released.</p>) ||
+                        (
+                            (props.enrolment.marksDetail === null || (
+                                (props.enrolment.marksDetail && props.enrolment.marksDetail.markBreakdowns === null) ||
+                                (props.enrolment.marksDetail.markBreakdowns && props.enrolment.marksDetail.markBreakdowns.length === 0))
+                            ) &&
+                            <p>No marks have been released.</p>
+                        ) ||
                         <ul className="collapsible popout">
                             {
+                                props.enrolment.marksDetail &&
+                                props.enrolment.marksDetail.markBreakdowns &&
                                 props.enrolment.marksDetail.markBreakdowns.map((mark, i) =>
                                     <li key={i}>
                                         <div className="collapsible-header">
@@ -160,7 +168,8 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                                                 <div className='col s12'>
                                                     <span>Marks (rewarded/total):</span>
                                                     <span
-                                                        className='right'>{ mark.rewardedMarks }/{ mark.totalMarks }</span>
+                                                        className='right'>{ mark.rewardedMarks }/{ mark.totalMarks }
+                                                    </span>
                                                 </div>
 
                                                 <div className='col s12'>

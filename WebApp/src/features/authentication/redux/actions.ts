@@ -1,6 +1,6 @@
 import * as authenticationConstants from './constants';
 import * as authenticationServices from './services';
-import {IAccountData, IActivationData, IAuthUser, ICredentials, IIdentity} from "./interfaces";
+import {IAccountData, IActivationData, IAuthUser, ICredentials, IIdentity, IPasswordReset} from "./interfaces";
 
 export const invokeAuthenticationRequest = (credentials: ICredentials) => {
     return (dispatch: any) => {
@@ -146,6 +146,22 @@ export const invokeSwitchRoleRequest = (auth: IAuthUser) => {
             }))
             .catch(error => dispatch({
                 type: authenticationConstants.SWITCH_ROLE_REQUEST_FAILED,
+                error
+            }))
+    }
+}
+
+export const invokePasswordResetRequest = (data: IPasswordReset) => {
+    return (dispatch: any) => {
+        dispatch({ type: authenticationConstants.RESET_PASSWORD_REQUEST_SENT });
+
+        authenticationServices.sendPasswordResetRequest(data)
+            .then(response => dispatch({
+                type: authenticationConstants.RESET_PASSWORD_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: authenticationConstants.RESET_PASSWORD_REQUEST_FAILED,
                 error
             }))
     }
