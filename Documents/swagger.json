@@ -436,6 +436,43 @@
         }
       }
     },
+    "/authentication/reset-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "For guest. To set a new password for their account after requesting a password recovery token.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /authentication/reset-password\rBody\r    {\r        accountId: string,\r        recoveryToken: string,\r        password: string,\r        passwordConfirm: string,\r        recaptchaToken: string\r    }\r</pre>\r\n\r\n\r\nReturns boolean result together with status message on failure.",
+        "requestBody": {
+          "description": "The required data to reset password..",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasswordReset"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
     "/class-content/add-files": {
       "post": {
         "tags": [
@@ -763,7 +800,7 @@
           "ClassContent"
         ],
         "summary": "For both. To translate a sentence or paragraph from English to another language.",
-        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n\r\n<pre>\rGET /class-content/translate-sentences\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n",
+        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n\r\n<pre>\rGET /class-content/translate-sentences\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonyms: boolean\r    }\r</pre>\r\n",
         "requestBody": {
           "description": "The account's ID.",
           "content": {
@@ -800,7 +837,7 @@
           "ClassContent"
         ],
         "summary": "For both. To translate an English word to another language.",
-        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n- {phrase} is a single word\r\n\r\n<pre>\rGET /class-content/translate-word\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: { string: [string] },\r    synonyms: null\r    antonyms: null\r}\r</pre>\r\n",
+        "description": "Request signature:\r\n- {forSynonym} is ignored\r\n- {phrase} is a single word\r\n\r\n<pre>\rGET /class-content/translate-word\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonyms: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: { string: [string] },\r    synonyms: null\r    antonyms: null\r}\r</pre>\r\n",
         "requestBody": {
           "description": "The account's ID.",
           "content": {
@@ -837,7 +874,7 @@
           "ClassContent"
         ],
         "summary": "For both. To get English thesaurus for an English word. If {translateIt.ForSynonyms == true}, returns the synonyms, otherwise, returns the antonyms.",
-        "description": "Request signature:\r\n- {targetLanguage} is ignored\r\n- {forSynonym}: true for synonyms, false for antonyms\r\n\r\n<pre>\rGET /class-content/get-thesaurus\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonym: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {synonym}: if {translateIt.forSynonyms == false, this property is null.}\r\n- {antonyms}: if {translateIt.forSynonyms == true, this property is null.}\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: null,\r    synonyms: { string: [string] } | null,\r    antonyms: { string: [string] } | null \r}\r</pre>\r\n",
+        "description": "Request signature:\r\n- {targetLanguage} is ignored\r\n- {forSynonym}: true for synonyms, false for antonyms\r\n\r\n<pre>\rGET /class-content/get-thesaurus\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        targetLanguage: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11,\r        phrase: string,\r        forSynonyms: boolean\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n- {synonym}: if {translateIt.forSynonyms == false, this property is null.}\r\n- {antonyms}: if {translateIt.forSynonyms == true, this property is null.}\r\n<pre>\r{\r    word: string,\r    rootForm: string,\r    wordTypes: [string],\r    translations: null,\r    synonyms: { string: [string] } | null,\r    antonyms: { string: [string] } | null \r}\r</pre>\r\n",
         "requestBody": {
           "description": "The account's ID.",
           "content": {
@@ -2237,6 +2274,32 @@
             "format": "date-time"
           },
           "comment": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "PasswordReset": {
+        "type": "object",
+        "properties": {
+          "accountId": {
+            "type": "string",
+            "nullable": true
+          },
+          "recoveryToken": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          },
+          "passwordConfirm": {
+            "type": "string",
+            "nullable": true
+          },
+          "recaptchaToken": {
             "type": "string",
             "nullable": true
           }

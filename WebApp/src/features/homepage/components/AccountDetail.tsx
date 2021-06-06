@@ -40,7 +40,11 @@ const AccountDetail = (props: IAccountDetail) => {
 
     React.useEffect(() => {
         setPhoneNumber(props.accountDetail.phoneNumber);
-        setShouldConfirmPhoneNumber(!props.accountDetail.phoneNumberConfirmed);
+        setShouldConfirmPhoneNumber(
+            props.accountDetail.phoneNumber !== null &&
+            props.accountDetail.phoneNumber.length !== 0 &&
+            !props.accountDetail.phoneNumberConfirmed
+        );
     }, [props.accountDetail.phoneNumber]);
 
     React.useEffect(() => {

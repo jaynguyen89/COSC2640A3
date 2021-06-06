@@ -50,8 +50,8 @@ const ClassroomModal = (props: IClassroomModal) => {
     }
 
     const goToClassroomContent = () => {
-        localStorage.setItem('classroomDetailsItem', JSON.stringify(classroom));
-        window.location.href = '/manage-classroom-contents';
+        localStorage.setItem('classroomContents_classroomId', classroom.id);
+        window.location.href = '/classroom-contents';
     }
 
     return (

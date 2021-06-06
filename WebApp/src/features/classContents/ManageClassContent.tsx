@@ -30,6 +30,7 @@ import {
     IManageClassContent, IRichContent
 } from "./redux/interfaces";
 import * as contentConstants from './redux/constants';
+import * as classroomConstants from '../classroom/redux/constants';
 import {clearAuthUser} from "../authentication/redux/actions";
 import VideoSection from "./components/VideoSection";
 import AttachmentSection from "./components/AttachmentSection";
@@ -41,9 +42,11 @@ import $ from "jquery";
 import AddFilesInput from "./components/AddFilesInput";
 import ContentEditor from "./components/ContentEditor";
 import ContextTranslation from "../translation/ContextTranslation";
+import {invokeGetClassroomDetailRequest} from "../classroom/redux/actions";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
+    getClassroomDetail: state.classroomStore.getClassroomDetail,
     getContent: state.contentStore.getContent,
     addFiles: state.contentStore.addFiles,
     updateFiles: state.contentStore.updateFiles,
@@ -54,6 +57,7 @@ const mapStateToProps = (state: any) => ({
 
 const mapActionsToProps = {
     clearAuthUser,
+    invokeGetClassroomDetailRequest,
     invokeGetClassroomContentRequest,
     invokeAddFilesRequest,
     invokeUpdateFilesRequest,
@@ -93,19 +97,42 @@ const ManageClassContent = (props: IManageClassContent) => {
             } as IFileUpdating)
         });
 
-        const classroomItem = localStorage.getItem('classroomDetailsItem');
-        const storedClassroom = JSON.parse(classroomItem || EMPTY_STRING) as IClassroomData;
-        setClassroom(storedClassroom || defaultClassroom);
-        setRichContent({ ...richContent, classroomId: storedClassroom.id });
+        const classroomId = localStorage.getItem('classroomContents_classroomId');
+        if (classroomId === null || classroomId === undefined) {
+            setStatusMessage({
+                messages: ['Failed to get classroom details. Please try going back and open this page again.'],
+                type: 'error',
+                closeAlert: () => setStatusMessage(EMPTY_STATUS)
+            } as IStatusMessage);
+            return;
+        }
 
-        props.invokeGetClassroomContentRequest(props.authUser, storedClassroom.id);
-        setUpdatedFiles({
-            classroomId: classroom.id,
-            fileType: 0,
-            uploadedFiles: null as unknown as FileList,
-            removedFiles: Array<string>()
-        } as IFileUpdating);
+        props.invokeGetClassroomDetailRequest(props.authUser, classroomId as string);
     }, []);
+
+    React.useEffect(() => {
+        if (props.getClassroomDetail.action === classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_FAILED)
+            checkSession(props.clearAuthUser, setPageError, props.getClassroomDetail.error?.message);
+
+        if (props.getClassroomDetail.action === classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_SUCCESS)
+            if (props.getClassroomDetail.payload === null)
+                setPageError({ messages: ['Failed to send request to server. Please try again.'], type: 'error' } as IStatusMessage);
+            else if (props.getClassroomDetail.payload.result === 0)
+                setPageError({ messages: props.getClassroomDetail.payload.messages, type: 'error' } as IStatusMessage);
+            else {
+                localStorage.removeItem('classroomContents_classroomId');
+                const classroomDetail = props.getClassroomDetail.payload.data as IClassroomData;
+                setClassroom(classroomDetail);
+                setRichContent({ ...richContent, classroomId: classroomDetail.id });
+                setUpdatedFiles({
+                    classroomId: classroomDetail.id,
+                    fileType: 0,
+                    uploadedFiles: null as unknown as FileList,
+                    removedFiles: Array<string>()
+                } as IFileUpdating);
+                props.invokeGetClassroomContentRequest(props.authUser, classroomDetail.id);
+            }
+    }, [props.getClassroomDetail]);
 
     React.useEffect(() => {
         if (props.getContent.action === contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_FAILED)
@@ -349,6 +376,7 @@ const ManageClassContent = (props: IManageClassContent) => {
         <div className='container' style={{ marginTop: '4em' }}>
             {
                 (
+                    props.getClassroomDetail.action === classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_SENT ||
                     props.getContent.action === contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_SENT ||
                     props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
                     props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT ||

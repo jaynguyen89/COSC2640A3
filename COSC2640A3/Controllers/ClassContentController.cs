@@ -40,8 +40,9 @@ namespace COSC2640A3.Controllers {
             IS3Service s3Service,
             ITextractService textractService,
             ITranslateService translateService,
-            IDictionaryService dictionaryService
-        ) {
+            IDictionaryService dictionaryService,
+            IRedisCacheService redisCache
+        ) : base(null, null, redisCache, null, null) {
             _logger = logger;
             _classContentService = classContentService;
             _classroomService = classroomService;
@@ -445,10 +446,16 @@ namespace COSC2640A3.Controllers {
         public async Task<JsonResult> GetClassroomContents([FromHeader] string accountId,[FromRoute] string classroomId) {
             _logger.LogInformation($"{ nameof(ClassContentController) }.{ nameof(UpdateContentForClassroom) }: Service starts.");
             
-            var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
-            if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
-            if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
-            
+            var authenticatedUser = await _redisCache.GetRedisCacheEntry<AuthenticatedUser>($"{ nameof(AuthenticatedUser) }_{ accountId }");
+            if (authenticatedUser is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            if (authenticatedUser.Role == Role.Teacher) {
+                var isBelonged = await _classroomService.IsClassroomBelongedToThisTeacherByAccountId(accountId, classroomId);
+                
+                if (!isBelonged.HasValue) return new JsonResult(new JsonResponse {Result = RequestResult.Failed, Messages = new[] {"An issue happened while processing your request."}});
+                if (!isBelonged.Value) return new JsonResult(new JsonResponse {Result = RequestResult.Failed, Messages = new[] {"You are not authorized for this request."}});
+            }
+
             var classContent = await _classContentService.GetClassContentVmByClassroomId(classroomId);
             return classContent is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })

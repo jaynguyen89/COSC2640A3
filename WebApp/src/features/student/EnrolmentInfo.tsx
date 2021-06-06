@@ -83,7 +83,10 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
 
                             <div className='col s12' style={{ marginTop: '1em' }}>
                                 <button className='btn waves-effect waves-light'
-                                        onClick={() => alert('Open classroom content page for student view.')}
+                                        onClick={ () => {
+                                            localStorage.setItem('classroomContents_classroomId', props.enrolment.classroom.id);
+                                            window.location.href = '/classroom-contents';
+                                        }}
                                 >
                                     <i className="fas fa-door-open"/>&nbsp;
                                     Go to classroom

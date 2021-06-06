@@ -29,7 +29,7 @@ function App() {
                     <Route path='/recover' component={ ResetPassword } />
                     <Route path='/home' component={ GenericHome } />
                     <Route path='/manage-classrooms' component={ ManageClassrooms } />
-                    <Route path='/manage-classroom-contents' component={ ManageClassContent } />
+                    <Route path='/classroom-contents' component={ ManageClassContent } />
                     <Route path='/browse-classrooms' component={ AllClassrooms } />
                     <Route path='/manage-enrolments' component={ ManageEnrolments } />
                     <Route path='/checkout-summary' component={ CheckoutSummary } />

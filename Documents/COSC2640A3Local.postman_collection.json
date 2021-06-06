@@ -1,0 +1,2114 @@
+{
+	"info": {
+		"_postman_id": "6af208b1-77e9-49f7-a1a9-8bf720c4f31a",
+		"name": "COSC2640A3Local",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "UpdateStudentDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhiYTk4YTg0LTkzMTctNGU2MS1iMGE2LWQ3ZGMxNDc0ZDg4MCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDg4NDQyLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTIwNDIsImlhdCI6MTYyMDQ4ODQ0MiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.oUZtE_mlHKhf9CEgUPLeIoxln0nJ6x5hAMaPrsdZYwhYS3wHJ2e4L2qzp9jVOYsM3D-JIwn3ZOEBJe5DAvX7F7cifUQy87vh1WVdycSUZ5-0uPc6MhJiqDv0Z_z7G5CY_2Wby7NgHvBPS5cd_51U6FC-N8C9ma8p2hZMncp4DtLDl_PXwOEzEjeQl6ghPSNDIcZmn3oaM4hEqUaaP56Xk1XH94RGjcVH0y2JpygayUf41EmaIjgM83d5ssiGFa9w8o7mXXCkOU1c2MPrX2DyuNZyWhpYQSCOLvyRuQVaSWvbsaP6pBdCU8W9ajIwqfOtnfpUf1U7db3AkkqGWNCODQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1C45F35A-543B-46ED-943B-ABC9702D8BCB\",\r\n    \"workplace\": \"RMIT University\",\r\n    \"department\": \"School of IT\",\r\n    \"personalUrl\": \"https://jaydeveloper.com/\",\r\n    \"language\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/account/update-student",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"update-student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetStudentDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhiYTk4YTg0LTkzMTctNGU2MS1iMGE2LWQ3ZGMxNDc0ZDg4MCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDg4NDQyLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTIwNDIsImlhdCI6MTYyMDQ4ODQ0MiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.oUZtE_mlHKhf9CEgUPLeIoxln0nJ6x5hAMaPrsdZYwhYS3wHJ2e4L2qzp9jVOYsM3D-JIwn3ZOEBJe5DAvX7F7cifUQy87vh1WVdycSUZ5-0uPc6MhJiqDv0Z_z7G5CY_2Wby7NgHvBPS5cd_51U6FC-N8C9ma8p2hZMncp4DtLDl_PXwOEzEjeQl6ghPSNDIcZmn3oaM4hEqUaaP56Xk1XH94RGjcVH0y2JpygayUf41EmaIjgM83d5ssiGFa9w8o7mXXCkOU1c2MPrX2DyuNZyWhpYQSCOLvyRuQVaSWvbsaP6pBdCU8W9ajIwqfOtnfpUf1U7db3AkkqGWNCODQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/student",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"student"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTeacherDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjMyYzc2YjliLTIxMDUtNGEzMC05ZjYyLWYxMWI2OWFmM2ZkYSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDg4NzMzLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTIzMzMsImlhdCI6MTYyMDQ4ODczMywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.V9h2_M79qYWd_AlIHVZ2Bjgl2CdO5bFbkbVXM6OG8TGpR_iIKQS14KZMuAoPRF7Jn50PSYOZiRJ19Yc6RR9yKD6blLiYhqruMc1E-vY00fw8OZVq63CrffhMRLDvU5SQuBw0jysgJmZP2gA68zkUCLr2aDHHc8kYzHcF3uP31u_stfrTCRNeu2vVhY9XuI_a7qQ_z61mCUaz9X-_nWTR0hnLe1VqZ8rqLZo3VllE2CIHKq7YHubQRLZB4ZIVXQp27SsJcime7x8NEIMj17NnAQ1OxM-HuwHLM8cIlOBr204EviIOVjq9C2UItkXWQIj5zi622drBfgJsmVWVYLiXBQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"1C45F35A-543B-46ED-943B-ABC9702D8BCB\",\r\n    \"workplace\": \"RMIT University\",\r\n    \"department\": \"School of IT\",\r\n    \"personalUrl\": \"https://jaydeveloper.com/\",\r\n    \"language\": 0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/account/update-teacher",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"update-teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetTeacherDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjMyYzc2YjliLTIxMDUtNGEzMC05ZjYyLWYxMWI2OWFmM2ZkYSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDg4NzMzLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTIzMzMsImlhdCI6MTYyMDQ4ODczMywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.V9h2_M79qYWd_AlIHVZ2Bjgl2CdO5bFbkbVXM6OG8TGpR_iIKQS14KZMuAoPRF7Jn50PSYOZiRJ19Yc6RR9yKD6blLiYhqruMc1E-vY00fw8OZVq63CrffhMRLDvU5SQuBw0jysgJmZP2gA68zkUCLr2aDHHc8kYzHcF3uP31u_stfrTCRNeu2vVhY9XuI_a7qQ_z61mCUaz9X-_nWTR0hnLe1VqZ8rqLZo3VllE2CIHKq7YHubQRLZB4ZIVXQp27SsJcime7x8NEIMj17NnAQ1OxM-HuwHLM8cIlOBr204EviIOVjq9C2UItkXWQIj5zi622drBfgJsmVWVYLiXBQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/teacher",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"teacher"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "EnableOrRenewTwoFa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImIzODAyZjUxLTk0MGEtNGQ3Yy04ZmU4LTQ4YTE1ZDllZGNkYiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkwMzMxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTM5MzEsImlhdCI6MTYyMDQ5MDMzMSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.5SsFQiDe2jplmqUgs3SPkOXT1FV5GuNGulp8h1hEGLEXYO6uo8-pA1jeBv7RcdaMjkztR9WkOj60Us0yfrEb6EF0KonjdY8clNnG9-1Ry5y6jdeD6a01GQ4QkpbcG3KulfYSnipjSmnlZZG-wr6_6iRcH15ewZWc80I-hKSk2RtWwPMXOTQKjD0csVPgN_SvpdLRTaCXCUgG8vf8WcWmpT_SKnr5k7Gk8XpIpnAZ1VH43ivkO_HBDTcDe91StHuyq6T10EDUUkLtFFgVW9HYF1Qbcg7ZMWF7TyzM8D0vMZQy8_AN12jCISQJZ40MFYeg4y93Ee7sIRNeZVBbzWaw0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/new-tfa",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"new-tfa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DisableTwoFa",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImIzODAyZjUxLTk0MGEtNGQ3Yy04ZmU4LTQ4YTE1ZDllZGNkYiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkwMzMxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTM5MzEsImlhdCI6MTYyMDQ5MDMzMSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.5SsFQiDe2jplmqUgs3SPkOXT1FV5GuNGulp8h1hEGLEXYO6uo8-pA1jeBv7RcdaMjkztR9WkOj60Us0yfrEb6EF0KonjdY8clNnG9-1Ry5y6jdeD6a01GQ4QkpbcG3KulfYSnipjSmnlZZG-wr6_6iRcH15ewZWc80I-hKSk2RtWwPMXOTQKjD0csVPgN_SvpdLRTaCXCUgG8vf8WcWmpT_SKnr5k7Gk8XpIpnAZ1VH43ivkO_HBDTcDe91StHuyq6T10EDUUkLtFFgVW9HYF1Qbcg7ZMWF7TyzM8D0vMZQy8_AN12jCISQJZ40MFYeg4y93Ee7sIRNeZVBbzWaw0g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/disable-tfa/recaptchaToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"disable-tfa",
+								"recaptchaToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdatePhoneNumber",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhkNzFiODJkLWUyZGQtNDc4NS1iMWVhLTdhM2E5NjJiYmQ5NSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkxMTA2LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTQ3MDYsImlhdCI6MTYyMDQ5MTEwNiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.CKvExPDuyTM_STJX_QzjrdgJSb_NbAhvZVJRC55yWlXLbRyYQW1hNyEoOuT15hsaE05o7xhTXnt1HasHymY63xMSlylzuqxTCiWmuSaMW_EFMcBbcBl0cP5R3k8I9kEk-1_EiLdiE1HUHcLouJN7B_-uenkLD8oms2wCxcrNqEnJI-6hT2sW67vq7FZwvLOGK_QhrAd0OFYbNelhODlyLvL4vZSmsD4Y4AqISoi7K2OY0uAG9nii1u_IQTucRZuMGjuMU0RTQHjcRuAAuFGYrAgAy3eyttl-B-banNLoaAqPJRRX-xFVt-ZKS9IU6KV4YsywTha92GnwbO8VYO6Wvw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/set-phone-number/0422357488",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"set-phone-number",
+								"0422357488"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemovePhoneNumber",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhkNzFiODJkLWUyZGQtNDc4NS1iMWVhLTdhM2E5NjJiYmQ5NSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkxMTA2LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTQ3MDYsImlhdCI6MTYyMDQ5MTEwNiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.CKvExPDuyTM_STJX_QzjrdgJSb_NbAhvZVJRC55yWlXLbRyYQW1hNyEoOuT15hsaE05o7xhTXnt1HasHymY63xMSlylzuqxTCiWmuSaMW_EFMcBbcBl0cP5R3k8I9kEk-1_EiLdiE1HUHcLouJN7B_-uenkLD8oms2wCxcrNqEnJI-6hT2sW67vq7FZwvLOGK_QhrAd0OFYbNelhODlyLvL4vZSmsD4Y4AqISoi7K2OY0uAG9nii1u_IQTucRZuMGjuMU0RTQHjcRuAAuFGYrAgAy3eyttl-B-banNLoaAqPJRRX-xFVt-ZKS9IU6KV4YsywTha92GnwbO8VYO6Wvw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/account/remove-phone-number",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"account",
+								"remove-phone-number"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Register",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jay.nguyen@jaydeveloper.com\",\r\n    \"username\": \"jay.nguyen\",\r\n    \"password\": \"Testing123!\",\r\n    \"passwordConfirm\": \"Testing123!\",\r\n    \"phoneNumber\": null,\r\n    \"preferredName\": \"Jay Nguyen\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/authentication/register",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"authentication",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ConfirmRegistration",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"jay.nguyen@jaydeveloper.com\",\r\n    \"username\": \"\",\r\n    \"confirmCode\": \"002334\",\r\n    \"recaptchaToken\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/authentication/confirm-registration",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"authentication",
+								"confirm-registration"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Authenticate",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": null,\r\n    \"username\": \"jay.nguyen\",\r\n    \"password\": \"Testing123!\",\r\n    \"asStudent\": true,\r\n    \"recaptchaToken\": \"\"\r\n}"
+						},
+						"url": {
+							"raw": "https://localhost:5001/authentication/authenticate",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"authentication",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unauthenticate",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImQyMTBhYWVlLTJiOTktNDM4Yy1iOWIzLTcyNzUxNzFhMmVkOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDg1MjU5LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0ODg4NTksImlhdCI6MTYyMDQ4NTI1OSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.zml57CtfyNqtbxW-JVGcdG_HNlkjbHV88Kxq6l8ASlLZUjYez_n-QtVZzQSWAz5Q-ex_fp--shWYw-DfjuuMZ1DOiyGULH8f55vtqhUsS2ariAhKE5QbeFUP7Ex5yvujYrNvR80w9FvkXV49rWUqXb9ENgd4e6Pp94sBayK3tp-WY76YN8jPTrX4g1XUbje-iYW-gUY05-iXXnKlysKyvHBITS6wlJxRJyv59k_VmeLuapqFfONspfXHal3_yvan9Ts9TXj4lRsj7iQIhM5OZPpPi1e51QysCqojvPDEATReGC9xOPBy0A2mxLJpHOKPnXLbvtCik6m0IoZ2jbzUuA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/authentication/unauthenticate",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"authentication",
+								"unauthenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SwitchRoleForAuthenticatedUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjBiMTE2OTE0LWU4OWEtNDk5Ni1iMzZmLTg3MjU0NjE1MzIzZiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIyNDY1Njk3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjI0NjkyOTcsImlhdCI6MTYyMjQ2NTY5NywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.1hBaXV5Qo7N9TR2cOhkX37J6ZMrsyCT40G4pi1E9921itWurNejxJiv0uE8UHSEcnpgfUHUQ_TFe1CvvX4b_o1Mk0tmpTe5PBMh4A61TGjKTvwLT1deArEWKxWfN23ChcdMS8dQRfrVP20ExZUqqD75kAnf4ndFkAMyJbHSuxFWTOT6OOkGQHCB0fs0i5jefXjCKuU0cQi5QI9wdsKjIZLvKNvEb45dg8QgNlGdTbccZwM0bk1bctD4gg_xHH_zEjOBjefsgW67a1syg8zNedxBQ4Shy7byoKk1r5KRQDr2Y3ykfl06TeHbRxA1buAfOqrQeRBq4Atb3UvIBiMosQw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/authentication/switch-role",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"authentication",
+								"switch-role"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Classroom",
+			"item": [
+				{
+					"name": "CreateClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImIyYzI1YWE5LWFjMzUtNDY2MC05NmI0LWUwZWEzNzk0YTk2MCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkyNDk4LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTYwOTgsImlhdCI6MTYyMDQ5MjQ5OCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.oZLVH4260v6nhbPCYu-9q5KvA-J-xXqZYwjxbbmGyUKZDtA2_yNPPoSE0C79IYgRqFdV-UoGlCFib7WhnCPPbD5EDAnh_e4FNtcBeQVJeD2MRgyZp6I-5jIT4SawekA9Gi-f6flfxjA05A9yhx-WBDyOemO8wgBOfu-SCOLlYvls4H79ItEDmy4OpjeZ6YhbO2tj5VUs5S_n2yLkgKTh9eCnJ4pMUKrqyJBp34R9bnNW-LUS8LSE0XCT1W9p2V6a0PokOCM7bovD4WHadjKNrWkD_JxFBMLywFlxtjyvVk8qvYtXq4PcyR06mmhhAsdsdH2c3uIFUrAOVRItYq6j8Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"className\": \".NET App Development\",\r\n    \"capacity\": 50,\r\n    \"price\": 246.9,\r\n    \"commencedOn\": \"2021-05-15T18:00:00\",\r\n    \"duration\": 6,\r\n    \"durationUnit\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/classroom/create",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjA0NWM2NDczLTEwYTgtNDQxOC04YTczLTUxMTRlZDZkMzQyNiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkxODg4LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTU0ODgsImlhdCI6MTYyMDQ5MTg4OCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.uH0e8WND55gtilYT1rtIFc8DWnCIul7f2c3LzsvD7Gznk6dWF4Z26hbVjIxbQacWq892v36XVdrxwktK7CT94czjRfFJiSPvvzpZFDscWd3Y-zCrxnatkfl9nAmsb6839Z2cbrRZ9IRDpd0DTBhwJ6LnWpMRFKlQkIHnYUjx4w_ERiA4J0GlvMVSu9jifn0OneGzQkZOEPihMMSSaYACfuoWtN4JuZZ5QsbtcZEnx9RNYuY5UKQUX7oWKt6s_OQL9QCVdpux_Svo-Ub5kQXg4vrwdufJvlWPtVVx9Tzozw7Aqw5UvU9DCr360pnreV_qzVPGOZ0MYOVpyLA7i3x84w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"2E1913B0-2140-4413-A6CC-E5FC69748D23\",\r\n    \"className\": \"Cloud Computing Fundamental\",\r\n    \"capacity\": 50,\r\n    \"price\": 246.9,\r\n    \"commencedOn\": \"2021-05-15T15:00:00\",\r\n    \"duration\": 6,\r\n    \"durationUnit\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/classroom/update",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RemoveClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjA0NWM2NDczLTEwYTgtNDQxOC04YTczLTUxMTRlZDZkMzQyNiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkxODg4LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTU0ODgsImlhdCI6MTYyMDQ5MTg4OCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.uH0e8WND55gtilYT1rtIFc8DWnCIul7f2c3LzsvD7Gznk6dWF4Z26hbVjIxbQacWq892v36XVdrxwktK7CT94czjRfFJiSPvvzpZFDscWd3Y-zCrxnatkfl9nAmsb6839Z2cbrRZ9IRDpd0DTBhwJ6LnWpMRFKlQkIHnYUjx4w_ERiA4J0GlvMVSu9jifn0OneGzQkZOEPihMMSSaYACfuoWtN4JuZZ5QsbtcZEnx9RNYuY5UKQUX7oWKt6s_OQL9QCVdpux_Svo-Ub5kQXg4vrwdufJvlWPtVVx9Tzozw7Aqw5UvU9DCr360pnreV_qzVPGOZ0MYOVpyLA7i3x84w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/remove/2E1913B0-2140-4413-A6CC-E5FC69748D23",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"remove",
+								"2E1913B0-2140-4413-A6CC-E5FC69748D23"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllClassroomsByTeacher",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImIyYzI1YWE5LWFjMzUtNDY2MC05NmI0LWUwZWEzNzk0YTk2MCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkyNDk4LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTYwOTgsImlhdCI6MTYyMDQ5MjQ5OCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.oZLVH4260v6nhbPCYu-9q5KvA-J-xXqZYwjxbbmGyUKZDtA2_yNPPoSE0C79IYgRqFdV-UoGlCFib7WhnCPPbD5EDAnh_e4FNtcBeQVJeD2MRgyZp6I-5jIT4SawekA9Gi-f6flfxjA05A9yhx-WBDyOemO8wgBOfu-SCOLlYvls4H79ItEDmy4OpjeZ6YhbO2tj5VUs5S_n2yLkgKTh9eCnJ4pMUKrqyJBp34R9bnNW-LUS8LSE0XCT1W9p2V6a0PokOCM7bovD4WHadjKNrWkD_JxFBMLywFlxtjyvVk8qvYtXq4PcyR06mmhhAsdsdH2c3uIFUrAOVRItYq6j8Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/all-by-teacher/3183F88E-013F-4402-A929-46CFC1E5EF2F",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"all-by-teacher",
+								"3183F88E-013F-4402-A929-46CFC1E5EF2F"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UploadFileForImports",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "importType",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "FileForImport",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/classroom/import",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"import"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "MarkClassroomAsCompleted",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/completed/id",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"completed",
+								"id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllClassrooms",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImRmMjliYzBjLWFmM2QtNGQ4NC04OWUzLWRmOGZkMjhjODA3YyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNTY4NTE5LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA1NzIxMTksImlhdCI6MTYyMDU2ODUxOSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.QOitXDHKs3aDFKPXMlvZ9je4SkECIyS2j6RkFuWtPE73kf1RsSDCYUf4dsHwEK7RTUK1D6uAacmOtYo0M8ki-Jels6FYlH8_pwaYvGaqEmj3kM3fV-7YyJbMx7f6FjNXRCFTkY4ENuoWnhkUbRqaZ2zT3LHEGXsGJ8h6pWJAb3uNUEynqMZ188pJ1NIqrd_XG4_9aRjNLezg6eJO37wcdovX0a4GKinnbxxYGzVqWerV_yuaVXAL6Dk3ipGqUyskTrn1r-eAJZUb1VPF5DPVKd1ukSuyxiHFQxSXuvCVoCgI3-Wvb6aPi5QDdNspmfzib7F4KEQ8G56kBAst2nuUTg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/all",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetEnrolmentsByClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImM3YjNmZTFjLTdjOWItNDQwNi1hMzQyLWY4YjBhNTAwZGE3MSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNTY4OTczLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA1NzI1NzMsImlhdCI6MTYyMDU2ODk3MywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.pWOndDa6XSwDOhoi9Xp8nV5Vnt0rHyf4mn3E3LIgrVGXE991Hou_XZ0NNr0rMpGEsL2yWiw1KKnOLuLD6wJ1jGi1T_Jg4Ne1QGDmvysfqtvcJt-gBTRkmc6taKJd8bpeMaOUZU1lKZQpxDMlwyguiIEITwR4FpFirzctmTfyCDnCnrsv9Zi4r_r2YXsMs6J3qoyjPp_bADJtU-BBf4zJSHZOJmqHtcb1hXdmGVPve56Ku-tvewF13qxId4IETRAiK4xWgh64FT83k-_KCLfaL5UfweQPWfgKdsKg_GXGM7uTYQYhdKcG3YTDEbtGEwJ_ASaTFG8h5pLd_z3ItZ5b4w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/enrolments/DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"enrolments",
+								"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClassroomDetails",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjgzYjk0YjQ1LTkzNzgtNGM0ZC1iZTFhLWJiZGI0MTYwMjM4NyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDk0MjExLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTc4MTEsImlhdCI6MTYyMDQ5NDIxMSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.h86L_fcZIKB0GiCngolHxuhT9inbJdN9ocri-4Ag0iFz25nE_U3pPrML6PYfbyzLu3pO0Um5S_Csi9Uahu4RbRsfwuuj5M9ZkLJwqvHzTz-VpE-JSzHcvGDhdWDdswnpUJDC8VhcXICgBB-Zz8w6GanXKPKOGhsRPEeXmANJ3wWJL5_rxqva8TxgVON7Qu-U0ER6bBoSIhq3IMdY6fNMZ16UfG9h0qcjpl6vofLUg49taXm3bFJ7ByvOM4LeC_m6D_pjDZSvQhbAJRt1XYeH2eADKQXypnajGGUIBfqIXVv3CHen9flQPxcdoiJasQ6lEH7ZMtyvp_c69NUQnUlo6w",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/classroom/details/DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"classroom",
+								"details",
+								"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ClassContent",
+			"item": [
+				{
+					"name": "AddFilesToClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjgwOWEyZDNhLWE0NGQtNGYyOS1hN2ZhLWIzZTIzNWE2ZTkwZCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIyNDY2MzkyLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjI0Njk5OTIsImlhdCI6MTYyMjQ2NjM5MiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.6nNsAE2uksKxicwh_DJzx3S9683DRw8RkwO8IHsfhWgr1IWLISZFXNRdzAsARQxQqNuSGZSQQVYiT5-gtawwmAenYzBFd-GAqQOX8MKM6Y2ohE86pqr8hOpS2VsDmMkQna77edOXjn1KeNp6akHji0Xya-NHHlYt_ZXykyrZ7ejycJWhNIXlc3fvBDMoezng0CKXMfzrBKYR_mz8P7I3EB6fdS2J-5xnqdwpP6i2gGWWjMJxymGYzDpjqC0WA5H44QNZyaK1mkEn8Fpy8lGNAwxRy1A38u_PmHtqhKCE4xWZFD3Hyf-zcCIvVKu9HUimThssaVIDUunQ5T_j1Bfg_g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "classroomId",
+									"value": "DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4",
+									"type": "text"
+								},
+								{
+									"key": "fileType",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "uploadedFiles",
+									"type": "file",
+									"src": [
+										"/C:/Users/lovea/Downloads/reactjs.mp4",
+										"/C:/Users/lovea/Downloads/dotnet_core.mp4"
+									]
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/add-files",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"add-files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateFilesForClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "classroomId",
+									"value": "some",
+									"type": "text"
+								},
+								{
+									"key": "fileType",
+									"value": "0",
+									"type": "text"
+								},
+								{
+									"key": "removedFiles",
+									"value": "[\"fileId1\",\"fileId2\"]",
+									"type": "text"
+								},
+								{
+									"key": "uploadedFiles",
+									"type": "file",
+									"src": []
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/update-files",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"update-files"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "AddContentToClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"classroomId\": \"\",\r\n    \"htmlContent\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/add-rich-content",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"add-rich-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ImportContentToClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhjMGIxZTc1LWI1NmMtNDJmNC05ZTYyLTJhZTVhZGIxZWI5YyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIxOTI0MTY3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjE5Mjc3NjcsImlhdCI6MTYyMTkyNDE2NywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.05T4SE1mnzEhN8SiYV4rHwbJgaVf8IL0NOC6DpOdzI5rX0hPuLJD_0icGZS5zqam9PcWQ7enQLuixsnh9aSCnJ6Za3YeuABpY-fk3QeeWI3YjVywGkisWYr_3Yc82ugaCYh2kbMAvIYsR5WKEqUJQtq-5F6RKx6Nr0y1fwS2KqJAauSdWnxr__jncmcYViz3m22rrv4r9U6JK-10mDeL8tveJtnAAkBsbLCjVKU0SnibSGLatSWH74n_txp8BfWjfc7bRIhQI4jXvrH9dJbX_cqsWPmrKyfTnuna3qBJ_1NcE_epX6TLnnG9Hz9iOiBxJjaZb19GbMUu1ItuTr5dcA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "classroomId",
+									"value": "DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4",
+									"type": "text"
+								},
+								{
+									"key": "filesForImport",
+									"type": "file",
+									"src": "/C:/Users/lovea/Desktop/text-screenshot.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/import-rich-content",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"import-rich-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateContentForClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"classroomId\": \"\",\r\n    \"htmlContent\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/update-rich-content",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"update-rich-content"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetClassroomContents",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/class-content/all/classroomId",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"all",
+								"classroomId"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TranslateSentences",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6Ijk3NTg2YmU4LWU1OTAtNGRjZS1hZmYzLTM4MzJkNjZjNWU1NiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIxOTE5OTkxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjE5MjM1OTEsImlhdCI6MTYyMTkxOTk5MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.FhfRWFVeRdGEYRax66eF-lC5IcQJ67PHpEfoHENN-Xw8dqChyQUA2DTbwFGgbVcLZjIFM5IThwcobfdgrRtxgjP5cx-RjPL0lCnlkz8ClFVpGisD9bXDqtu1Sx1MLJ682K1TicQxzbWYU4fIaa7QGpItRzywc-32d1db__ouGhkKwr_DZaS5UhoLkXZMfDOo43V1dCxCj5JqXW6XyXVSSplzVc2bCkP1kSJF1WWRlV-JSfXqdsDSgkp26xF6uBeg5vzfiUN1qYuKBollKNDGUCbvSRqg--M4bMrcVPMpQln2-xWZu_uI0FqtUrT8-s1zwOol9SBdcxgtkVuZGq9IIQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"targetLanguage\": 1,\r\n    \"phrase\": \"Google Translate is a multilingual neural machine translation service developed by Google, to translate text, documents and websites from one language into another.\",\r\n    \"forSynonyms\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/translate-sentences",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"translate-sentences"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "TranslateWord",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjllYWNlYjdiLWZmYWEtNDNmOC04N2M5LWY1MTZmNGI1ODBkNyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIyNjIxNzA0LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjI2MjUzMDQsImlhdCI6MTYyMjYyMTcwNCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.mKEWtlbKGtAnoDy7zRas7rrMc9HDvdqRTTpkCaFob72RPdhJETG09bNSFRWM8AfNSZXGJVhWkkyhG3nZMolubzGtyddZZsrg-dBV1_6IBkTLJ2REeT08I7enTwVTS1qHCsobHeJfoUgw453URrdNjXRC3rBx5dLLh4VNJgVDQmQTCW57Ak9M5cZGBLim_6pTqx4XVaXRKP_4_8Nt1ZlNBEaeaHGtsiaxuLMet8oqVJkO70o2FopY2nWHVtsYO0jpcqjwA6bWpNhQOsu0tQOPr2rwB1oTgrw_foiQOsSsjluBZ5lz1ZpPA844I71xBi7ta9Zp6VBAFP2QZcsEdmhWvQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"targetLanguage\": 1,\r\n    \"phrase\": \"monitors\",\r\n    \"forSynonyms\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/translate-word",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"translate-word"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetThesaurus",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJlMTRkMTQxNi0yOWI3LTQ1MDAtYmNiYS03ZWZkNDI0M2JlMzEiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjllYWNlYjdiLWZmYWEtNDNmOC04N2M5LWY1MTZmNGI1ODBkNyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIyNjIxNzA0LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjI2MjUzMDQsImlhdCI6MTYyMjYyMTcwNCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.mKEWtlbKGtAnoDy7zRas7rrMc9HDvdqRTTpkCaFob72RPdhJETG09bNSFRWM8AfNSZXGJVhWkkyhG3nZMolubzGtyddZZsrg-dBV1_6IBkTLJ2REeT08I7enTwVTS1qHCsobHeJfoUgw453URrdNjXRC3rBx5dLLh4VNJgVDQmQTCW57Ak9M5cZGBLim_6pTqx4XVaXRKP_4_8Nt1ZlNBEaeaHGtsiaxuLMet8oqVJkO70o2FopY2nWHVtsYO0jpcqjwA6bWpNhQOsu0tQOPr2rwB1oTgrw_foiQOsSsjluBZ5lz1ZpPA844I71xBi7ta9Zp6VBAFP2QZcsEdmhWvQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"targetLanguage\": 1,\r\n    \"phrase\": \"neutral\",\r\n    \"forSynonyms\": false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/class-content/get-thesaurus",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"class-content",
+								"get-thesaurus"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Security",
+			"item": [
+				{
+					"name": "ConfirmTwoFaPin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/security/confirm-tfa-pin/123456",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"security",
+								"confirm-tfa-pin",
+								"123456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "SendTwoFaPinToEmailAndSms",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/security/send-tfa-pin",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"security",
+								"send-tfa-pin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "VerifySmsTokenForPhoneNumberConfirmation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjhkNzFiODJkLWUyZGQtNDc4NS1iMWVhLTdhM2E5NjJiYmQ5NSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDkxMTA2LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTQ3MDYsImlhdCI6MTYyMDQ5MTEwNiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.CKvExPDuyTM_STJX_QzjrdgJSb_NbAhvZVJRC55yWlXLbRyYQW1hNyEoOuT15hsaE05o7xhTXnt1HasHymY63xMSlylzuqxTCiWmuSaMW_EFMcBbcBl0cP5R3k8I9kEk-1_EiLdiE1HUHcLouJN7B_-uenkLD8oms2wCxcrNqEnJI-6hT2sW67vq7FZwvLOGK_QhrAd0OFYbNelhODlyLvL4vZSmsD4Y4AqISoi7K2OY0uAG9nii1u_IQTucRZuMGjuMU0RTQHjcRuAAuFGYrAgAy3eyttl-B-banNLoaAqPJRRX-xFVt-ZKS9IU6KV4YsywTha92GnwbO8VYO6Wvw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/security/verify-sms-token/W8GQEDWW",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"security",
+								"verify-sms-token",
+								"W8GQEDWW"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestNewSmsTokenForPhoneNumberConfirmation",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/security/request-sms-token/recaptchaToken",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"security",
+								"request-sms-token",
+								"recaptchaToken"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "RequestNewTokenForAccountRecovery",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"\",\r\n    \"username\": \"\",\r\n    \"recaptchaToken\": \"\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/security/request-recovery-token",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"security",
+								"request-recovery-token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Student",
+			"item": [
+				{
+					"name": "EnrolIntoClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjNhMzg1ODc2LWUyNGItNGFhMi04N2I2LTFlNDgxNTkyMDNkYSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDk0OTc3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTg1NzcsImlhdCI6MTYyMDQ5NDk3NywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.uJypazFq-j6vu9WnpVucKmfWDF8fosfC4eX4vWidCB89zb8kScB9jq3c1maQhDEgR4EEcun72ua7djsJeY4G0Awra7wEGUMhVw5D3T7v1gB76vevtBT0rPithJ7Vq4nuHehZQwcdbOcUUEdcOZj2OmjWCciD0k8WVuJxA__VIfRPH5hIwZnf8AdRQr877kWgl6Cw3uTrvLdH-V9JcIqTzDV2sya2Le_JZUhv9LExlg3c9w3xEEQxo4pvbCUvc7RP6ci9ifz0EnIRxdg3PEA4z6r8NRXohLJJkuoWsPiDj7r26jjqgUj3VOUFwRalfQfID4zSAVuBa4_WStcSEV-yUQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/student/enrol/DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"student",
+								"enrol",
+								"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UnenrolToClassroom",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjNhMzg1ODc2LWUyNGItNGFhMi04N2I2LTFlNDgxNTkyMDNkYSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDk0OTc3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTg1NzcsImlhdCI6MTYyMDQ5NDk3NywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.uJypazFq-j6vu9WnpVucKmfWDF8fosfC4eX4vWidCB89zb8kScB9jq3c1maQhDEgR4EEcun72ua7djsJeY4G0Awra7wEGUMhVw5D3T7v1gB76vevtBT0rPithJ7Vq4nuHehZQwcdbOcUUEdcOZj2OmjWCciD0k8WVuJxA__VIfRPH5hIwZnf8AdRQr877kWgl6Cw3uTrvLdH-V9JcIqTzDV2sya2Le_JZUhv9LExlg3c9w3xEEQxo4pvbCUvc7RP6ci9ifz0EnIRxdg3PEA4z6r8NRXohLJJkuoWsPiDj7r26jjqgUj3VOUFwRalfQfID4zSAVuBa4_WStcSEV-yUQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/student/unenrol/B9683B95-C12B-4C98-A11F-731E997EE6BD",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"student",
+								"unenrol",
+								"B9683B95-C12B-4C98-A11F-731E997EE6BD"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetAllEnrolments",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImQ5ZWRkMDZkLTFlMTktNGI0ZC04OTFjLWVkY2MyNTk3MTgwZSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNTcwMzAwLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA1NzM5MDAsImlhdCI6MTYyMDU3MDMwMCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.VJBsl1m1Y79XqeKCf9wFwr_BJiykldk1e8iwEbuXwiqfM4nr-5Sq3cZ0iuhjTriIxNABo87_uXF-hKryCmTiqMHgaAP2Kpd1GU6tI4X_LTMAUQg-9LKfxl7_-S29TXutPhi9FMmwpX4TRLLZjG6QBw0LXGTVdr-DM5Y3zk-_05f6pvy8FUQdsve_3IFKH5uILinHsGIdjID8Lrzwj_zOenRB57v5Uakcw-0TdmPw8oDqVYuAkaYJRln7rvIyLdiN5yFWzG4fG8hY6CaKSvORl3ZODD9p1kbMEq65dvCTq0u8i4u6xWlyvObBVJNVKxD4r3MceYWqwuRc0eGEgdA96Q",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "https://localhost:5001/student/enrolments",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"student",
+								"enrolments"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Teacher",
+			"item": [
+				{
+					"name": "AddMarksToStudentEnrolment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjNhMzg1ODc2LWUyNGItNGFhMi04N2I2LTFlNDgxNTkyMDNkYSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNDk0OTc3LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA0OTg1NzcsImlhdCI6MTYyMDQ5NDk3NywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.uJypazFq-j6vu9WnpVucKmfWDF8fosfC4eX4vWidCB89zb8kScB9jq3c1maQhDEgR4EEcun72ua7djsJeY4G0Awra7wEGUMhVw5D3T7v1gB76vevtBT0rPithJ7Vq4nuHehZQwcdbOcUUEdcOZj2OmjWCciD0k8WVuJxA__VIfRPH5hIwZnf8AdRQr877kWgl6Cw3uTrvLdH-V9JcIqTzDV2sya2Le_JZUhv9LExlg3c9w3xEEQxo4pvbCUvc7RP6ci9ifz0EnIRxdg3PEA4z6r8NRXohLJJkuoWsPiDj7r26jjqgUj3VOUFwRalfQfID4zSAVuBa4_WStcSEV-yUQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"enrolmentId\": \"0D48AC87-06E9-4708-83CC-8977DC582CB7\",\r\n    \"markBreakdowns\": [\r\n        {\r\n            \"taskName\": \"Console App in .NET\",\r\n            \"totalMarks\": 15,\r\n            \"rewardedMarks\": 14,\r\n            \"markedOn\": \"2021-05-17T17:30:29\",\r\n            \"comment\": \"This is a test.\"\r\n        },\r\n        {\r\n            \"taskName\": \".NET MVC with Razor\",\r\n            \"totalMarks\": 35,\r\n            \"rewardedMarks\": 33,\r\n            \"markedOn\": \"2021-06-01T08:46:23\",\r\n            \"comment\": \"This is an assignment.\"\r\n        },\r\n        {\r\n            \"taskName\": \".NET Core Web App\",\r\n            \"totalMarks\": 50,\r\n            \"rewardedMarks\": 46,\r\n            \"markedOn\": \"2021-06-13T12:06:31\",\r\n            \"comment\": \"This is a mock project.\"\r\n        }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/teacher/add-marks",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"teacher",
+								"add-marks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExportClassroomData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6Ijc1MzMyMGRmLTAyNWEtNDYyNC1hOGU5LTRiOTYzZjJjMmI4YiIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIwNjE3MDQzLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjA2MjA2NDMsImlhdCI6MTYyMDYxNzA0MywiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.KzOzXZJOyCGQX_b8GRNrFkkuSvfBcrRbYMBMrdSMxX4XHDZO5rj75f85v-uadRfHqLimqtv781Tj6yiMbE02Wh_2TIr6VpK45KYo80inrhOHSxHJw4Pm_DMYxzbshOsJvFYY2QkXB2zyeqXLkPx8xB2gNfUP5LaRuJrVVrWvjMs8F78iHGH0HA86j6LkzDOey1vWApHMI82DUAOYdy_qRq5N5ZCR3Fczo0Pt8oM-ZUDooryYfJc_K2KYCUCM6KbBP_U8Qbky6PB9sp-fdkTlb0mam22fydjOFiUPFFdGfC9fN1VtnuDVD2b8ZS4qpmyqvv4jwzoEqkFIY9TKAc20Ug",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"classroomIds\": [\r\n        \"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4\",\r\n        \"4BA97C0F-E147-4B59-8418-3FAB613E87EE\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/teacher/export-classrooms",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"teacher",
+								"export-classrooms"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "ExportStudentsInClassroomData",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIxYTdhOTllZC05OGQ0LTQwNmQtYWQzNS1iOWI5MzExNTI3NDciLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImYyZGE1N2I1LTVhYWEtNDcyOS1iMTQwLTBhNDg5NTUxZGFlOCIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjE5MTk3MDQxLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MTkyMDA2NDEsImlhdCI6MTYxOTE5NzA0MSwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.NyMvtFbXTMA7JFOS_1ehNRD44LoTr2S8d5Tddvp_W9EzW_RKC1zAzGylkTVVoobFQv23lqVC4tpFNI6wjh3-r8QFcWhUGn7f-FSsFVBg6vlt9_hdjg8m7UuiR3jp2ufzkQje_WTBuyOHO8tvPa3KcrbUlqojdQeY9trayaVlwP1bHvzIndwtZMBrJvZIhkCPXN1qPP7aXgNJ0P65ja4hL8BvQi06APPKkLkbW0ZaBhICoKMvdfvsRme_xi_j5JakL6XcerMYdB0LLD5UaLzhvuRpXieVgUs5pvIZNU6mXfZZru89xO74KLTjE9pv8cuHVlr3U-NxIOB7jvOkXEyJ9g",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"classroomIds\": [\r\n        \"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4\",\r\n        \"4BA97C0F-E147-4B59-8418-3FAB613E87EE\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/teacher/export-students",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"teacher",
+								"export-students"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Payment",
+			"item": [
+				{
+					"name": "CapturePaypalPayment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6IjQ3ZThmMGVmLTkyZGYtNDlkZS1iMTA4LTQwZmI0NjBiZWJjMSIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIxNTA4MjQ2LCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjE1MTE4NDYsImlhdCI6MTYyMTUwODI0NiwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.hpunYGqRjG0PlaGkI7AONYJoaRT_pmo8Z8qn3-bG_szLTwnHONPkHqmH0kcsAmIutQAFEQgYFtO9R186gJKJ-GuQ_ekO8795TPcmusJW_bAcnux-tsgtot8tsp3HyDna1C9uMssotPBDdPqNm7-rBEVZD_wgLkQ3RR9D9WGYueFeSmhXZPspRlxgKN9quT_U9LQRVZuVvySSC9Mk72IISrl55L2zp9RN_OMCGYpYLayyODMMbRZ8Y48hzDR9mTh_URV-AljwEbnvcmhTxkypbE2FVWYeBCq6tER7AG5J3W6TNz_rOyTx9ZNGoGNv8UpPllqo2iBdUdjQMzO_ySdmyw",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "3731904c-d8be-490a-b7fb-9b40ee54ddc2",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"paypalEmail\": \"test@gmail.com\",\r\n    \"orderId\": \"6KH38169TV132343K\",\r\n    \"amount\": 123.45,\r\n    \"authorizationId\": \"1C666931FA793954E\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/payment/paypal/0D48AC87-06E9-4708-83CC-8977DC582CB7",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"payment",
+								"paypal",
+								"0D48AC87-06E9-4708-83CC-8977DC582CB7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CaptureStripeCardPayment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImY0YjlmMDA1LTQ2MDctNDRjOS1hNzcyLTYwNjUxMGM5NmY0NyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIxMjU5MzMwLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjEyNjI5MzAsImlhdCI6MTYyMTI1OTMzMCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.HKbDWXEAWZFcO5i9UOHSWc6-0bp54e1C8qyHE5ut-9NhCsBYl0Rtjf846VLeqeMrDgOpF1a0IAVEi6_MNhCxHmbPAuvjGgy06oIQSeJSHZ4FaOWi7YYw58w4fkLshpTfQ9Cvo_3bDhhHjtE1MTr_7G8d8tvwM0oXoH9gCRlNaff4oABeOsI8HCaz66SGAXu0dl4ianieJkxDpMoHo5nZOqLqOgIXSCYcTsQjQ3V6t-IPP1XadTH5sg1aacPthnBLxajXCIN3EXE_PoGw8QvLA3LlfStYfX-glRpmuLojd1gzCV2R89qc93hGmsGOnbhPcxZtbNHUCmDEWEN_gxGvfg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cardType\": \"\",\r\n    \"last4Digits\": \"\",\r\n    \"tokenId\": \"\",\r\n    \"details\": {\r\n        \"classroomId\": \"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4\",\r\n        \"className\": \"Cloud Computing Fundamental\",\r\n        \"amount\": 123.45\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/payment/card/0D48AC87-06E9-4708-83CC-8977DC582CB7",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"payment",
+								"card",
+								"0D48AC87-06E9-4708-83CC-8977DC582CB7"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "CaptureStripeGooglePayment",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJraWQiOiJoU21GRWZFd0R1NkJXYzN6QUVNXC9lWFB1NFVvdGE2VnJMdTVmdHhoMWNaMD0iLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiIzNzMxOTA0Yy1kOGJlLTQ5MGEtYjdmYi05YjQwZWU1NGRkYzIiLCJhdWQiOiI2cHZla3ZjZmgwMWgyN2lzNXBjdGswNTczMiIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJldmVudF9pZCI6ImY0YjlmMDA1LTQ2MDctNDRjOS1hNzcyLTYwNjUxMGM5NmY0NyIsInRva2VuX3VzZSI6ImlkIiwiYXV0aF90aW1lIjoxNjIxMjU5MzMwLCJpc3MiOiJodHRwczpcL1wvY29nbml0by1pZHAuYXAtc291dGhlYXN0LTIuYW1hem9uYXdzLmNvbVwvYXAtc291dGhlYXN0LTJfcmNBQ2M3T3JEIiwiY29nbml0bzp1c2VybmFtZSI6ImpheS5uZ3V5ZW4iLCJleHAiOjE2MjEyNjI5MzAsImlhdCI6MTYyMTI1OTMzMCwiZW1haWwiOiJqYXkubmd1eWVuQGpheWRldmVsb3Blci5jb20ifQ.HKbDWXEAWZFcO5i9UOHSWc6-0bp54e1C8qyHE5ut-9NhCsBYl0Rtjf846VLeqeMrDgOpF1a0IAVEi6_MNhCxHmbPAuvjGgy06oIQSeJSHZ4FaOWi7YYw58w4fkLshpTfQ9Cvo_3bDhhHjtE1MTr_7G8d8tvwM0oXoH9gCRlNaff4oABeOsI8HCaz66SGAXu0dl4ianieJkxDpMoHo5nZOqLqOgIXSCYcTsQjQ3V6t-IPP1XadTH5sg1aacPthnBLxajXCIN3EXE_PoGw8QvLA3LlfStYfX-glRpmuLojd1gzCV2R89qc93hGmsGOnbhPcxZtbNHUCmDEWEN_gxGvfg",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "AccountId",
+								"value": "1",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cardType\": \"\",\r\n    \"last4Digits\": \"\",\r\n    \"tokenId\": \"\",\r\n    \"details\": {\r\n        \"classroomId\": \"DE45F0CD-3184-4042-B73B-B9EAE3B0A4C4\",\r\n        \"className\": \"Cloud Computing Fundamental\",\r\n        \"amount\": 123.45\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "https://localhost:5001/payment/google/0D48AC87-06E9-4708-83CC-8977DC582CB7",
+							"protocol": "https",
+							"host": [
+								"localhost"
+							],
+							"port": "5001",
+							"path": [
+								"payment",
+								"google",
+								"0D48AC87-06E9-4708-83CC-8977DC582CB7"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

@@ -4,6 +4,8 @@ import {EMPTY_STRING, IActionResult} from "../../../providers/helpers";
 export interface IManageClassContent {
     authUser: IAuthUser,
     clearAuthUser: () => void,
+    getClassroomDetail: IActionResult,
+    invokeGetClassroomDetailRequest: (auth: IAuthUser, classroomId: string) => void,
     getContent: IActionResult,
     addFiles: IActionResult,
     updateFiles: IActionResult,

@@ -30,7 +30,7 @@ namespace StudentImportToClassroom {
         private const byte ScheduleFailedStatus = 4;
         
         private const string ScheduleTableName = "student.import.schedules";
-        private const string DbConnectionString = "Server=(localdb)\\MSSQLLocalDB;Database=COSC2640A3;User Id=something;Password=something;Trusted_Connection=True;";
+        private const string DbConnectionString = "Server=cca3db.ctfrqvuved4d.ap-southeast-2.rds.amazonaws.com;Database=COSC2640A3;User ID=admin;Password=cca3dbpassword;Trusted_Connection=True;Integrated Security=False;";
 
         public Function() {
             _s3Service = new AmazonS3Client(

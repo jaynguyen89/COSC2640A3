@@ -296,7 +296,7 @@ const CheckoutSummary = (props: ICheckoutSummary) => {
                                             name="cosc2640a3.com"
                                             stripeKey="pk_test_51HQDZND2FG7NncIEj68F5ie7Yc6VKR7y5r0aMkoaf3OD5CUIcqHBCYq3Wb2biu3D1jie5wjUKdsfwh3kdWG6flgJ00KdGXIjMp"
                                             token={ processStripeCheckout }
-                                            panelLabel='Pay {{ amount }}'
+                                            panelLabel='Pay Now'
                                         >
                                             <button className='btn waves-effect waves-light'>
                                                 <i className="fas fa-coins"/>&nbsp;
