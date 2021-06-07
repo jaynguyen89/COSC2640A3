@@ -125,3 +125,9 @@ LambdaApps/ClassroomImport/ClassroomImport/bin/
 LambdaApps/StudentImportToClassroom/.idea/
 LambdaApps/StudentImportToClassroom/StudentImportToClassroom/bin/
 WebApp/build/
+MapReduce/DataMapper/DataMapper/bin/
+MapReduce/DataMapper/DataMapper/obj/
+MapReduce/DataReducer/DataReducer/bin/
+MapReduce/DataReducer/DataReducer/obj/
+MapReduce/DataReducer/.vs/
+MapReduce/DataMapper/.vs/

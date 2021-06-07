@@ -16,7 +16,8 @@ using Newtonsoft.Json;
 
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.SystemTextJson.DefaultLambdaJsonSerializer))]
 
-namespace ClassroomImport {
+namespace ClassroomImport
+{
 
     public class Function {
 
@@ -74,12 +75,15 @@ namespace ClassroomImport {
                 return;
             }
 
-            importSchedule.Status = ScheduleProcessingStatus;
-            var updateScheduleResult = await UpdateImportSchedule(importSchedule);
-            if (!updateScheduleResult.HasValue || !updateScheduleResult.Value) {
-                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
-                await Task.CompletedTask;
-                return;
+            if (importSchedule.Status != ScheduleProcessingStatus) {
+                importSchedule.Status = ScheduleProcessingStatus;
+                var updateScheduleResult = await UpdateImportSchedule(importSchedule);
+
+                if (!updateScheduleResult.HasValue || !updateScheduleResult.Value) {
+                    await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
+                    await Task.CompletedTask;
+                    return;
+                }
             }
             
             var fileStream = await GetFileFromS3BucketFor(s3Event.Detail.Asset.FileId, s3Event.Detail.Bucket.Name);
@@ -90,7 +94,7 @@ namespace ClassroomImport {
             }
             
             var fileContent = await GetContentFrom(fileStream);
-            if (fileContent == null) {
+            if (fileContent == null || fileContent.Length == 0) {
                 await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to get content from file stream.");
                 await Task.CompletedTask;
                 return;
@@ -161,6 +165,7 @@ namespace ClassroomImport {
 
         private async Task<string> GetContentFrom(Stream fileStream) {
             try {
+                fileStream.Position = 0;
                 var reader = new StreamReader(fileStream);
                 return await reader.ReadToEndAsync();
             }
@@ -190,13 +195,6 @@ namespace ClassroomImport {
                             new Condition {
                                 ComparisonOperator = ComparisonOperator.EQ,
                                 AttributeValueList = new List<AttributeValue> { new AttributeValue(fileId) }
-                            }
-                        },
-                        {
-                            nameof(ImportSchedule.Status),
-                            new Condition {
-                                ComparisonOperator = ComparisonOperator.LT,
-                                AttributeValueList = new List<AttributeValue> { new AttributeValue(ScheduleProcessingStatus.ToString()) }
                             }
                         }
                     }
@@ -312,15 +310,15 @@ namespace ClassroomImport {
                            $"{ nameof(CreatedOn) }" +
                         ") " +
                         "VALUES (" +
-                           $"{ TeacherId }, " +
-                           $"{ ClassName }, " +
+                           $"'{ TeacherId }', " +
+                           $"'{ ClassName }', " +
                            $"{ Capacity }, " +
                            $"{ Price }, " +
-                           $"{ CommencedOn }, " +
+                           $"{ (CommencedOn.HasValue ? $"'{CommencedOn.Value:yyyy-MM-dd HH:mm:ss}'" : "null") }, " +
                            $"{ Duration }, " +
                            $"{ DurationUnit }, " +
-                           $"{ IsActive }, " +
-                           $"{ CreatedOn }" +
+                           $"'{ IsActive }', " +
+                           $"'{CreatedOn:yyyy-MM-dd HH:mm:ss}'" +
                         ");";
             }
         }

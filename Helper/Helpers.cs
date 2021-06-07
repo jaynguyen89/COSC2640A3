@@ -65,5 +65,12 @@ namespace Helper {
             var emailTokens = email.Split("@");
             return $"{ emailTokens[0][..2] }***{ emailTokens[0][^2..] }@{ emailTokens[^1] }";
         }
+        
+        public static DateTime GetRandomDateTime(DateTime from, DateTime to) {
+            var range = to - from;
+            var randTimeSpan = new TimeSpan((long)((new Random()).NextDouble() * range.Ticks)); 
+
+            return from + randTimeSpan;
+        }
     }
 }

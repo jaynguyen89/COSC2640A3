@@ -50,5 +50,12 @@ namespace Helper.Shared {
             { (byte) SharedEnums.Language.Russian, "ru" },
             { (byte) SharedEnums.Language.Spanish, "es" }
         };
+
+        public static readonly string[] EmailDomains = {
+            "gmail.com", "yahoo.com", "hotmail.com", "msn.com", "live.com",
+            "outlook.com", "ymail.com", "googlemail.com", "sky.com", "mail.com",
+            "aim.com", "icloud.com", "apple.com", "microsoft.com", "qq.com",
+            "verizon.net", "yandex.ru", "telstra.au", "skype.me", "edu.com"
+        };
     }
 }

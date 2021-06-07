@@ -75,12 +75,15 @@ namespace StudentImportToClassroom {
                 return;
             }
 
-            importSchedule.Status = ScheduleProcessingStatus;
-            var updateScheduleResult = await UpdateImportSchedule(importSchedule);
-            if (!updateScheduleResult.HasValue || !updateScheduleResult.Value) {
-                await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
-                await Task.CompletedTask;
-                return;
+            if (importSchedule.Status != ScheduleProcessingStatus) {
+                importSchedule.Status = ScheduleProcessingStatus;
+                var updateScheduleResult = await UpdateImportSchedule(importSchedule);
+
+                if (!updateScheduleResult.HasValue || !updateScheduleResult.Value) {
+                    await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to update { nameof(ImportSchedule) } to { ScheduleTableName }.");
+                    await Task.CompletedTask;
+                    return;
+                }
             }
             
             var fileStream = await GetFileFromS3BucketFor(s3Event.Detail.Asset.FileId, s3Event.Detail.Bucket.Name);
@@ -91,7 +94,7 @@ namespace StudentImportToClassroom {
             }
             
             var fileContent = await GetContentFrom(fileStream);
-            if (fileContent == null) {
+            if (fileContent == null || fileContent.Length == 0) {
                 await Terminate(context.Logger, importSchedule, $"SQS Event #{ message.MessageId } failed: unable to get content from file stream.");
                 await Task.CompletedTask;
                 return;
@@ -158,6 +161,7 @@ namespace StudentImportToClassroom {
 
         private async Task<string> GetContentFrom(Stream fileStream) {
             try {
+                fileStream.Position = 0;
                 var reader = new StreamReader(fileStream);
                 return await reader.ReadToEndAsync();
             }
@@ -187,13 +191,6 @@ namespace StudentImportToClassroom {
                             new Condition {
                                 ComparisonOperator = ComparisonOperator.EQ,
                                 AttributeValueList = new List<AttributeValue> { new AttributeValue(fileId) }
-                            }
-                        },
-                        {
-                            nameof(ImportSchedule.Status),
-                            new Condition {
-                                ComparisonOperator = ComparisonOperator.LT,
-                                AttributeValueList = new List<AttributeValue> { new AttributeValue(ScheduleProcessingStatus.ToString()) }
                             }
                         }
                     }
@@ -301,30 +298,30 @@ namespace StudentImportToClassroom {
                 public InvoiceInfo Invoice { get; set; }
 
                 public string GetInsertEnrolmentStatement(string invoiceId, string classroomId) {
-                    return $"INSERT INTO Invoice (" +
+                    return $"INSERT INTO Enrolment (" +
                                $"{ nameof(StudentId) }, " +
                                $"{ nameof(ClassroomId) }, " +
                                $"{ nameof(InvoiceId) }, " +
                                $"{ nameof(EnrolledOn) }, " +
                                $"{ nameof(OverallMark) }, " +
                                $"{ nameof(MarkBreakdowns) }, " +
-                               $"{ nameof(IsPassed) }, " +
+                               $"{ nameof(IsPassed) }" +
                                ") " +
                            "VALUES (" +
-                               $"{ StudentId }, " +
-                               $"{ classroomId }, " +
-                               $"{ invoiceId }, " +
-                               $"{ EnrolledOn }, " +
+                               $"'{ StudentId }', " +
+                               $"'{ classroomId }', " +
+                               $"'{ invoiceId }', " +
+                               $"'{EnrolledOn:yyyy-MM-dd HH:mm:ss}', " +
                                $"{ OverallMark }, " +
-                               $"{ MarkBreakdowns }, " +
-                               $"{ IsPassed }, " +
+                               $"'{ MarkBreakdowns }', " +
+                               $"{ (IsPassed.HasValue ? $"'{ IsPassed }'" : "null") }" +
                            ");";
                 }
 
                 public class InvoiceInfo {
                     
                     public decimal DueAmount { get; set; }
-                    public bool IsPaid { get; set; }
+                    public bool? IsPaid { get; set; }
                     public string PaymentMethod { get; set; }
                     public string PaymentId { get; set; }
                     public string TransactionId { get; set; }
@@ -341,17 +338,17 @@ namespace StudentImportToClassroom {
                                    $"{ nameof(TransactionId) }, " +
                                    $"{ nameof(ChargeId) }, " +
                                    $"{ nameof(PaymentStatus) }, " +
-                                   $"{ nameof(PaidOn) }, " +
+                                   $"{ nameof(PaidOn) }" +
                                ") OUTPUT INSERTED.Id " +
                                "VALUES (" +
                                    $"{ DueAmount }, " +
-                                   $"{ IsPaid }, " +
-                                   $"{ PaymentMethod }, " +
-                                   $"{ PaymentId }, " +
-                                   $"{ TransactionId }, " +
-                                   $"{ ChargeId }, " +
-                                   $"{ PaymentStatus }, " +
-                                   $"{ PaidOn }, " +
+                                   $"{ (IsPaid.HasValue ? $"'{ IsPaid }'" : "null") }, " +
+                                   $"{ (string.IsNullOrEmpty(PaymentMethod) ? "null" : $"'{ PaymentMethod }'") }, " +
+                                   $"{ (string.IsNullOrEmpty(PaymentId) ? "null" : $"'{ PaymentId }'") }, " +
+                                   $"{ (string.IsNullOrEmpty(TransactionId) ? "null" : $"'{ TransactionId }'") }, " +
+                                   $"{ (string.IsNullOrEmpty(ChargeId) ? "null" : $"'{ ChargeId }'") }, " +
+                                   $"{ (string.IsNullOrEmpty(PaymentStatus) ? "null" : $"'{ PaymentStatus }'") }, " +
+                                   $"{ (PaidOn.HasValue ? $"'{PaidOn.Value:yyyy-MM-dd HH:mm:ss}'" : "null") }" +
                                ");";
                     }
                 }
