@@ -20,6 +20,8 @@ namespace COSC2640A3.Bindings {
         }
 
         public int CalculateOverallMarks() {
+            if (MarkBreakdowns == null) return -1;
+            
             var totalSum = MarkBreakdowns.Select(mark => mark.TotalMarks).Aggregate((former, latter) => former + latter);
             var rewardSum = MarkBreakdowns.Select(mark => mark.RewardedMarks).Aggregate((former, latter) => former + latter);
 

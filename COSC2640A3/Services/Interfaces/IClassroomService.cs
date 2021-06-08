@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
@@ -34,7 +35,7 @@ namespace COSC2640A3.Services.Interfaces {
         
         Task<string[]> GetIdsOfClassroomsAlreadyEnrolledByStudentWith(string accountId);
         
-        Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] enrolledClassroomIds);
+        Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] classroomIds, int offset, int limit = 50);
         
         Task<ClassroomVM> GetClassroomDetailsFor(string classroomId);
         
@@ -47,5 +48,9 @@ namespace COSC2640A3.Services.Interfaces {
         Task<ClassroomExportVM[]> GetClassroomDataForExportBy(string[] classroomIds);
         
         Task<KeyValuePair<bool?, bool>> DoesClassroomHaveAnyEnrolment(string classroomId);
+
+        Task<bool?> IsEndOfClassroomResultsByOffset(int offset);
+        
+        Task<ClassroomVM[]> SearchClassroomsExcludingFrom(string teacherId, string[] classroomIds, SearchData searchData);
     }
 }

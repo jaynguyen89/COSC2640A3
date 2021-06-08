@@ -104,5 +104,19 @@ namespace COSC2640A3.Services.Services {
                 return default;
             }
         }
+
+        public bool? InsertMultipleInvoices(Invoice[] invoices) {
+            _logger.LogInformation($"{ nameof(GeneratorService) }.{ nameof(InsertMultipleInvoices) }: Inserting classrooms.");
+            _dbContext.Invoices.AddRange(invoices);
+
+            try {
+                var result = _dbContext.SaveChanges();
+                return result == invoices.Length;
+            }
+            catch (DbUpdateException e) {
+                _logger.LogError($"{ nameof(GeneratorService) }.{ nameof(InsertMultipleInvoices) } - { nameof(DbUpdateException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
     }
 }

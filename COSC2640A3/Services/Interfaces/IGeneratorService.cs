@@ -16,5 +16,7 @@ namespace COSC2640A3.Services.Interfaces {
         Task<bool?> InsertMultipleEnrolments(Enrolment[] enrolments);
         
         Task<string[]> InsertMultipleClassrooms(Classroom[] classrooms);
+        
+        bool? InsertMultipleInvoices(Invoice[] invoices);
     }
 }

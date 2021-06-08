@@ -11,6 +11,7 @@ interface IClassroomStore {
     updateClassroom: IActionResult,
     uploadFileImport: IActionResult,
     getAllClassrooms: IActionResult,
+    searchClassrooms: IActionResult,
     getClassroomEnrolments: IActionResult
 }
 
@@ -23,6 +24,7 @@ const initialState : IClassroomStore = {
     updateClassroom: DEFAULT_ACTION_RESULT,
     uploadFileImport: DEFAULT_ACTION_RESULT,
     getAllClassrooms: DEFAULT_ACTION_RESULT,
+    searchClassrooms: DEFAULT_ACTION_RESULT,
     getClassroomEnrolments: DEFAULT_ACTION_RESULT
 }
 
@@ -162,6 +164,21 @@ const reducer = produce((state, action) => {
             state.getClassroomEnrolments.action = classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED;
             state.getClassroomEnrolments.payload = null;
             state.getClassroomEnrolments.error = action.error;
+            return;
+        case classroomConstants.SEARCH_CLASSROOMS_REQUEST_SENT:
+            state.searchClassrooms.action = classroomConstants.SEARCH_CLASSROOMS_REQUEST_SENT;
+            state.searchClassrooms.payload = null;
+            state.searchClassrooms.error = null;
+            return;
+        case classroomConstants.SEARCH_CLASSROOMS_REQUEST_SUCCESS:
+            state.searchClassrooms.action = classroomConstants.SEARCH_CLASSROOMS_REQUEST_SUCCESS;
+            state.searchClassrooms.payload = action.payload;
+            state.searchClassrooms.error = null;
+            return;
+        case classroomConstants.SEARCH_CLASSROOMS_REQUEST_FAILED:
+            state.searchClassrooms.action = classroomConstants.SEARCH_CLASSROOMS_REQUEST_FAILED;
+            state.searchClassrooms.payload = null;
+            state.searchClassrooms.error = action.error;
             return;
         default:
             return;

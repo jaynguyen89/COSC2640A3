@@ -1,7 +1,7 @@
 import {IIssue, IResponse} from "../../../providers/helpers";
 import {sendRequestForResult} from "../../../providers/serviceProvider";
 import {IAuthUser} from "../../authentication/redux/interfaces";
-import {IClassroom, IFileImport} from "./interfaces";
+import {CLASSROOMS_PER_PAGE, IClassroom, IFileImport} from "./interfaces";
 
 const CLASSROOM_ENDPOINT = 'classroom/';
 
@@ -81,9 +81,9 @@ export const sendImportJsonFileClassroomsRequest = (auth: IAuthUser, fileData: I
     );
 };
 
-export const sendGetAllClassroomsRequest = (auth: IAuthUser): Promise<IResponse | IIssue> => {
+export const sendGetAllClassroomsRequest = (auth: IAuthUser, offset: number): Promise<IResponse | IIssue> => {
     return sendRequestForResult(
-        `${ CLASSROOM_ENDPOINT }all`,
+        `${ CLASSROOM_ENDPOINT }all/${ offset }/${ CLASSROOMS_PER_PAGE }`,
         auth,
         null,
         null,
@@ -98,5 +98,15 @@ export const sendGetEnrolmentsByClassroomRequest = (auth: IAuthUser, classroomId
         null,
         null,
         'GET'
+    );
+}
+
+export const sendSearchClassroomsRequest = (
+    auth: IAuthUser, searchData: { classroomName: string, teacherName: string }
+): Promise<IResponse | IIssue> => {
+    return sendRequestForResult(
+        `${ CLASSROOM_ENDPOINT }search`,
+        auth,
+        searchData,
     );
 }

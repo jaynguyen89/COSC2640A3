@@ -2,6 +2,8 @@ import {IAuthUser} from "../../authentication/redux/interfaces";
 import {EMPTY_STRING, IActionResult, IStatusMessage} from "../../../providers/helpers";
 import moment from "moment";
 
+export const CLASSROOMS_PER_PAGE = 60;
+
 export interface IManageClassroom {
     authUser: IAuthUser,
     invokeGetAllTeacherClassroomsRequest: (auth: IAuthUser, teacherId: string | null) => void,
@@ -117,7 +119,9 @@ export const defaultFileImport : IFileImport = {
 export interface IAllClassrooms {
     authUser: IAuthUser,
     clearAuthUser: () => void,
-    invokeGetAllClassroomsRequest: (auth: IAuthUser) => void,
+    invokeSearchClassroomsRequest: (auth: IAuthUser, searchData: { classroomName: string, teacherName: string }) => void,
+    searchClassrooms: IActionResult,
+    invokeGetAllClassroomsRequest: (auth: IAuthUser, offset: number) => void,
     getAllClassrooms: IActionResult,
     invokeGetClassroomDetailRequest: (auth: IAuthUser, classroomId: string) => void,
     getClassroomDetail: IActionResult,

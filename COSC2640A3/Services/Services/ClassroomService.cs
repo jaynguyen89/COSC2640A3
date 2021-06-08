@@ -2,12 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using COSC2640A3.Bindings;
 using COSC2640A3.DbContexts;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels.Account;
 using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
+using Helper;
+using Helper.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
@@ -114,13 +117,15 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] enrolledClassroomIds) {
+        public async Task<ClassroomVM[]> GetAllClassroomsExcludingFrom(string teacherId, string[] classroomIds, int offset, int limit) {
             try {
                 return await _dbContext.Classrooms
                                        .Where(classroom => 
                                            !classroom.TeacherId.Equals(teacherId) &&
-                                           !enrolledClassroomIds.Contains(classroom.Id)
+                                           !classroomIds.Contains(classroom.Id)
                                         )
+                                       .Skip(offset)
+                                       .Take(limit)
                                        .Select(classroom => new ClassroomVM {
                                            Id = classroom.Id,
                                            TeacherId = classroom.TeacherId,
@@ -189,7 +194,7 @@ namespace COSC2640A3.Services.Services {
                        .ToArray();
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetStudentEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetStudentEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }
@@ -201,7 +206,7 @@ namespace COSC2640A3.Services.Services {
                                        .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetEnrolmentsByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }
@@ -211,7 +216,7 @@ namespace COSC2640A3.Services.Services {
                 return await _dbContext.Classrooms.AllAsync(classroom => classroom.Teacher.AccountId.Equals(accountId));
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(AreTheseClassroomsBelongedTo) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(AreTheseClassroomsBelongedTo) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }
@@ -224,7 +229,7 @@ namespace COSC2640A3.Services.Services {
                                        .ToArrayAsync();
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetClassroomDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(GetClassroomDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return null;
             }
         }
@@ -239,8 +244,67 @@ namespace COSC2640A3.Services.Services {
                 return new KeyValuePair<bool?, bool>(true, hasPaidEnrolment);
             }
             catch (ArgumentNullException e) {
-                _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(DoesClassroomHaveAnyEnrolment) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(DoesClassroomHaveAnyEnrolment) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
                 return new KeyValuePair<bool?, bool>(default, default);
+            }
+        }
+
+        public async Task<bool?> IsEndOfClassroomResultsByOffset(int offset) {
+            try {
+                var classroomsCount = await _dbContext.Classrooms.CountAsync();
+                return classroomsCount <= offset;
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(IsEndOfClassroomResultsByOffset) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<ClassroomVM[]> SearchClassroomsExcludingFrom(string teacherId, string[] classroomIds, SearchData searchData) {
+            try {
+                var enumerableClassrooms = await _dbContext.Classrooms
+                                                           .Where(classroom => !classroom.TeacherId.Equals(teacherId) && !classroomIds.Contains(classroom.Id))
+                                                           .Select(classroom => new {
+                                                               Classroom = classroom,
+                                                               TeacherName = classroom.Teacher.Account.PreferredName
+                                                           })
+                                                           .ToArrayAsync();
+
+                var classroomsByTeacherName = Array.Empty<ClassroomVM>();
+                if (Helpers.IsProperString(searchData.TeacherName)) {
+                    var teacherNameKeywords = searchData.TeacherName.ToLower().Split(SharedConstants.MonoSpace);
+
+                    classroomsByTeacherName = enumerableClassrooms
+                                              .Where(entry =>
+                                                  entry.TeacherName.ToLower().Contains(searchData.TeacherName) ||
+                                                  teacherNameKeywords.Any(entry.TeacherName.ToLower().Contains)
+                                              )
+                                              .Select(entry => {
+                                                  var classroomVm = (ClassroomVM) entry.Classroom;
+                                                  classroomVm.TeacherName = entry.TeacherName;
+                                                  return classroomVm;
+                                              }).ToArray();
+                }
+
+                if (!Helpers.IsProperString(searchData.ClassroomName)) return classroomsByTeacherName;
+                
+                var classroomNameKeywords = searchData.ClassroomName.ToLower().Split(SharedConstants.MonoSpace);
+                var classroomsByClassName = enumerableClassrooms
+                                            .Where(entry =>
+                                                entry.Classroom.ClassName.Contains(searchData.ClassroomName) ||
+                                                classroomNameKeywords.Any(entry.Classroom.ClassName.ToLower().Contains)
+                                            )
+                                            .Select(entry => {
+                                                var classroomVm = (ClassroomVM) entry.Classroom;
+                                                classroomVm.TeacherName = entry.TeacherName;
+                                                return classroomVm;
+                                            }).ToArray();
+                
+                return classroomsByTeacherName.Union(classroomsByClassName).ToArray();
+            }
+            catch (ArgumentNullException e) {
+                _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(SearchClassroomsExcludingFrom) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
             }
         }
     }

@@ -451,7 +451,7 @@ namespace COSC2640A3.Controllers {
         /// Request signature:
         /// <!--
         /// <code>
-        ///     GET /classroom/all
+        ///     GET /classroom/all/{offset}/{limit}
         ///     Headers
         ///         "AccountId": string
         ///         "Authorization": "Bearer token"
@@ -461,25 +461,31 @@ namespace COSC2640A3.Controllers {
         /// Returned object signature:
         /// <!--
         /// <code>
-        /// [{
-        ///     id: string,
-        ///     teacherId: string,
-        ///     teacherName: string,
-        ///     className: string,
-        ///     price: number,
-        ///     enrolmentsCount: number,
-        ///     classroomDetail: null
-        /// }]
+        /// {
+        ///     Offset: number,
+        ///     IsLast: boolean,
+        ///     Classrooms: [{
+        ///         id: string,
+        ///         teacherId: string,
+        ///         teacherName: string,
+        ///         className: string,
+        ///         price: number,
+        ///         enrolmentsCount: number,
+        ///         classroomDetail: null
+        ///     }]
+        /// }
         /// </code>
         /// -->
         /// </remarks>
         /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="startOffset" type="int">The offset of classroom to start getting data.</param>
+        /// <param name="limit" type="int">The number of classrooms to get.</param>
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
         /// <response code="200">The request was successfully processed.</response>
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Student)]
-        [HttpGet("all")]
-        public async Task<JsonResult> GetAllClassrooms([FromHeader] string accountId) {
+        [HttpGet("all/{startOffset:int}/{limit:int}")]
+        public async Task<JsonResult> GetAllClassrooms([FromHeader] string accountId,[FromRoute] int startOffset,[FromRoute] int limit) {
             _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(GetAllClassrooms) }: Service starts.");
             
             var teacher = await _accountService.GetTeacherByAccountId(accountId);
@@ -488,10 +494,11 @@ namespace COSC2640A3.Controllers {
             var enrolledClassroomIds = await _classroomService.GetIdsOfClassroomsAlreadyEnrolledByStudentWith(accountId);
             if (enrolledClassroomIds is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
-            var classrooms = await _classroomService.GetAllClassroomsExcludingFrom(teacher.Id, enrolledClassroomIds);
+            var classrooms = await _classroomService.GetAllClassroomsExcludingFrom(teacher.Id, enrolledClassroomIds, startOffset, limit);
+            var isEnd = await _classroomService.IsEndOfClassroomResultsByOffset(startOffset + limit);
             return classrooms is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
-                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = new { Offset = startOffset, IsLast = isEnd, Classrooms = classrooms } });
         }
 
         /// <summary>
@@ -640,6 +647,63 @@ namespace COSC2640A3.Controllers {
             return classroomDetail is null
                 ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
                 : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classroomDetail });
+        }
+
+        /// <summary>
+        /// For student. To get all classrooms for browsing, excluding the ones created by its teacher role, and the ones they already enrolled in.
+        /// Classrooms only have basic data from the Classroom table.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     POST /classroom/search
+        ///     Headers
+        ///         "AccountId": string
+        ///         "Authorization": "Bearer token"
+        ///     Body
+        ///         {
+        ///             classroomName: string,
+        ///             teacherName: string
+        ///         }
+        /// </code>
+        /// -->
+        ///
+        /// Returned object signature:
+        /// <!--
+        /// <code>
+        /// [{
+        ///     id: string,
+        ///     teacherId: string,
+        ///     teacherName: string,
+        ///     className: string,
+        ///     price: number,
+        ///     enrolmentsCount: number,
+        ///     classroomDetail: null
+        /// }]
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <param name="accountId" type="string">The account's ID.</param>
+        /// <param name="searchData">The data of classroom name and teacher name to search.</param>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [HttpPost("search")]
+        [RoleAuthorize(Role.Student)]
+        public async Task<JsonResult> SearchClassrooms([FromHeader] string accountId,[FromBody] SearchData searchData) {
+            _logger.LogInformation($"{ nameof(ClassroomController) }.{ nameof(SearchClassrooms) }: Service starts.");
+            
+            var teacher = await _accountService.GetTeacherByAccountId(accountId);
+            if (teacher is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var enrolledClassroomIds = await _classroomService.GetIdsOfClassroomsAlreadyEnrolledByStudentWith(accountId);
+            if (enrolledClassroomIds is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+
+            var classrooms = await _classroomService.SearchClassroomsExcludingFrom(teacher.Id, enrolledClassroomIds, searchData);
+            return classrooms is null
+                ? new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } })
+                : new JsonResult(new JsonResponse { Result = RequestResult.Success, Data = classrooms });
         }
     }
 }

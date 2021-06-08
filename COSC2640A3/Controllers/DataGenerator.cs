@@ -1,31 +1,35 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels.Features;
 using Helper;
 using Helper.Shared;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using static Helper.Shared.SharedConstants;
 
 namespace COSC2640A3.Controllers {
 
     [ApiController]
     [Route("generator")]
-    public sealed class DataGenerator {
+    public sealed class DataGenerator : ControllerBase {
 
         private readonly ILogger<DataGenerator> _logger;
         private readonly IGeneratorService _generatorService;
         private readonly IClassroomService _classroomService;
         private readonly IEnrolmentService _enrolmentService;
         
-        private const int NumberOfTeachers = 1000;
+        private const int NumberOfTeachers = 5000;
         private const int MinNumberOfClassroomsPerTeacher = 10;
         private const int MaxNumberOfClassroomsPerTeacher = 20;
-        private const int NumberOfStudents = 50000;
+        private const int NumberOfStudents = 100000;
         private const int MinPrice = 1000;
         private const int MaxPrice = 150000;
 
@@ -71,8 +75,8 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(classroomIds);
         }
         
-        [HttpGet("generate-students-and-enrolments")]
-        public async Task<ActionResult> GenerateStudentAccountsAndEnrolmentsData(DataExport classroomData) {
+        [HttpGet("generate-students-and-enrolments/{save}")]
+        public async Task<ActionResult> GenerateStudentAccountsAndEnrolmentsData([FromBody] DataExport classroomData,[FromRoute] int save) {
             _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(GenerateStudentAccountsAndEnrolmentsData) }: service starts.");
 
             var studentAccounts = new List<Account>();
@@ -89,11 +93,27 @@ namespace COSC2640A3.Controllers {
             _logger.LogInformation("Done inserting student accounts and roles.");
 
             var classrooms = classroomData.ClassroomIds.Select(async classroomId => await _classroomService.GetClassroomById(classroomId)).Select(task => task.Result).ToArray();
-            var classroomsCount = classrooms.Length;
 
+            if (save == 0) {
+                var statements = GenerateInsertStatements(classrooms, classrooms.Length, studentIds);
+                
+                var exportedFile = new MemoryStream();
+                var writer = new StreamWriter(exportedFile);
+                foreach (var statement in statements) await writer.WriteLineAsync(statement);
+                
+                await writer.FlushAsync();
+                exportedFile.Position = 0;
+                return File(exportedFile, MediaTypeNames.Text.Plain, $"statements.sql");
+            }
+
+            if (!await SaveEnrolments(classrooms, classrooms.Length, studentIds)) return new JsonResult(0);
+            return new JsonResult(1);
+        }
+
+        private async Task<bool> SaveEnrolments(Classroom[] classrooms, int classroomsCount, string[] studentIds) {
             foreach (var classroom in classrooms) {
                 var invoiceId = await SaveInvoice(classroom.Price);
-                if (invoiceId is null) return new JsonResult(0);
+                if (invoiceId is null) return false;
                 
                 var numberOfEnrolments = GetRandomNumberOfEnrolmentByPriceRange(classroom.Price, classroom.Capacity);
                 var classroomEnrolments = new List<string>();
@@ -116,10 +136,63 @@ namespace COSC2640A3.Controllers {
                 }
                 
                 var success = await _generatorService.InsertMultipleEnrolments(enrolments.ToArray());
-                if (!success.HasValue || !success.Value) return new JsonResult(0);
+                if (!success.HasValue || !success.Value) return false;
+            }
+            
+            return true;
+        }
+
+        private string[] GenerateInsertStatements(Classroom[] classrooms, int classroomsCount, string[] studentIds) {
+            var methods = new[] { "PayPal", "GooglePay", "Visa", "Master", "Amex" };
+
+            var invoicesByClassroomIds = (from classroom in classrooms
+                let isPaid = Helpers.GetRandomNumberInRangeInclusive(1) == 1
+                select new {
+                    ClassroomId = classroom.Id,
+                    Invoice = new Invoice {
+                        Id = Guid.NewGuid().ToString().ToLower(),
+                        DueAmount = classroom.Price,
+                        IsPaid = isPaid,
+                        PaymentId = isPaid ? Guid.NewGuid().ToString() : null,
+                        ChargeId = isPaid ? Guid.NewGuid().ToString() : null,
+                        TransactionId = isPaid ? Guid.NewGuid().ToString() : null,
+                        PaymentStatus = isPaid ? "COMPLETED" : null,
+                        PaymentMethod = isPaid ? methods[Helpers.GetRandomNumberInRangeInclusive(methods.Length - 1)] : null,
+                        PaidOn = Helpers.GetRandomDateTime(DateTime.UtcNow.AddDays(60), DateTime.UtcNow.AddDays(90))
+                    }
+                })
+                .ToDictionary(z => z.ClassroomId, z => z.Invoice);
+
+            var invoices = invoicesByClassroomIds.Select(z => z.Value).ToArray();
+            var success = _generatorService.InsertMultipleInvoices(invoices);
+            if (!success.HasValue || !success.Value) return null;
+
+            var enrolments = new List<string>();
+            foreach (var classroom in classrooms) {
+                var numberOfEnrolments = GetRandomNumberOfEnrolmentByPriceRange(classroom.Price, classroom.Capacity);
+                var classroomEnrolments = new List<string>();
+                
+                var index = Array.FindIndex(classrooms, c => c.Id.Equals(classroom.Id)) + 1;
+                for (var i = 0; i < numberOfEnrolments; i++) {
+                    _logger.LogInformation($"Classroom #{ index } of { classroomsCount }: Enrolment #{ i + 1 } of { numberOfEnrolments }");
+                    
+                    var studentId = studentIds[Helpers.GetRandomNumberInRangeInclusive(studentIds.Length - 1)];
+                    while (classroomEnrolments.Contains(studentId)) studentId = studentIds[Helpers.GetRandomNumberInRangeInclusive(studentIds.Length - 1)];
+
+                    var markBreakdowns = GenerateEnrolmentMarks();
+                    var overallMarks = new StudentMarks { MarkBreakdowns = markBreakdowns }.CalculateOverallMarks();
+                    
+                    enrolments.Add($"INSERT INTO Enrolment (StudentId, ClassroomId, InvoiceId, EnrolledOn, OverallMark, MarkBreakdowns, IsPassed) " +
+                                   $"VALUES ('{ studentId }', '{ classroom.Id }', '{ invoicesByClassroomIds[classroom.Id].Id }', " +
+                                   $"'{Helpers.GetRandomDateTime(DateTime.UtcNow.AddDays(30), DateTime.UtcNow.AddDays(60)):yyyy-MM-dd HH:mm:ss}', " +
+                                   $"{ (overallMarks == -1 ? "null" : $"{ overallMarks }") }, " +
+                                   $"{ (markBreakdowns == null ? "null" : $"'{ JsonConvert.SerializeObject(markBreakdowns) }'") }, null);"
+                                );
+                    classroomEnrolments.Add(studentId);
+                }
             }
 
-            return new OkResult();
+            return enrolments.ToArray();
         }
 
         private async Task<string> SaveInvoice(decimal amount) {
@@ -248,6 +321,27 @@ namespace COSC2640A3.Controllers {
                 IsActive = true,
                 CreatedOn = Helpers.GetRandomDateTime(DateTime.UtcNow, DateTime.UtcNow.AddDays(29))
             };
+        }
+
+        private static MarkBreakdownVM[] GenerateEnrolmentMarks() {
+            var numberOfTasks = Helpers.GetRandomNumberInRangeInclusive(5);
+            if (numberOfTasks == 0) return default;
+
+            var marks = new List<MarkBreakdownVM>();
+            for (var i = 0; i < numberOfTasks; i++) {
+                var total = Helpers.GetRandomNumberInRangeInclusive(200, 10);
+                var rewarded = Helpers.GetRandomNumberInRangeInclusive(total, total/5);
+                
+                marks.Add(new MarkBreakdownVM {
+                    TaskName = string.Join(SharedConstants.MonoSpace, Faker.Lorem.Words(Helpers.GetRandomNumberInRangeInclusive(4, 2))),
+                    TotalMarks = total,
+                    RewardedMarks = rewarded,
+                    Comment = Faker.Lorem.Sentence(),
+                    MarkedOn = Helpers.GetRandomDateTime(DateTime.UtcNow.AddDays(-365), DateTime.UtcNow)
+                });
+            }
+
+            return marks.ToArray();
         }
 
         private static int GetRandomNumberOfEnrolmentByPriceRange(decimal price, short capacity) {

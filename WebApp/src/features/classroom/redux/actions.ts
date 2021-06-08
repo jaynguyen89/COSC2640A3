@@ -115,11 +115,11 @@ export const invokeUploadFileForImportRequest = (auth: IAuthUser, fileData: IFil
     };
 }
 
-export const invokeGetAllClassroomsRequest = (auth: IAuthUser) => {
+export const invokeGetAllClassroomsRequest = (auth: IAuthUser, offset: number) => {
     return (dispatch: any) => {
         dispatch({ type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SENT });
 
-        classroomServices.sendGetAllClassroomsRequest(auth)
+        classroomServices.sendGetAllClassroomsRequest(auth, offset)
             .then(response => dispatch({
                 type: classroomConstants.GET_ALL_CLASSROOMS_REQUEST_SUCCESS,
                 payload: response
@@ -142,6 +142,24 @@ export const invokeGetEnrolmentsByClassroomRequest = (auth: IAuthUser, classroom
             }))
             .catch(error => dispatch({
                 type: classroomConstants.GET_ENROLMENTS_BY_CLASSROOM_REQUEST_FAILED,
+                error
+            }))
+    };
+}
+
+export const invokeSearchClassroomsRequest = (
+    auth: IAuthUser, searchData: { classroomName: string, teacherName: string }
+) => {
+    return (dispatch: any) => {
+        dispatch({ type: classroomConstants.SEARCH_CLASSROOMS_REQUEST_SENT });
+
+        classroomServices.sendSearchClassroomsRequest(auth, searchData)
+            .then(response => dispatch({
+                type: classroomConstants.SEARCH_CLASSROOMS_REQUEST_SUCCESS,
+                payload: response
+            }))
+            .catch(error => dispatch({
+                type: classroomConstants.SEARCH_CLASSROOMS_REQUEST_FAILED,
                 error
             }))
     };
