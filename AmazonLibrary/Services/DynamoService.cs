@@ -62,6 +62,70 @@ namespace AmazonLibrary.Services {
             return classroomSchedules.Concat(studentSchedules).ToArray();
         }
 
+        public async Task<EmrProgress> GetLastEmrProgress() {
+            _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(GetLastEmrProgress) }: Service starts.");
+
+            var scanEmrProgressTableRequest = new ScanRequest { TableName = _options.Value.EmrProgressTableName };
+
+            try {
+                var response = await _dbContext.ScanAsync(scanEmrProgressTableRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Scan request to DynamoDB failed.");
+
+                return response.Count == 0
+                    ? new EmrProgress()
+                    : response.Items
+                              .OrderByDescending(item => long.Parse(item[nameof(EmrProgress.Timestamp)].N))
+                              .First();
+            }
+            catch (InternalServerErrorException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetLastEmrProgress) }: { e.Message }\n\n{ e.StackTrace }");
+                return default;
+            }
+            catch (ProvisionedThroughputExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetLastEmrProgress) } - { nameof(ProvisionedThroughputExceededException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (RequestLimitExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetLastEmrProgress) } - { nameof(RequestLimitExceededException) }: { e.StackTrace }");
+                return default;
+            }
+            catch (ResourceNotFoundException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetLastEmrProgress) } - { nameof(ResourceNotFoundException) }: { e.StackTrace }");
+                return default;
+            }
+        }
+
+        public async Task<EmrStatistics[]> GetEmrStatistics() {
+            _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(GetEmrStatistics) }: Service starts.");
+
+            var scanEmrResultsTableRequest = new ScanRequest { TableName = _options.Value.EmrResultsTableName };
+
+            try {
+                var response = await _dbContext.ScanAsync(scanEmrResultsTableRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Scan request to DynamoDB failed.");
+
+                return response.Count == 0
+                    ? default
+                    : response.Items.Select(item => (EmrStatistics) item).ToArray();
+            }
+            catch (InternalServerErrorException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetEmrStatistics) }: { e.Message }\n\n{ e.StackTrace }");
+                return null;
+            }
+            catch (ProvisionedThroughputExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetEmrStatistics) } - { nameof(ProvisionedThroughputExceededException) }: { e.StackTrace }");
+                return null;
+            }
+            catch (RequestLimitExceededException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetEmrStatistics) } - { nameof(RequestLimitExceededException) }: { e.StackTrace }");
+                return null;
+            }
+            catch (ResourceNotFoundException e) {
+                _logger.LogError($"{ nameof(DynamoService) }.{ nameof(GetEmrStatistics) } - { nameof(ResourceNotFoundException) }: { e.StackTrace }");
+                return null;
+            }
+        }
+
         private async Task<ImportSchedule[]> GetSchedulesByTable(string tableName, string accountId) {
             _logger.LogInformation($"{ nameof(DynamoService) }.{ nameof(GetAllSchedulesDataFor) }: Service starts.");
             

@@ -1126,6 +1126,112 @@
              <response code="200">The request was successfully processed.</response>
              <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         </member>
+        <member name="M:COSC2640A3.Controllers.DataGenerator.TriggerEmrMapper">
+            <summary>
+            For guest. To trigger AWS EMR Mapper inside EMR Master Cluster from client-side.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /data/trigger-emr-mapper
+            </code>
+            -->
+            </remarks>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = boolean }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.DataGenerator.TriggerEmrReducer">
+            <summary>
+            For guest. To trigger AWS EMR Reducer inside EMR Master Cluster from client-side.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /data/trigger-emr-reducer
+            </code>
+            -->
+            </remarks>
+            <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = boolean }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.DataGenerator.GetStatisticsResult">
+             <summary>
+             For guest. To get the statistics results after the EMR Mapper-Reducer have both finished their processing jobs.
+             </summary>
+             <remarks>
+             Request signature:
+             <!--
+             <code>
+                 GET /data/get-statistics
+             </code>
+             -->
+            
+             Returned object signature:
+             <!--
+             <code>
+             {
+                 progress: {
+                     id: string,
+                     timestamp: datetime,
+                     mapperDone: boolean,
+                     reducerDone: boolean
+                 },
+                 statistics: [{
+                     id: string,
+                     timestamp: datetime,
+                     range50: number,
+                     range100: number,
+                     range250: number,
+                     range500: number,
+                     range1000: number,
+                     range1001: number
+                 }]
+             }
+             </code>
+             -->
+             </remarks>
+             <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+             <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.DataGenerator.GenerateTeacherAccountsAndClassroomsData">
+            <summary>
+            For guest. To generate data for SQL Server database. This service generates teacher-related data: Account, AccountRole, Teacher, Student (not used), Classroom.
+            Returns array of the generated classroom IDs.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                GET /data/generate-teachers-and-classrooms
+            </code>
+            -->
+            </remarks>
+            <returns>JsonResponse object: { Result = 0|1, Data = [string] }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
+        <member name="M:COSC2640A3.Controllers.DataGenerator.GenerateStudentAccountsAndEnrolmentsData(COSC2640A3.Bindings.DataExport,System.Int32)">
+            <summary>
+            For guest. To generate data for SQL Server database. This service generates student-related data: Account, AccountRole, Teacher (not used), Student, Enrolment, Invoice.
+            Returns the generated INSERT statements for the enrolments in FileResult if successful.
+            </summary>
+            <remarks>
+            Request signature:
+            <!--
+            <code>
+                POST /data/generate-students-and-enrolments/{save}
+            </code>
+            -->
+            </remarks>
+            <param name="classroomData">The generated classroom IDs taken from the stage of generating teachers.</param>
+            <param name="saveToDbDirectly">
+            To indicate if the generated data should be inserted directly to SQL Server database or returned in Response as the INSERT statements.
+            Set `<c>saveToDbDirectly == 0</c>` to get the INSERT statements, set `<c>saveToDbDirectly == 1</c>` to insert directly (EXTREMELY time/resource-consuming, not recommended).
+            </param>
+            <returns>JsonResponse object: { Result = 0|1, Data = FileResult }</returns>
+            <response code="200">The request was successfully processed.</response>
+        </member>
         <member name="M:COSC2640A3.Controllers.PaymentController.CapturePaypalPayment(System.String,AssistantLibrary.Models.PaypalAuthorization)">
              <summary>
              For student. To make a payment using <b>Paypal</b> for an enrolment's invoice.

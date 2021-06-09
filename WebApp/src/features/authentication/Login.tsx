@@ -157,7 +157,7 @@ const Login = (props: ILoginComponent) => {
                         Forgot password? <a href='/forgot-password'>Recover here</a>.
                     </div>
                     <div className='col s12 center-align' style={{ marginTop: '10px' }}>
-                        <a href='/statistics'>Click here</a> to view sales statistics (AWS MapReduce).
+                        <a href='/statistics'>Click here</a> to view sales statistics (AWS EMR - MapReduce).
                     </div>
                 </div>
             </div>

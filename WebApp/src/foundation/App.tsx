@@ -14,6 +14,7 @@ import ManageClassContent from "../features/classContents/ManageClassContent";
 import AllClassrooms from "../features/classroom/AllClassrooms";
 import ManageEnrolments from "../features/teacher/ManageEnrolments";
 import CheckoutSummary from "../features/checkout/CheckoutSummary";
+import Statistics from "../features/statistics/Statistics";
 
 function App() {
     return (
@@ -33,6 +34,7 @@ function App() {
                     <Route path='/browse-classrooms' component={ AllClassrooms } />
                     <Route path='/manage-enrolments' component={ ManageEnrolments } />
                     <Route path='/checkout-summary' component={ CheckoutSummary } />
+                    <Route path='/statistics' component={ Statistics } />
                 </Switch>
             </BrowserRouter>
         </>

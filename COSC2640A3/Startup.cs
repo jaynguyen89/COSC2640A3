@@ -90,7 +90,16 @@ namespace COSC2640A3 {
             app.UseSwagger();
             app.UseSwaggerUI(options => options.SwaggerEndpoint("/swagger/v1/swagger.json", "WebApplication1 v1"));
 
-            app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+            app.UseCors(builder =>
+                builder.AllowAnyHeader()
+                       .AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       //.SetIsOriginAllowed(origin => true)
+                       //.WithHeaders(Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowOrigin, "*")
+                       //.AllowCredentials()
+                       //.WithOrigins("http://ec2-3-25-62-10.ap-southeast-2.compute.amazonaws.com", "https://cosc2640a3.d8tv5ca9mcxi1.amplifyapp.com")
+                       //.WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+            );
 
             var loggerConfig = Configuration.GetAWSLoggingConfigSection();
             _ = loggerFactory.AddAWSProvider(loggerConfig);

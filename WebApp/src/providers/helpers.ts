@@ -145,7 +145,7 @@ export const checkUnenrolmentResult = (
         else if (unenrolResult.payload.result === 0)
             setStatusMessage({ messages: unenrolResult.payload.messages, type: 'error' } as IStatusMessage);
         else {
-            setStatusMessage({ messages: ['Your enrolment and its corresponding invoice has been removed.'], type: 'error' } as IStatusMessage);
+            setStatusMessage({ messages: ['Your enrolment and its corresponding invoice has been removed.'], type: 'success' } as IStatusMessage);
             const removedEnrolmentId = unenrolResult.payload.data as unknown as string;
 
             let clone = _.cloneDeep(enrolments);

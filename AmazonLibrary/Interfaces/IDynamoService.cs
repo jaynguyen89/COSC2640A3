@@ -9,5 +9,9 @@ namespace AmazonLibrary.Interfaces {
         Task<string> SaveToSchedulesTable(ImportSchedule schedule, SharedEnums.ImportType importType);
         
         Task<ImportSchedule[]> GetAllSchedulesDataFor(string accountId);
+        
+        Task<EmrProgress> GetLastEmrProgress();
+        
+        Task<EmrStatistics[]> GetEmrStatistics();
     }
 }

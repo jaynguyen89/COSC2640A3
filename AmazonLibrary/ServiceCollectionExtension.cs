@@ -21,6 +21,7 @@ namespace AmazonLibrary {
             services.AddScoped<IAmazonMailService, AmazonMailService>();
             services.AddScoped<ITextractService, TextractService>();
             services.AddScoped<ITranslateService, TranslateService>();
+            services.AddScoped<IEmrService, EmrService>();
         }
     }
 }

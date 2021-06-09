@@ -53,23 +53,25 @@ const ClassroomCard = (props: IClassroomCard) => {
             {
                 props.completed === undefined &&
                 <div className='card-action'>
-                    <a className='small-text text-link teal-text'
+                    <div className='row' style={{ margin: 0 }}>
+                    <a className='small-text text-link teal-text left'
                        onClick={ () => props.handleReviseBtn && props.handleReviseBtn(props.classroom.id) }
                     >
                         Revise
                     </a>
 
-                    <a className='small-text text-link amber-text'
+                    <a className='small-text text-link amber-text right'
                        onClick={ () => props.handleMarkAsCompletedBtn && props.handleMarkAsCompletedBtn(props.classroom.id) }
                     >
                         Mark as Completed
                     </a>
 
-                    <a className='small-text text-link red-text'
+                    <a className='small-text text-link red-text' style={{ display: 'none' }}
                        onClick={ () => props.handleRemoveBtn && props.handleRemoveBtn(props.classroom.id) }
                     >
                         Remove
                     </a>
+                    </div>
                 </div>
             }
         </div>

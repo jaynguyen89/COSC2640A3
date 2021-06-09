@@ -10,6 +10,7 @@ using COSC2640A3.Services.Interfaces;
 using COSC2640A3.ViewModels;
 using COSC2640A3.ViewModels.Features;
 using Helper;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -190,6 +191,7 @@ namespace COSC2640A3.Controllers {
         /// <returns>JsonResponse object: { Result = 0|1, Messages = [string] }</returns>
         /// <response code="200">The request was successfully processed.</response>
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
+        [DisableCors]
         [RoleAuthorize(Role.Teacher)]
         [HttpDelete("remove/{classroomId}")]
         public async Task<JsonResult> RemoveClassroom([FromHeader] string accountId,[FromRoute] string classroomId) {

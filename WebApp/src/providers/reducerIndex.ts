@@ -8,6 +8,7 @@ import studentStore from '../features/student/redux/reducer';
 import checkoutStore from '../features/checkout/redux/reducer';
 import contentStore from '../features/classContents/redux/reducer';
 import translationStore from '../features/translation/redux/reducer';
+import statisticsStore from '../features/statistics/redux/reducer';
 
 export default combineReducers({
     authenticationStore,
@@ -17,5 +18,6 @@ export default combineReducers({
     studentStore,
     checkoutStore,
     contentStore,
-    translationStore
+    translationStore,
+    statisticsStore
 });

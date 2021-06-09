@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using Amazon;
@@ -37,8 +38,15 @@ namespace AmazonLibrary.Services {
 
         public async Task<bool?> SendEmailSingle(EmailComposer emailComposer) {
             _logger.LogInformation($"{ nameof(AmazonMailService) }.{ nameof(SendEmailSingle) }: service starts.");
+            
+            string emailContent;
+            try {
+                emailContent = await File.ReadAllTextAsync(GetEmailTemplateAccordingTo(emailComposer.EmailType));
+            }
+            catch (Exception) {
+                return default;
+            }
 
-            var emailContent = GetEmailTemplateAccordingTo(emailComposer.EmailType);
             if (!Helpers.IsProperString(emailContent)) return default;
 
             foreach (var (placeholder, content) in emailComposer.Contents)

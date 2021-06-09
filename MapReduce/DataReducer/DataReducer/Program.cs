@@ -6,18 +6,24 @@ using Amazon.DynamoDBv2.Model;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
+using Amazon.S3;
+using Amazon.S3.Model;
 
 namespace DataReducer {
 
     public sealed class Program {
 
         private readonly IAmazonDynamoDB _dynamoService;
+        private readonly IAmazonS3 _s3Service;
 
+        private const string MapReduceDataBucket = "cosc2640a3.map.reduce.data";
         private const string MapReduceDataTable = "cosc2640a3.map.reduce.data";
         private const string MapReduceResultsTable = "cosc2640a3.map.reduce.results";
+        private const string MapReduceProgressTable = "cosc2640a3.map.reduce.progress";
 
         public Program() {
             _dynamoService = new AmazonDynamoDBClient(
@@ -27,13 +33,28 @@ namespace DataReducer {
                     RegionEndpoint = RegionEndpoint.APSoutheast2
                 }
             );
+            
+            _s3Service = new AmazonS3Client(
+                "AKIAJSENDXCAPZWGB6HQ",
+                "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3",
+                new AmazonS3Config {
+                    RegionEndpoint = RegionEndpoint.APSoutheast2,
+                    Timeout = TimeSpan.FromSeconds(120)
+                }
+            );
         }
 
         public static async Task Main(string[] args) {
             var program = new Program();
 
-            var data = await GetData(program._dynamoService);
-            if (data == null) return;
+            var dataFileId = await GetLastDataFileId(program._dynamoService);
+            if (dataFileId == null) Environment.Exit(-1);
+
+            var progressId = await GetLastProgress(program._dynamoService);
+            if (progressId == null) Environment.Exit(-1);
+
+            var data = await GetDataFromS3FileByKey(dataFileId, program._s3Service);
+            if (data == null || data.Length == 0) Environment.Exit(-1);
 
             var range50Counts = 0;
             var range100Counts = 0;
@@ -62,7 +83,45 @@ namespace DataReducer {
             };
 
             await SaveResult(JsonConvert.SerializeObject(stats), program._dynamoService);
-            foreach (var item in data) await DeleteData(item.Id, program._dynamoService);
+            await UpdateProgress(progressId, program._dynamoService);
+        }
+
+        private static async Task UpdateProgress(string progressId, IAmazonDynamoDB dynamoService) {
+            var updateItemRequest = new UpdateItemRequest {
+                TableName = MapReduceProgressTable,
+                Key = new Dictionary<string, AttributeValue> {
+                    { "Id", new AttributeValue { S = progressId } }
+                },
+                AttributeUpdates = new Dictionary<string, AttributeValueUpdate> {
+                    ["ReducerDone"] = new AttributeValueUpdate {
+                        Action = AttributeAction.PUT,
+                        Value = new AttributeValue { BOOL = true }
+                    },
+                    ["Timestamp"] = new AttributeValueUpdate {
+                        Action = AttributeAction.PUT,
+                        Value = new AttributeValue { N = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString() }
+                    }
+                },
+                ReturnValues = ReturnValue.NONE
+            };
+            
+            _ = await dynamoService.UpdateItemAsync(updateItemRequest);
+        }
+
+        private static async Task<string> GetLastProgress(IAmazonDynamoDB dynamoService) {
+            var scanEmrProgressTableRequest = new ScanRequest { TableName = MapReduceProgressTable };
+            
+            try {
+                var response = await dynamoService.ScanAsync(scanEmrProgressTableRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Scan request to DynamoDB failed.");
+
+                return response.Count == 0
+                    ? default
+                    : response.Items
+                              .OrderByDescending(item => long.Parse(item["Timestamp"].N))
+                              .First()["Id"].S;
+            }
+            catch (Exception) { return default; }
         }
 
         private static async Task SaveResult(string result, IAmazonDynamoDB dynamoService) {
@@ -70,32 +129,45 @@ namespace DataReducer {
             await resultTable.PutItemAsync(new Document {
                 ["Id"] = Guid.NewGuid().ToString().ToLower(),
                 ["Statistics"] = result,
-                ["Timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeSeconds()
+                ["Timestamp"] = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
             });
         }
 
-        private static async Task<EnrolmentInvoice[]> GetData(IAmazonDynamoDB dynamoService) {
+        private static async Task<EnrolmentInvoice[]> GetDataFromS3FileByKey(string fileId, IAmazonS3 s3Service) {
+            try {
+                var getFileRequest = new GetObjectRequest {
+                    BucketName = MapReduceDataBucket,
+                    Key = fileId
+                };
+
+                var response = await s3Service.GetObjectAsync(getFileRequest);
+                if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Get file from S3 request failed.");
+
+                var reader = new StreamReader(response.ResponseStream);
+                var content = await reader.ReadToEndAsync();
+
+                var data = JsonConvert.DeserializeObject<EnrolmentInvoice[]>(content);
+                
+                reader.Close();
+                return data;
+            }
+            catch (Exception) { return null; }
+        }
+
+        private static async Task<string> GetLastDataFileId(IAmazonDynamoDB dynamoService) {
             try {
                 var scanAllRequest = new ScanRequest { TableName = MapReduceDataTable };
 
                 var response = await dynamoService.ScanAsync(scanAllRequest);
                 if (response.HttpStatusCode != HttpStatusCode.OK) throw new InternalServerErrorException("Request to AWS DynamoDb failed.");
 
-                return response.Items.Select(item => (EnrolmentInvoice) item).ToArray();
+                return response.Count == 0
+                    ? default
+                    : response.Items
+                              .OrderByDescending(item => long.Parse(item["Timestamp"].N))
+                              .First()["FileId"].S;
             }
-            catch (Exception) { return null; }
-        }
-
-        private static async Task DeleteData(string key, IAmazonDynamoDB dynamoDB) {
-            var deleteItemRequest = new DeleteItemRequest {
-                TableName = MapReduceDataTable,
-                ReturnValues = ReturnValue.NONE,
-                Key = new Dictionary<string, AttributeValue> {
-                    { nameof(EnrolmentInvoice.Id), new AttributeValue { S = key } }
-                }
-            };
-
-            _ = await dynamoDB.DeleteItemAsync(deleteItemRequest);
+            catch (Exception) { return default; }
         }
 
         public sealed class EnrolmentInvoice {

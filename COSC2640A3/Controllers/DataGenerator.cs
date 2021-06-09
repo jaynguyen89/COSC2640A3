@@ -4,9 +4,11 @@ using System.IO;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using AmazonLibrary.Interfaces;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
+using COSC2640A3.ViewModels;
 using COSC2640A3.ViewModels.Features;
 using Helper;
 using Helper.Shared;
@@ -18,18 +20,20 @@ using static Helper.Shared.SharedConstants;
 namespace COSC2640A3.Controllers {
 
     [ApiController]
-    [Route("generator")]
+    [Route("data")]
     public sealed class DataGenerator : ControllerBase {
 
         private readonly ILogger<DataGenerator> _logger;
         private readonly IGeneratorService _generatorService;
         private readonly IClassroomService _classroomService;
         private readonly IEnrolmentService _enrolmentService;
+        private readonly IEmrService _emrService;
+        private readonly IDynamoService _dynamoService;
         
-        private const int NumberOfTeachers = 5000;
-        private const int MinNumberOfClassroomsPerTeacher = 10;
-        private const int MaxNumberOfClassroomsPerTeacher = 20;
-        private const int NumberOfStudents = 100000;
+        private const int NumberOfTeachers = 3000;
+        private const int MinNumberOfClassroomsPerTeacher = 5;
+        private const int MaxNumberOfClassroomsPerTeacher = 10;
+        private const int NumberOfStudents = 100;
         private const int MinPrice = 1000;
         private const int MaxPrice = 150000;
 
@@ -37,14 +41,152 @@ namespace COSC2640A3.Controllers {
             ILogger<DataGenerator> logger,
             IGeneratorService generatorService,
             IClassroomService classroomService,
-            IEnrolmentService enrolmentService
+            IEnrolmentService enrolmentService,
+            IEmrService emrService,
+            IDynamoService dynamoService
         ) {
             _logger = logger;
             _generatorService = generatorService;
             _classroomService = classroomService;
             _enrolmentService = enrolmentService;
+            _emrService = emrService;
+            _dynamoService = dynamoService;
         }
 
+        /// <summary>
+        /// For guest. To trigger AWS EMR Mapper inside EMR Master Cluster from client-side.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     GET /data/trigger-emr-mapper
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = boolean }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        [HttpGet("trigger-emr-mapper")]
+        public async Task<JsonResult> TriggerEmrMapper() {
+            _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(TriggerEmrMapper) }: service starts.");
+            
+            var emrProgress = await _dynamoService.GetLastEmrProgress();
+            if (emrProgress is null) return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." }});
+            if (Helpers.IsProperString(emrProgress.Id) && !emrProgress.ReducerDone)
+                return new JsonResult(new JsonResponse {
+                Result = SharedEnums.RequestResult.Failed,
+                    Messages = new [] {
+                        emrProgress.MapperDone
+                            ? "The EMR Mapper has done mapping step. To save computing resources, mapper won\'t run again. Please execute reducer step."
+                            : "You have previously executed the EMR Mapper. It is still running. Please come back later to check progress and execute reducer step."
+                    }
+                });
+
+            var result = _emrService.ExecuteCommandMapper();
+            return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Success, Data = result });
+        }
+        
+        /// <summary>
+        /// For guest. To trigger AWS EMR Reducer inside EMR Master Cluster from client-side.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     GET /data/trigger-emr-reducer
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = boolean }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        [HttpGet("trigger-emr-reducer")]
+        public async Task<JsonResult> TriggerEmrReducer() {
+            _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(TriggerEmrReducer) }: service starts.");
+            
+            var emrProgress = await _dynamoService.GetLastEmrProgress();
+            if (emrProgress is null) return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." }});
+            if (Helpers.IsProperString(emrProgress.Id) && !emrProgress.ReducerDone)
+                if (!emrProgress.MapperDone) return new JsonResult(new JsonResponse {
+                    Result = SharedEnums.RequestResult.Failed,
+                    Messages = new [] { "You have previously executed the EMR Mapper. It is still running. Please come back later to check progress and execute reducer step." }
+                });
+            
+            var result = _emrService.ExecuteCommandReducer();
+            return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Success, Data = result });
+        }
+        
+        /// <summary>
+        /// For guest. To get the statistics results after the EMR Mapper-Reducer have both finished their processing jobs.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     GET /data/get-statistics
+        /// </code>
+        /// -->
+        ///
+        /// Returned object signature:
+        /// <!--
+        /// <code>
+        /// {
+        ///     progress: {
+        ///         id: string,
+        ///         timestamp: datetime,
+        ///         mapperDone: boolean,
+        ///         reducerDone: boolean
+        ///     },
+        ///     statistics: [{
+        ///         id: string,
+        ///         timestamp: datetime,
+        ///         range50: number,
+        ///         range100: number,
+        ///         range250: number,
+        ///         range500: number,
+        ///         range1000: number,
+        ///         range1001: number
+        ///     }]
+        /// }
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <returns>JsonResponse object: { Result = 0|1, Messages = [string], Data = object }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        [HttpGet("get-statistics")]
+        public async Task<JsonResult> GetStatisticsResult() {
+            _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(GetStatisticsResult) }: service starts.");
+            
+            var emrProgress = await _dynamoService.GetLastEmrProgress();
+            if (emrProgress is null) return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." }});
+
+            var statistics = await _dynamoService.GetEmrStatistics();
+            var statisticsVm = statistics
+                               .Select(statistic => {
+                                   var statisticVm = JsonConvert.DeserializeObject<EmrStatisticsVM>(statistic.Statistics) ?? new EmrStatisticsVM();
+                                   statisticVm.Id = statistic.Id;
+                                   statisticVm.Timestamp = DateTimeOffset.FromUnixTimeMilliseconds(statistic.Timestamp).UtcDateTime;
+                                   return statisticVm;
+                               })
+                               .OrderByDescending(statistic => statistic.Timestamp)
+                               .ToArray();
+            
+            return new JsonResult(new JsonResponse { Result = SharedEnums.RequestResult.Success, Data = new { Progress = (EmrProgressVM) emrProgress, Statistics = statisticsVm } });
+        }
+
+        /// <summary>
+        /// For guest. To generate data for SQL Server database. This service generates teacher-related data: Account, AccountRole, Teacher, Student (not used), Classroom.
+        /// Returns array of the generated classroom IDs.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     GET /data/generate-teachers-and-classrooms
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <returns>JsonResponse object: { Result = 0|1, Data = [string] }</returns>
+        /// <response code="200">The request was successfully processed.</response>
         [HttpGet("generate-teachers-and-classrooms")]
         public async Task<JsonResult> GenerateTeacherAccountsAndClassroomsData() {
             _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(GenerateTeacherAccountsAndClassroomsData) }: service starts.");
@@ -75,8 +217,27 @@ namespace COSC2640A3.Controllers {
             return new JsonResult(classroomIds);
         }
         
-        [HttpGet("generate-students-and-enrolments/{save}")]
-        public async Task<ActionResult> GenerateStudentAccountsAndEnrolmentsData([FromBody] DataExport classroomData,[FromRoute] int save) {
+        /// <summary>
+        /// For guest. To generate data for SQL Server database. This service generates student-related data: Account, AccountRole, Teacher (not used), Student, Enrolment, Invoice.
+        /// Returns the generated INSERT statements for the enrolments in FileResult if successful.
+        /// </summary>
+        /// <remarks>
+        /// Request signature:
+        /// <!--
+        /// <code>
+        ///     POST /data/generate-students-and-enrolments/{save}
+        /// </code>
+        /// -->
+        /// </remarks>
+        /// <param name="classroomData">The generated classroom IDs taken from the stage of generating teachers.</param>
+        /// <param name="saveToDbDirectly">
+        /// To indicate if the generated data should be inserted directly to SQL Server database or returned in Response as the INSERT statements.
+        /// Set `<c>saveToDbDirectly == 0</c>` to get the INSERT statements, set `<c>saveToDbDirectly == 1</c>` to insert directly (EXTREMELY time/resource-consuming, not recommended).
+        /// </param>
+        /// <returns>JsonResponse object: { Result = 0|1, Data = FileResult }</returns>
+        /// <response code="200">The request was successfully processed.</response>
+        [HttpPost("generate-students-and-enrolments/{saveToDbDirectly}")]
+        public async Task<ActionResult> GenerateStudentAccountsAndEnrolmentsData([FromBody] DataExport classroomData,[FromRoute] int saveToDbDirectly) {
             _logger.LogInformation($"{ nameof(DataGenerator) }.{ nameof(GenerateStudentAccountsAndEnrolmentsData) }: service starts.");
 
             var studentAccounts = new List<Account>();
@@ -94,7 +255,7 @@ namespace COSC2640A3.Controllers {
 
             var classrooms = classroomData.ClassroomIds.Select(async classroomId => await _classroomService.GetClassroomById(classroomId)).Select(task => task.Result).ToArray();
 
-            if (save == 0) {
+            if (saveToDbDirectly == 0) {
                 var statements = GenerateInsertStatements(classrooms, classrooms.Length, studentIds);
                 
                 var exportedFile = new MemoryStream();
@@ -308,7 +469,7 @@ namespace COSC2640A3.Controllers {
             if (className.Length > 70) className = className[..70];
 
             className = className.First().ToString().ToUpper() + className[1..];
-            var capacities = new short[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
+            var capacities = new short[] { 10,20,30,40,50 };//new short[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
 
             return new Classroom {
                 TeacherId = teacherId,

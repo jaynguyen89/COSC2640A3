@@ -23,5 +23,16 @@
         
         // For AWS Simple Mail Service
         public string MailSentFromAddress { get; set; }
+        
+        // For EMR service
+        public string EmrMasterNodeEndpointUrl { get; set; }
+        
+        public string EmrMasterNodeEc2Username { get; set; }
+        
+        public string KeyFingerprint { get; set; }
+        
+        public string EmrProgressTableName { get; set; }
+        
+        public string EmrResultsTableName { get; set; }
     }
 }

@@ -1160,13 +1160,13 @@
         }
       }
     },
-    "/classroom/all": {
+    "/classroom/all/{startOffset}/{limit}": {
       "get": {
         "tags": [
           "Classroom"
         ],
         "summary": "For student. To get all classrooms for browsing, excluding the ones created by its teacher role, and the ones they already enrolled in.\r\nClassrooms only have basic data from the Classroom table.",
-        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/all\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r[{\r    id: string,\r    teacherId: string,\r    teacherName: string,\r    className: string,\r    price: number,\r    enrolmentsCount: number,\r    classroomDetail: null\r}]\r</pre>\r\n",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /classroom/all/{offset}/{limit}\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    Offset: number,\r    IsLast: boolean,\r    Classrooms: [{\r        id: string,\r        teacherId: string,\r        teacherName: string,\r        className: string,\r        price: number,\r        enrolmentsCount: number,\r        classroomDetail: null\r    }]\r}\r</pre>\r\n",
         "parameters": [
           {
             "name": "accountId",
@@ -1174,6 +1174,26 @@
             "description": "The account's ID.",
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "startOffset",
+            "in": "path",
+            "description": "The offset of classroom to start getting data.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "path",
+            "description": "The number of classrooms to get.",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -1247,6 +1267,155 @@
           },
           "401": {
             "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/classroom/search": {
+      "post": {
+        "tags": [
+          "Classroom"
+        ],
+        "summary": "For student. To get all classrooms for browsing, excluding the ones created by its teacher role, and the ones they already enrolled in.\r\nClassrooms only have basic data from the Classroom table.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /classroom/search\rHeaders\r    \"AccountId\": string\r    \"Authorization\": \"Bearer token\"\rBody\r    {\r        classroomName: string,\r        teacherName: string\r    }\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r[{\r    id: string,\r    teacherId: string,\r    teacherName: string,\r    className: string,\r    price: number,\r    enrolmentsCount: number,\r    classroomDetail: null\r}]\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "accountId",
+            "in": "header",
+            "description": "The account's ID.",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The data of classroom name and teacher name to search.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchData"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchData"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          },
+          "401": {
+            "description": "Authorization failed: expired or mismatched or insufficient."
+          }
+        }
+      }
+    },
+    "/data/trigger-emr-mapper": {
+      "get": {
+        "tags": [
+          "DataGenerator"
+        ],
+        "summary": "For guest. To trigger AWS EMR Mapper inside EMR Master Cluster from client-side.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /data/trigger-emr-mapper\r</pre>\r\n",
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/data/trigger-emr-reducer": {
+      "get": {
+        "tags": [
+          "DataGenerator"
+        ],
+        "summary": "For guest. To trigger AWS EMR Reducer inside EMR Master Cluster from client-side.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /data/trigger-emr-reducer\r</pre>\r\n",
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/data/get-statistics": {
+      "get": {
+        "tags": [
+          "DataGenerator"
+        ],
+        "summary": "For guest. To get the statistics results after the EMR Mapper-Reducer have both finished their processing jobs.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /data/get-statistics\r</pre>\r\n\r\n\r\nReturned object signature:\r\n\r\n<pre>\r{\r    progress: {\r        id: string,\r        timestamp: datetime,\r        mapperDone: boolean,\r        reducerDone: boolean\r    },\r    statistics: [{\r        id: string,\r        timestamp: datetime,\r        range50: number,\r        range100: number,\r        range250: number,\r        range500: number,\r        range1000: number,\r        range1001: number\r    }]\r}\r</pre>\r\n",
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/data/generate-teachers-and-classrooms": {
+      "get": {
+        "tags": [
+          "DataGenerator"
+        ],
+        "summary": "For guest. To generate data for SQL Server database. This service generates teacher-related data: Account, AccountRole, Teacher, Student (not used), Classroom.\r\nReturns array of the generated classroom IDs.",
+        "description": "Request signature:\r\n\r\n<pre>\rGET /data/generate-teachers-and-classrooms\r</pre>\r\n",
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
+          }
+        }
+      }
+    },
+    "/data/generate-students-and-enrolments/{saveToDbDirectly}": {
+      "post": {
+        "tags": [
+          "DataGenerator"
+        ],
+        "summary": "For guest. To generate data for SQL Server database. This service generates student-related data: Account, AccountRole, Teacher (not used), Student, Enrolment, Invoice.\r\nReturns the generated INSERT statements for the enrolments in FileResult if successful.",
+        "description": "Request signature:\r\n\r\n<pre>\rPOST /data/generate-students-and-enrolments/{save}\r</pre>\r\n",
+        "parameters": [
+          {
+            "name": "saveToDbDirectly",
+            "in": "path",
+            "description": "To indicate if the generated data should be inserted directly to SQL Server database or returned in Response as the INSERT statements.\r\nSet `{saveToDbDirectly == 0}` to get the INSERT statements, set `{saveToDbDirectly == 1}` to insert directly (EXTREMELY time/resource-consuming, not recommended).",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "description": "The generated classroom IDs taken from the stage of generating teachers.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/DataExport"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The request was successfully processed."
           }
         }
       }
@@ -2388,6 +2557,20 @@
             "nullable": true
           },
           "htmlContent": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SearchData": {
+        "type": "object",
+        "properties": {
+          "classroomName": {
+            "type": "string",
+            "nullable": true
+          },
+          "teacherName": {
             "type": "string",
             "nullable": true
           }
