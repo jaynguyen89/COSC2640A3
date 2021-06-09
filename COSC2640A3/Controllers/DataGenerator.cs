@@ -30,10 +30,10 @@ namespace COSC2640A3.Controllers {
         private readonly IEmrService _emrService;
         private readonly IDynamoService _dynamoService;
         
-        private const int NumberOfTeachers = 3000;
-        private const int MinNumberOfClassroomsPerTeacher = 5;
-        private const int MaxNumberOfClassroomsPerTeacher = 10;
-        private const int NumberOfStudents = 100;
+        private const int NumberOfTeachers = 5000;
+        private const int MinNumberOfClassroomsPerTeacher = 7;
+        private const int MaxNumberOfClassroomsPerTeacher = 15;
+        private const int NumberOfStudents = 100000;
         private const int MinPrice = 1000;
         private const int MaxPrice = 150000;
 
@@ -469,7 +469,7 @@ namespace COSC2640A3.Controllers {
             if (className.Length > 70) className = className[..70];
 
             className = className.First().ToString().ToUpper() + className[1..];
-            var capacities = new short[] { 10,20,30,40,50 };//new short[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 };
+            var capacities = new short[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 }; // new short[] { 10,20,30,40,50 };
 
             return new Classroom {
                 TeacherId = teacherId,
