@@ -20,6 +20,7 @@ namespace COSC2640A3.DbContexts
         public virtual DbSet<AccountRole> AccountRoles { get; set; }
         public virtual DbSet<ClassContent> ClassContents { get; set; }
         public virtual DbSet<Classroom> Classrooms { get; set; }
+        public virtual DbSet<DataCache> DataCaches { get; set; }
         public virtual DbSet<Enrolment> Enrolments { get; set; }
         public virtual DbSet<Invoice> Invoices { get; set; }
         public virtual DbSet<Student> Students { get; set; }
@@ -33,7 +34,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Account");
 
-                entity.HasIndex(e => e.Id, "UQ__Account__3214EC067682C7CC")
+                entity.HasIndex(e => e.Id, "UQ__Account__3214EC066CD9ABBE")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -65,7 +66,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("AccountRole");
 
-                entity.HasIndex(e => e.Id, "UQ__AccountR__3214EC0656316ECA")
+                entity.HasIndex(e => e.Id, "UQ__AccountR__3214EC06FAF09F38")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -85,7 +86,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("ClassContent");
 
-                entity.HasIndex(e => e.Id, "UQ__ClassCon__3214EC06CEE34AD8")
+                entity.HasIndex(e => e.Id, "UQ__ClassCon__3214EC06408626BD")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -113,7 +114,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Classroom");
 
-                entity.HasIndex(e => e.Id, "UQ__Classroo__3214EC06E8F750E7")
+                entity.HasIndex(e => e.Id, "UQ__Classroo__3214EC060564C9DC")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -141,11 +142,33 @@ namespace COSC2640A3.DbContexts
                     .HasForeignKey(d => d.TeacherId);
             });
 
+            modelBuilder.Entity<DataCache>(entity =>
+            {
+                entity.ToTable("DataCache");
+
+                entity.HasIndex(e => e.Id, "UQ__DataCach__3214EC0634AB2040")
+                    .IsUnique();
+
+                entity.Property(e => e.Id)
+                    .HasMaxLength(50)
+                    .HasDefaultValueSql("(newid())");
+
+                entity.Property(e => e.DataId).HasMaxLength(50);
+
+                entity.Property(e => e.DataKey).HasMaxLength(50);
+
+                entity.Property(e => e.DataType).HasMaxLength(50);
+
+                entity.Property(e => e.SearchInput).HasMaxLength(1000);
+
+                entity.Property(e => e.SerializedData).IsRequired();
+            });
+
             modelBuilder.Entity<Enrolment>(entity =>
             {
                 entity.ToTable("Enrolment");
 
-                entity.HasIndex(e => e.Id, "UQ__tmp_ms_x__3214EC06790D331D")
+                entity.HasIndex(e => e.Id, "UQ__Enrolmen__3214EC0642A230B8")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -183,7 +206,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Invoice");
 
-                entity.HasIndex(e => e.Id, "UQ__Invoice__3214EC0602052DA4")
+                entity.HasIndex(e => e.Id, "UQ__Invoice__3214EC064F547255")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -207,7 +230,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Student");
 
-                entity.HasIndex(e => e.Id, "UQ__Student__3214EC06751F50E0")
+                entity.HasIndex(e => e.Id, "UQ__Student__3214EC067F00F75F")
                     .IsUnique();
 
                 entity.Property(e => e.Id)
@@ -233,7 +256,7 @@ namespace COSC2640A3.DbContexts
             {
                 entity.ToTable("Teacher");
 
-                entity.HasIndex(e => e.Id, "UQ__Teacher__3214EC06F70D544D")
+                entity.HasIndex(e => e.Id, "UQ__Teacher__3214EC06BF8579C8")
                     .IsUnique();
 
                 entity.Property(e => e.Id)

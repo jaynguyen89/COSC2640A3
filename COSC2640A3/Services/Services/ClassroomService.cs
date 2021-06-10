@@ -13,20 +13,19 @@ using Helper;
 using Helper.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace COSC2640A3.Services.Services {
 
-    public sealed class ClassroomService : IClassroomService {
+    public sealed class ClassroomService : ServiceBase, IClassroomService {
         
         private readonly ILogger<ClassroomService> _logger;
-        private readonly MainDbContext _dbContext;
 
         public ClassroomService(
             ILogger<ClassroomService> logger,
             MainDbContext dbContext
-        ) {
+        ) : base(dbContext) {
             _logger = logger;
-            _dbContext = dbContext;
         }
 
         public async Task<string> InsertNewClassroom(Classroom classroom) {
@@ -262,6 +261,14 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<ClassroomVM[]> SearchClassroomsExcludingFrom(string teacherId, string[] classroomIds, SearchData searchData) {
             try {
+                var cachedClassroomsByTeacherName = await GetCache<ClassroomVM[]>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.TeacherName });
+                var cachedClassroomsByClassroomName = await GetCache<ClassroomVM[]>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.ClassroomName });
+                
+                if (cachedClassroomsByTeacherName is not null || cachedClassroomsByClassroomName is not null)
+                    return (cachedClassroomsByTeacherName ?? Array.Empty<ClassroomVM>())
+                           .Union(cachedClassroomsByClassroomName ?? Array.Empty<ClassroomVM>())
+                           .ToArray();
+
                 var enumerableClassrooms = await _dbContext.Classrooms
                                                            .Where(classroom => !classroom.TeacherId.Equals(teacherId) && !classroomIds.Contains(classroom.Id))
                                                            .Select(classroom => new {
@@ -272,12 +279,12 @@ namespace COSC2640A3.Services.Services {
 
                 var classroomsByTeacherName = Array.Empty<ClassroomVM>();
                 if (Helpers.IsProperString(searchData.TeacherName)) {
-                    var teacherNameKeywords = searchData.TeacherName.ToLower().Split(SharedConstants.MonoSpace);
+                    var teacherNameKeywords = searchData.TeacherName.Split(SharedConstants.MonoSpace);
 
                     classroomsByTeacherName = enumerableClassrooms
                                               .Where(entry =>
-                                                  entry.TeacherName.ToLower().Contains(searchData.TeacherName) ||
-                                                  teacherNameKeywords.Any(entry.TeacherName.ToLower().Contains)
+                                                  entry.TeacherName.Contains(searchData.TeacherName) ||
+                                                  teacherNameKeywords.Any(entry.TeacherName.Contains)
                                               )
                                               .Select(entry => {
                                                   var classroomVm = (ClassroomVM) entry.Classroom;
@@ -288,17 +295,33 @@ namespace COSC2640A3.Services.Services {
 
                 if (!Helpers.IsProperString(searchData.ClassroomName)) return classroomsByTeacherName;
                 
-                var classroomNameKeywords = searchData.ClassroomName.ToLower().Split(SharedConstants.MonoSpace);
+                var classroomNameKeywords = searchData.ClassroomName.Split(SharedConstants.MonoSpace);
                 var classroomsByClassName = enumerableClassrooms
                                             .Where(entry =>
                                                 entry.Classroom.ClassName.Contains(searchData.ClassroomName) ||
-                                                classroomNameKeywords.Any(entry.Classroom.ClassName.ToLower().Contains)
+                                                classroomNameKeywords.Any(entry.Classroom.ClassName.Contains)
                                             )
                                             .Select(entry => {
                                                 var classroomVm = (ClassroomVM) entry.Classroom;
                                                 classroomVm.TeacherName = entry.TeacherName;
                                                 return classroomVm;
                                             }).ToArray();
+
+                if (classroomsByTeacherName.Length != 0)
+                    _ = await SaveCache(new DataCache {
+                        DataType = $"{ nameof(ClassroomVM) }[]",
+                        SearchInput = searchData.TeacherName,
+                        SerializedData = JsonConvert.SerializeObject(classroomsByTeacherName),
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    });
+                
+                if (classroomsByClassName.Length != 0)
+                    _ = await SaveCache(new DataCache {
+                        DataType = $"{ nameof(ClassroomVM) }[]",
+                        SearchInput = searchData.ClassroomName,
+                        SerializedData = JsonConvert.SerializeObject(classroomsByClassName),
+                        Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                    });
                 
                 return classroomsByTeacherName.Union(classroomsByClassName).ToArray();
             }

@@ -8,20 +8,19 @@ using COSC2640A3.ViewModels.Exports;
 using COSC2640A3.ViewModels.Features;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace COSC2640A3.Services.Services {
 
-    public sealed class EnrolmentService : IEnrolmentService {
+    public sealed class EnrolmentService : ServiceBase, IEnrolmentService {
         
         private readonly ILogger<EnrolmentService> _logger;
-        private readonly MainDbContext _dbContext;
 
         public EnrolmentService(
             ILogger<EnrolmentService> logger,
             MainDbContext dbContext
-        ) {
+        ) : base(dbContext) {
             _logger = logger;
-            _dbContext = dbContext;
         }
 
         public async Task<string> InsertNewEnrolment(Enrolment enrolment) {
@@ -96,6 +95,9 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<EnrolmentVM[]> GetStudentEnrolmentsByAccountId(string accountId) {
             try {
+                var cachedData = await GetCache<EnrolmentVM[]>(new DataCache { DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account) });
+                if (cachedData is not null) return cachedData;
+                
                 var enrolmentData = await _dbContext.Enrolments
                                        .Where(enrolment => enrolment.Student.AccountId.Equals(accountId))
                                        .Select(enrolment => new {
@@ -106,7 +108,7 @@ namespace COSC2640A3.Services.Services {
                                        })
                                        .ToArrayAsync();
 
-                return enrolmentData
+                var enrolments = enrolmentData
                        .Select(enrolmentInfo => {
                            var enrolment = enrolmentInfo.envolmentVm;
                            enrolment.Classroom = enrolmentInfo.classroom;
@@ -115,6 +117,14 @@ namespace COSC2640A3.Services.Services {
                            return enrolment;
                        })
                        .ToArray();
+
+                _ = await SaveCache(new DataCache {
+                    DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account),
+                    SerializedData = JsonConvert.SerializeObject(enrolments),
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                });
+
+                return enrolments;
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetStudentEnrolmentsByAccountId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
@@ -162,14 +172,18 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public EnrolmentExportVM[] GetEnrolmentDataForExportBy(string[] classroomIds) {
+        public async Task<EnrolmentExportVM[]> GetEnrolmentDataForExportBy(string[] classroomIds) {
             try {
+                var cacheKey = classroomIds.Aggregate((x, y) => $"{ x },{ y }");
+                var cachedData = await GetCache<EnrolmentExportVM[]>(new DataCache { DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey });
+                if (cachedData is not null) return cachedData;
+                
                 var queryableEnrolments = _dbContext.Enrolments
                                                     .Where(enrolment => classroomIds.Contains(enrolment.ClassroomId))
-                                                    .Select(enrolment => new { ClassroomId = enrolment.ClassroomId, Enrolment = enrolment, Invoice = enrolment.Invoice })
+                                                    .Select(enrolment => new { enrolment.ClassroomId, Enrolment = enrolment, enrolment.Invoice })
                                                     .AsEnumerable();
                 
-                return queryableEnrolments
+                var enrolmentData = queryableEnrolments
                        .GroupBy(enrolment => enrolment.ClassroomId)
                        .Select(group => new EnrolmentExportVM {
                            ClassroomId = group.Key, 
@@ -180,6 +194,14 @@ namespace COSC2640A3.Services.Services {
 
                            }).ToArray()
                        }).ToArray();
+
+                _ = await SaveCache(new DataCache {
+                    DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey,
+                    SerializedData = JsonConvert.SerializeObject(enrolmentData),
+                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                });
+
+                return enrolmentData;
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(EnrolmentService) }.{ nameof(GetEnrolmentDataForExportBy) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");

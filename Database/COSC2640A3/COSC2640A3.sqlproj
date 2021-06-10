@@ -66,6 +66,7 @@
     <Build Include="schema\Enrolment.sql" />
     <Build Include="schema\Invoice.sql" />
     <Build Include="schema\ClassContent.sql" />
+    <Build Include="schema\DataCache.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="publish\COSC2640A3.local.publish.xml" />
