@@ -9,7 +9,7 @@
             Used for translating sentences/paragraphs and words.
             </summary>
         </member>
-        <member name="M:COSC2640A3.Controllers.AccountController.UpdateStudentDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateStudentDetails(System.String,COSC2640A3.Bindings.StudentDetail)">
             <summary>
             For student. Update student data including school name, faculty, and personal URL.
             </summary>
@@ -79,7 +79,7 @@
             <response code="200">The request was successfully processed.</response>
             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         </member>
-        <member name="M:COSC2640A3.Controllers.AccountController.UpdateTeacherDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateTeacherDetails(System.String,COSC2640A3.Bindings.TeacherDetail)">
             <summary>
             For teacher. Update teacher data including company, jobTitle, and personal website.
             </summary>

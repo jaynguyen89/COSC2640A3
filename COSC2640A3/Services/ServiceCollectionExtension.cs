@@ -4,9 +4,9 @@ using COSC2640A3.Services.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Options;
 
-namespace COSC2640A3.Services {
+namespace COSC2640A3.Services
+{
 
     public static class ServiceCollectionExtension {
 

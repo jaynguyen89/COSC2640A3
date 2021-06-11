@@ -20,7 +20,7 @@ export const sendGoogleCheckoutRequest = (
     auth: IAuthUser, googleAuth: IStripeAuthorization, enrolmentId: string
 ): Promise<IResponse | IIssue> => {
     return sendRequestForResult(
-        `${ PAYMENT_ENDPOINT }paypal/${ enrolmentId }`,
+        `${ PAYMENT_ENDPOINT }google/${ enrolmentId }`,
         auth,
         googleAuth,
         null
@@ -31,7 +31,7 @@ export const sendCardCheckoutRequest = (
     auth: IAuthUser, cardAuth: IStripeAuthorization, enrolmentId: string
 ): Promise<IResponse | IIssue> => {
     return sendRequestForResult(
-        `${ PAYMENT_ENDPOINT }paypal/${ enrolmentId }`,
+        `${ PAYMENT_ENDPOINT }card/${ enrolmentId }`,
         auth,
         cardAuth,
         null

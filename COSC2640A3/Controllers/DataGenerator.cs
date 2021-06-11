@@ -30,10 +30,10 @@ namespace COSC2640A3.Controllers {
         private readonly IEmrService _emrService;
         private readonly IDynamoService _dynamoService;
         
-        private const int NumberOfTeachers = 5000;
+        private const int NumberOfTeachers = 100;
         private const int MinNumberOfClassroomsPerTeacher = 5;
         private const int MaxNumberOfClassroomsPerTeacher = 10;
-        private const int NumberOfStudents = 100000;
+        private const int NumberOfStudents = 1000;
         private const int MinPrice = 1000;
         private const int MaxPrice = 150000;
 
@@ -260,7 +260,10 @@ namespace COSC2640A3.Controllers {
                 
                 var exportedFile = new MemoryStream();
                 var writer = new StreamWriter(exportedFile);
-                foreach (var statement in statements) await writer.WriteLineAsync(statement);
+                foreach (var statement in statements) {
+                    await writer.WriteLineAsync(statement);
+                    //System.IO.File.AppendAllText(@"D:\Workspace\COSC2640\COSC2640A3\COSC2640A3\Controllers\statements.sql", $"{ statement }\n");
+                }
                 
                 await writer.FlushAsync();
                 exportedFile.Position = 0;

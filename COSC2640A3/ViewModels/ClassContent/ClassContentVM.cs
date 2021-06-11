@@ -17,6 +17,15 @@ namespace COSC2640A3.ViewModels.ClassContent {
         
         public string HtmlContent { get; set; }
 
+        public ClassContentVM() {
+            Id = string.Empty;
+            Videos = Array.Empty<FileVM>();
+            Audios = Array.Empty<FileVM>();
+            Photos = Array.Empty<FileVM>();
+            Attachments = Array.Empty<FileVM>();
+            HtmlContent = string.Empty;
+        }
+
         public static implicit operator ClassContentVM(Models.ClassContent classContent) {
             return new() {
                 Id = classContent.Id,

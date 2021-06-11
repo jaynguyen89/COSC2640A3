@@ -70,34 +70,34 @@ namespace COSC2640A3.Services.Services {
                 if (Helpers.IsProperString(cache.DataType) && Helpers.IsProperString(cache.DataId) && Helpers.IsProperString(cache.DataKey))
                     entry = await _dbContext.DataCaches
                                             .Where(c =>
-                                                c.DataType.Equals(c.DataType) &&
-                                                c.DataId.Equals(c.DataId) &&
-                                                c.DataKey.Equals(c.DataKey)
+                                                c.DataType.Equals(cache.DataType) &&
+                                                c.DataId.Equals(cache.DataId) &&
+                                                c.DataKey.Equals(cache.DataKey)
                                             )
                                             .FirstOrDefaultAsync();
                 else if (Helpers.IsProperString(cache.DataType) && Helpers.IsProperString(cache.DataId))
                     entry = await _dbContext.DataCaches
                                             .Where(c =>
-                                                c.DataType.Equals(c.DataType) &&
-                                                c.DataId.Equals(c.DataId)
+                                                c.DataType.Equals(cache.DataType) &&
+                                                c.DataId.Equals(cache.DataId)
                                             )
                                             .FirstOrDefaultAsync();
                 else if (Helpers.IsProperString(cache.DataType) && Helpers.IsProperString(cache.DataKey))
                     entry = await _dbContext.DataCaches
                                             .Where(c =>
-                                                c.DataType.Equals(c.DataType) &&
-                                                c.DataKey.Equals(c.DataKey)
+                                                c.DataType.Equals(cache.DataType) &&
+                                                c.DataKey.Equals(cache.DataKey)
                                             )
                                             .FirstOrDefaultAsync();
                 else if (Helpers.IsProperString(cache.DataType) && Helpers.IsProperString(cache.SearchInput))
                     entry = await _dbContext.DataCaches
                                             .Where(c =>
                                                 c.DataType.Equals(cache.DataType) &&
-                                                c.SearchInput.Equals(c.SearchInput)
+                                                c.SearchInput.Equals(cache.SearchInput)
                                             )
                                             .FirstOrDefaultAsync();
                 else if (Helpers.IsProperString(cache.DataKey))
-                    entry = await _dbContext.DataCaches.Where(c => c.DataKey.Equals(c.DataKey)).FirstOrDefaultAsync();
+                    entry = await _dbContext.DataCaches.Where(c => c.DataKey.Equals(cache.DataKey)).FirstOrDefaultAsync();
 
                 return entry;
             }

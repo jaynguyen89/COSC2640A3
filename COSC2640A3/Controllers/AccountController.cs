@@ -68,7 +68,7 @@ namespace COSC2640A3.Controllers {
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Student)]
         [HttpPut("update-student")]
-        public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] AccountDetail studentDetail) {
+        public async Task<JsonResult> UpdateStudentDetails([FromHeader] string accountId,[FromBody] StudentDetail studentDetail) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateStudentDetails) }: Service starts.");
 
             var errors = studentDetail.VerifyDetail();
@@ -178,7 +178,7 @@ namespace COSC2640A3.Controllers {
         /// <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         [RoleAuthorize(Role.Teacher)]
         [HttpPut("update-teacher")]
-        public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] AccountDetail teacherDetail) {
+        public async Task<JsonResult> UpdateTeacherDetails([FromHeader] string accountId,[FromBody] TeacherDetail teacherDetail) {
             _logger.LogInformation($"{ nameof(AccountController) }.{ nameof(UpdateTeacherDetails) }: Service starts.");
             
             var errors = teacherDetail.VerifyDetail(false);

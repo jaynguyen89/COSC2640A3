@@ -210,9 +210,10 @@ namespace COSC2640A3.Services.Services {
             }
         }
 
-        public async Task<bool?> AreTheseClassroomsBelongedTo(string accountId) {
+        public async Task<bool?> AreTheseClassroomsBelongedTo(string accountId, string[] classroomIds) {
             try {
-                return await _dbContext.Classrooms.AllAsync(classroom => classroom.Teacher.AccountId.Equals(accountId));
+                var classroomIdsByAccount = await _dbContext.Classrooms.Where(classroom => classroom.Teacher.AccountId.Equals(accountId)).Select(classroom => classroom.Id).ToArrayAsync();
+                return classroomIds.All(classroomIdsByAccount.Contains);
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(ClassroomService) }.{ nameof(AreTheseClassroomsBelongedTo) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");
@@ -261,12 +262,12 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<ClassroomVM[]> SearchClassroomsExcludingFrom(string teacherId, string[] classroomIds, SearchData searchData) {
             try {
-                var cachedClassroomsByTeacherName = await GetCache<ClassroomVM[]>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.TeacherName });
-                var cachedClassroomsByClassroomName = await GetCache<ClassroomVM[]>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.ClassroomName });
+                var cachedClassroomsByTeacherName = await GetCache<List<ClassroomVM>>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.TeacherName });
+                var cachedClassroomsByClassroomName = await GetCache<List<ClassroomVM>>(new DataCache { DataType = $"{ nameof(ClassroomVM) }[]", SearchInput = searchData.ClassroomName });
                 
                 if (cachedClassroomsByTeacherName is not null || cachedClassroomsByClassroomName is not null)
-                    return (cachedClassroomsByTeacherName ?? Array.Empty<ClassroomVM>())
-                           .Union(cachedClassroomsByClassroomName ?? Array.Empty<ClassroomVM>())
+                    return (cachedClassroomsByTeacherName?.ToArray() ?? Array.Empty<ClassroomVM>())
+                           .Union(cachedClassroomsByClassroomName?.ToArray() ?? Array.Empty<ClassroomVM>())
                            .ToArray();
 
                 var enumerableClassrooms = await _dbContext.Classrooms

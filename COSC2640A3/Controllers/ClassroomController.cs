@@ -97,6 +97,7 @@ namespace COSC2640A3.Controllers {
 
             classroom.TeacherId = teacher.Id;
             classroom.IsActive = true;
+            classroom.CreatedOn = DateTime.UtcNow;
 
             await _contextService.StartTransaction();
             var classroomId = await _classroomService.InsertNewClassroom(classroom);

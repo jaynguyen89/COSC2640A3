@@ -130,11 +130,3 @@ export const defaultPasswordReset: IPasswordReset = {
     passwordConfirm: EMPTY_STRING,
     recaptchaToken: EMPTY_STRING
 }
-
-export const verifyPasswordReset = (data: IPasswordReset): boolean => {
-    return data.accountId.length !== 0 &&
-        data.password.length !== 0 &&
-        data.passwordConfirm.length !== 0 &&
-        data.recoveryToken.length !== 0 &&
-        data.recaptchaToken.length !== 0;
-}

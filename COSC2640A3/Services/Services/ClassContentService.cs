@@ -67,7 +67,7 @@ namespace COSC2640A3.Services.Services {
             try {
                 var classContent = await _dbContext.ClassContents
                                                    .SingleOrDefaultAsync(content => content.ClassroomId.Equals(classroomId));
-                return classContent;
+                return classContent ?? new ClassContentVM();
             }
             catch (ArgumentNullException e) {
                 _logger.LogWarning($"{ nameof(ClassContentService) }.{ nameof(GetClassContentVmByClassroomId) } - { nameof(ArgumentNullException) }: { e.Message }\n\n{ e.StackTrace }");

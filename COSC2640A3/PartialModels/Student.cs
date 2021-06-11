@@ -4,9 +4,9 @@ namespace COSC2640A3.Models {
 
     public partial class Student {
 
-        public void UpdateDetail(AccountDetail detail) {
-            SchoolName = detail.Workplace;
-            Faculty = detail.Department;
+        public void UpdateDetail(StudentDetail detail) {
+            SchoolName = detail.SchoolName;
+            Faculty = detail.Faculty;
             PersonalUrl = detail.PersonalUrl;
         }
     }

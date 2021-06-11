@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using COSC2640A3.DbContexts;
@@ -95,8 +96,8 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<EnrolmentVM[]> GetStudentEnrolmentsByAccountId(string accountId) {
             try {
-                var cachedData = await GetCache<EnrolmentVM[]>(new DataCache { DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account) });
-                if (cachedData is not null) return cachedData;
+                // var cachedData = await GetCache<List<EnrolmentVM>>(new DataCache { DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account) });
+                // if (cachedData is not null) return cachedData.ToArray();
                 
                 var enrolmentData = await _dbContext.Enrolments
                                        .Where(enrolment => enrolment.Student.AccountId.Equals(accountId))
@@ -118,11 +119,11 @@ namespace COSC2640A3.Services.Services {
                        })
                        .ToArray();
 
-                _ = await SaveCache(new DataCache {
-                    DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account),
-                    SerializedData = JsonConvert.SerializeObject(enrolments),
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                });
+                // _ = await SaveCache(new DataCache {
+                //     DataType = $"{ nameof(EnrolmentVM) }[]", DataId = accountId, DataKey = nameof(Account),
+                //     SerializedData = JsonConvert.SerializeObject(enrolments),
+                //     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                // });
 
                 return enrolments;
             }
@@ -174,9 +175,9 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<EnrolmentExportVM[]> GetEnrolmentDataForExportBy(string[] classroomIds) {
             try {
-                var cacheKey = classroomIds.Aggregate((x, y) => $"{ x },{ y }");
-                var cachedData = await GetCache<EnrolmentExportVM[]>(new DataCache { DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey });
-                if (cachedData is not null) return cachedData;
+                // var cacheKey = classroomIds.Aggregate((x, y) => $"{ x },{ y }");
+                // var cachedData = await GetCache<List<EnrolmentExportVM>>(new DataCache { DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey });
+                // if (cachedData is not null) return cachedData.ToArray();
                 
                 var queryableEnrolments = _dbContext.Enrolments
                                                     .Where(enrolment => classroomIds.Contains(enrolment.ClassroomId))
@@ -195,11 +196,11 @@ namespace COSC2640A3.Services.Services {
                            }).ToArray()
                        }).ToArray();
 
-                _ = await SaveCache(new DataCache {
-                    DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey,
-                    SerializedData = JsonConvert.SerializeObject(enrolmentData),
-                    Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
-                });
+                // _ = await SaveCache(new DataCache {
+                //     DataType = $"{ nameof(EnrolmentExportVM) }[]", SearchInput = cacheKey,
+                //     SerializedData = JsonConvert.SerializeObject(enrolmentData),
+                //     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                // });
 
                 return enrolmentData;
             }

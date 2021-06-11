@@ -154,6 +154,36 @@ const reducer = produce((state, action) => {
             state.disableTfa.payload = null;
             state.disableTfa.error = action.error;
             return;
+        case accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_SENT:
+            state.updateStudent.action = accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_SENT;
+            state.updateStudent.payload = null;
+            state.updateStudent.error = null;
+            return;
+        case accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_SUCCESS:
+            state.updateStudent.action = accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_SUCCESS;
+            state.updateStudent.payload = action.payload;
+            state.updateStudent.error = null;
+            return;
+        case accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_FAILED:
+            state.updateStudent.action = accountConstants.UPDATE_STUDENT_DETAIL_REQUEST_FAILED;
+            state.updateStudent.payload = null;
+            state.updateStudent.error = action.error;
+            return;
+        case accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_SENT:
+            state.updateTeacher.action = accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_SENT;
+            state.updateTeacher.payload = null;
+            state.updateTeacher.error = null;
+            return;
+        case accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_SUCCESS:
+            state.updateTeacher.action = accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_SUCCESS;
+            state.updateTeacher.payload = action.payload;
+            state.updateTeacher.error = null;
+            return;
+        case accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_FAILED:
+            state.updateTeacher.action = accountConstants.UPDATE_TEACHER_DETAIL_REQUEST_FAILED;
+            state.updateTeacher.payload = null;
+            state.updateTeacher.error = action.error;
+            return;
         default:
             return;
     }
