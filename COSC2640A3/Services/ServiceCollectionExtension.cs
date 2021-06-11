@@ -15,7 +15,7 @@ namespace COSC2640A3.Services
             services.AddScoped<MainDbContext>();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            var isDevelopment = configuration.GetSection($"{nameof(COSC2640A3)}Environment").Value.Equals("Development");
+            var isDevelopment = false;// configuration.GetSection($"{nameof(COSC2640A3)}Environment").Value.Equals("Development");
             
             services.AddStackExchangeRedisCache(options => {
                 options.Configuration = configuration.GetValue<string>(

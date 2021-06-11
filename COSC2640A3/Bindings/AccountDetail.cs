@@ -10,9 +10,7 @@ namespace COSC2640A3.Bindings {
     }
 
     public sealed class StudentDetail : AccountDetail {
-        
-        public string Id { get; set; } // Student ID, not Account ID
-        
+
         public string SchoolName { get; set; }
         
         public string Faculty { get; set; }

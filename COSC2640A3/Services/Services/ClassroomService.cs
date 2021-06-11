@@ -284,8 +284,8 @@ namespace COSC2640A3.Services.Services {
 
                     classroomsByTeacherName = enumerableClassrooms
                                               .Where(entry =>
-                                                  entry.TeacherName.Contains(searchData.TeacherName) ||
-                                                  teacherNameKeywords.Any(entry.TeacherName.Contains)
+                                                  entry.TeacherName.ToLower().Contains(searchData.TeacherName) ||
+                                                  teacherNameKeywords.Any(entry.TeacherName.ToLower().Contains)
                                               )
                                               .Select(entry => {
                                                   var classroomVm = (ClassroomVM) entry.Classroom;
@@ -299,8 +299,8 @@ namespace COSC2640A3.Services.Services {
                 var classroomNameKeywords = searchData.ClassroomName.Split(SharedConstants.MonoSpace);
                 var classroomsByClassName = enumerableClassrooms
                                             .Where(entry =>
-                                                entry.Classroom.ClassName.Contains(searchData.ClassroomName) ||
-                                                classroomNameKeywords.Any(entry.Classroom.ClassName.Contains)
+                                                entry.Classroom.ClassName.ToLower().Contains(searchData.ClassroomName) ||
+                                                classroomNameKeywords.Any(entry.Classroom.ClassName.ToLower().Contains)
                                             )
                                             .Select(entry => {
                                                 var classroomVm = (ClassroomVM) entry.Classroom;

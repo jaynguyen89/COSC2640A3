@@ -13,7 +13,7 @@ namespace COSC2640A3.Services.Services {
 
         protected readonly MainDbContext _dbContext;
 
-        private const int DefaultCacheExpirationMinutes = 5;
+        private const int DefaultCacheExpirationMinutes = 2;
 
         protected ServiceBase(MainDbContext dbContext) {
             _dbContext = dbContext;

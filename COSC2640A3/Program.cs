@@ -18,6 +18,7 @@ namespace COSC2640A3 {
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
                 .ConfigureAppConfiguration(webBuilder => {
+                    webBuilder.AddJsonFile("appsettings.json", true, true);
                     webBuilder.AddEnvironmentVariables();
                     _ = webBuilder.AddSystemsManager(
                         $"{ SharedConstants.FSlash }{ nameof(COSC2640A3) }",

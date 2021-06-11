@@ -20,13 +20,15 @@ namespace COSC2640A3.DbContexts {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             base.OnConfiguring(optionsBuilder);
 
-            var connectionString =
-                _configuration.GetSection($"{ nameof(COSC2640A3) }Environment").Value.Equals("Development")
-                    ? _options.Value.DevelopmentConnectionString
-                    : _options.Value.ProductionConnectionString;
+            var connectionString = _options.Value.ProductionConnectionString;
+            //_configuration.GetSection($"{ nameof(COSC2640A3) }Environment").Value.Equals("Development")
+            //? _options.Value.DevelopmentConnectionString
+            //: _options.Value.ProductionConnectionString;
 
             if (!optionsBuilder.IsConfigured)
                 optionsBuilder.UseSqlServer(connectionString);
         }
     }
 }
+
+//Scaffold-DbContext "Server=(localdb)\MSSQLLocalDB;Database=COSC2640A3;Trusted_Connection=True;" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force -Context MainDbContext

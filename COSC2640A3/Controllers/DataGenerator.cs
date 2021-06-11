@@ -30,10 +30,10 @@ namespace COSC2640A3.Controllers {
         private readonly IEmrService _emrService;
         private readonly IDynamoService _dynamoService;
         
-        private const int NumberOfTeachers = 100;
-        private const int MinNumberOfClassroomsPerTeacher = 5;
-        private const int MaxNumberOfClassroomsPerTeacher = 10;
-        private const int NumberOfStudents = 1000;
+        private const int NumberOfTeachers = 5;
+        private const int MinNumberOfClassroomsPerTeacher = 1;
+        private const int MaxNumberOfClassroomsPerTeacher = 5;
+        private const int NumberOfStudents = 50;
         private const int MinPrice = 1000;
         private const int MaxPrice = 150000;
 
@@ -472,13 +472,13 @@ namespace COSC2640A3.Controllers {
             if (className.Length > 70) className = className[..70];
 
             className = className.First().ToString().ToUpper() + className[1..];
-            var capacities = new short[] { 50, 100, 150, 200, 250, 300, 350, 400, 450, 500 }; //new short[] { 10,20,30,40,50 };
+            var price = (decimal) (Helpers.GetRandomNumberInRangeInclusive(MaxPrice, MinPrice) * 1.0 / 100);
 
             return new Classroom {
                 TeacherId = teacherId,
                 ClassName = className,
-                Capacity = capacities[Helpers.GetRandomNumberInRangeInclusive(capacities.Length - 1)],
-                Price = (decimal) (Helpers.GetRandomNumberInRangeInclusive(MaxPrice, MinPrice) * 1.0/100),
+                Capacity = GetRandomNumberOfCapacity(price),
+                Price = price,
                 CommencedOn = Helpers.GetRandomDateTime(DateTime.UtcNow.AddDays(60), DateTime.UtcNow.AddDays(90)),
                 Duration = (byte) Helpers.GetRandomNumberInRangeInclusive(10, 1),
                 DurationUnit = (byte) SharedEnums.DurationUnit.Weeks,
@@ -508,18 +508,34 @@ namespace COSC2640A3.Controllers {
             return marks.ToArray();
         }
 
+        private static short GetRandomNumberOfCapacity(decimal price) {
+            Dictionary<KeyValuePair<decimal, decimal>, short[]> capacityRanges = new() {
+                { new KeyValuePair<decimal, decimal>(0, 50), new short[] { 30,34,38 } },
+                { new KeyValuePair<decimal, decimal>(50, 100), new short[] { 26,30,34 } },
+                { new KeyValuePair<decimal, decimal>(100, 250), new short[] { 22,26,30 } },
+                { new KeyValuePair<decimal, decimal>(250, 500), new short[] { 18,22,26 } },
+                { new KeyValuePair<decimal, decimal>(500, 750), new short[] { 14,18,22 } },
+                { new KeyValuePair<decimal, decimal>(750, 1000), new short[] { 10,14,18 } },
+                { new KeyValuePair<decimal, decimal>(1000, 1250), new short[] { 6,10,14 } },
+                { new KeyValuePair<decimal, decimal>(1250, 1500), new short[] { 2,6,10 } }
+            };
+
+            var capacities = capacityRanges.Where(pair => price >= pair.Key.Key && price <= pair.Key.Value).Select(pair => pair.Value).First();
+            return capacities[Helpers.GetRandomNumberInRangeInclusive(capacities.Length - 1)];
+        }
+
         private static int GetRandomNumberOfEnrolmentByPriceRange(decimal price, short capacity) {
             Dictionary<KeyValuePair<decimal, decimal>, KeyValuePair<int, int>> enrolmentRanges = new() {
-                { new KeyValuePair<decimal, decimal>(0, 50), new KeyValuePair<int, int>(capacity/4, capacity) },
-                { new KeyValuePair<decimal, decimal>(50, 100), new KeyValuePair<int, int>(capacity/10, capacity*9/10) },
-                { new KeyValuePair<decimal, decimal>(100, 250), new KeyValuePair<int, int>(capacity/15, capacity*4/5) },
-                { new KeyValuePair<decimal, decimal>(250, 500), new KeyValuePair<int, int>(capacity/15, capacity*3/5) },
-                { new KeyValuePair<decimal, decimal>(500, 1000), new KeyValuePair<int, int>(capacity/15, capacity*7/15) },
-                { new KeyValuePair<decimal, decimal>(1000, 10000), new KeyValuePair<int, int>(capacity/15, capacity/3) }
+                { new KeyValuePair<decimal, decimal>(0, 50), new KeyValuePair<int, int>(capacity*3/5, capacity) },
+                { new KeyValuePair<decimal, decimal>(50, 100), new KeyValuePair<int, int>(capacity/2, capacity*9/10) },
+                { new KeyValuePair<decimal, decimal>(100, 250), new KeyValuePair<int, int>(capacity*2/5, capacity*4/5) },
+                { new KeyValuePair<decimal, decimal>(250, 500), new KeyValuePair<int, int>(capacity*2/5, capacity*7/10) },
+                { new KeyValuePair<decimal, decimal>(500, 1000), new KeyValuePair<int, int>(capacity*3/10, capacity*3/5) },
+                { new KeyValuePair<decimal, decimal>(1000, 1500), new KeyValuePair<int, int>(capacity/5, capacity/2) }
             };
 
             var (min, max) = enrolmentRanges
-                             .Where(pair => pair.Key.Key <= price && pair.Key.Value >= price)
+                             .Where(pair => price >= pair.Key.Key && price <= pair.Key.Value)
                              .Select(pair => pair.Value)
                              .First();
 

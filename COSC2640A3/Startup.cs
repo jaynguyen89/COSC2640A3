@@ -1,8 +1,11 @@
 using System;
 using System.IO;
 using System.Reflection;
+using Amazon;
+using Amazon.Runtime;
 using AmazonLibrary;
 using AssistantLibrary;
+using AWS.Logger;
 using COSC2640A3.Attributes;
 using COSC2640A3.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -74,6 +77,12 @@ namespace COSC2640A3 {
                     MaxAge = TimeSpan.FromDays(int.Parse(Configuration.GetValue<string>($"{ nameof(MainOptions) }:{ nameof(MainOptions.CookieAgeTimespan)}")))
                 };
             });
+
+            services.AddLogging(options => {
+                options.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+                options.SetMinimumLevel(LogLevel.Information);
+            });
+            
             services.AddHttpContextAccessor();
             
             services.Configure<MainOptions>(Configuration.GetSection(nameof(MainOptions)));
@@ -92,13 +101,13 @@ namespace COSC2640A3 {
 
             app.UseCors(builder =>
                 builder.AllowAnyHeader()
-                       .AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       //.SetIsOriginAllowed(origin => true)
-                       //.WithHeaders(Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowOrigin, "*")
-                       //.AllowCredentials()
-                       //.WithOrigins("http://ec2-3-25-62-10.ap-southeast-2.compute.amazonaws.com", "https://cosc2640a3.d8tv5ca9mcxi1.amplifyapp.com")
-                       //.WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                       //.AllowAnyOrigin()
+                       //.AllowAnyMethod()
+                       .SetIsOriginAllowed(origin => true)
+                       .WithHeaders(Microsoft.Net.Http.Headers.HeaderNames.AccessControlAllowOrigin, "*")
+                       .AllowCredentials()
+                       .WithOrigins("http://ec2-3-25-62-10.ap-southeast-2.compute.amazonaws.com", "https://cosc2640a3.d8tv5ca9mcxi1.amplifyapp.com")
+                       .WithMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             );
 
             var loggerConfig = Configuration.GetAWSLoggingConfigSection();
