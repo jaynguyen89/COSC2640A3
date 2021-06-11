@@ -50,15 +50,27 @@ const ClassName = (props: IScheduleList) => {
                                     <td>{ schedule.fileSize } KB</td>
                                     <td>{ moment.unix(schedule.uploadedOn).format('DD MMM YYYY hh:mm') }</td>
                                     <td>{ (schedule.isForClassroom && 'Classrooms') || 'Students' }</td>
-                                    <td>{
-                                        schedule.status === 0 ? 'Awaiting' : (
-                                            schedule.status === 1 ? 'Processing' : (
-                                                schedule.status === 2 ? 'Done' : (
-                                                    schedule.status === 3 ? 'Incomplete' : 'Failed'
+                                    <td>
+                                        <span className={
+                                            (schedule.status === 0 && 'purple-text') || (
+                                                (schedule.status === 1 && 'blue-text') || (
+                                                    (schedule.status === 2 && 'green-text') || (
+                                                        (schedule.status === 3 && 'amber-text') || 'red-text'
+                                                    )
                                                 )
                                             )
-                                        )
-                                    }</td>
+                                        }>
+                                            {
+                                                schedule.status === 0 ? 'Awaiting' : (
+                                                    schedule.status === 1 ? 'Processing' : (
+                                                        schedule.status === 2 ? 'Done' : (
+                                                            schedule.status === 3 ? 'Incomplete' : 'Failed'
+                                                        )
+                                                    )
+                                                )
+                                            }
+                                        </span>
+                                    </td>
                                 </tr>
                             )
                         }

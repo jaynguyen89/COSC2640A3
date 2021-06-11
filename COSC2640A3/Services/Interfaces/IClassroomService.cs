@@ -43,7 +43,7 @@ namespace COSC2640A3.Services.Interfaces {
         
         Task<Enrolment[]> GetEnrolmentsByClassroomId(string classroomId);
         
-        Task<bool?> AreTheseClassroomsBelongedTo(string accountId);
+        Task<bool?> AreTheseClassroomsBelongedTo(string accountId, string[] classroomIds);
         
         Task<ClassroomExportVM[]> GetClassroomDataForExportBy(string[] classroomIds);
         

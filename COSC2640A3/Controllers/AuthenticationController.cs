@@ -209,7 +209,7 @@ namespace COSC2640A3.Controllers {
             if (errors.Length != 0) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = errors });
             
             var account = await _accountService.GetAccountByEmailOrUsername(credentials.Email, credentials.Username);
-            if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
+            if (account is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "No account matches your login credentials." } });
 
             if (Helpers.IsProperString(account.RecoveryToken))
                 return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new[] { "A password reset request is pending on this account. Please reset password first." } });

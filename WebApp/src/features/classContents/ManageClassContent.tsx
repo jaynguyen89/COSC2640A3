@@ -214,7 +214,7 @@ const ManageClassContent = (props: IManageClassContent) => {
             return;
         }
 
-        setAddedFiles({ ...addedFiles, fileType: fileType, classroomId: classroom.id });
+        setAddedFiles({ ...addedFiles, uploadedFiles: files, fileType: fileType, classroomId: classroom.id });
     }
 
     const getNewRichTextContent = (newContent: any) => setRichContent({ ...richContent, htmlContent: newContent });
@@ -571,7 +571,7 @@ const ManageClassContent = (props: IManageClassContent) => {
                                             ) ||
                                             <AddFilesInput
                                                 files={ addedFiles.uploadedFiles }
-                                                fileType={ 2 }
+                                                fileType={ 3 }
                                                 handleFilesInput={ handleAddingFiles }
                                                 confirmAdding={ handleUploadBtnClicked }
                                             />

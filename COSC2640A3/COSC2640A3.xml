@@ -9,7 +9,7 @@
             Used for translating sentences/paragraphs and words.
             </summary>
         </member>
-        <member name="M:COSC2640A3.Controllers.AccountController.UpdateStudentDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateStudentDetails(System.String,COSC2640A3.Bindings.StudentDetail)">
             <summary>
             For student. Update student data including school name, faculty, and personal URL.
             </summary>
@@ -79,7 +79,7 @@
             <response code="200">The request was successfully processed.</response>
             <response code="401">Authorization failed: expired or mismatched or insufficient.</response>
         </member>
-        <member name="M:COSC2640A3.Controllers.AccountController.UpdateTeacherDetails(System.String,COSC2640A3.Bindings.AccountDetail)">
+        <member name="M:COSC2640A3.Controllers.AccountController.UpdateTeacherDetails(System.String,COSC2640A3.Bindings.TeacherDetail)">
             <summary>
             For teacher. Update teacher data including company, jobTitle, and personal website.
             </summary>
@@ -1853,6 +1853,24 @@
             <summary>
             Void return. The cache entry must not be null.
             </summary>
+        </member>
+        <member name="M:COSC2640A3.Services.Services.ServiceBase.SaveCache(COSC2640A3.Models.DataCache)">
+            <summary>
+            To save cache. Possible combinations of keys in DataCache:
+            (DataType, DataId, DataKey); (DataType, DataId); (DataType, DataKey); DataKey; SearchInput;
+            </summary>
+            <param name="cache"></param>
+            <typeparam></typeparam>
+            <returns type="bool"></returns>
+        </member>
+        <member name="M:COSC2640A3.Services.Services.ServiceBase.GetCache``1(COSC2640A3.Models.DataCache)">
+            <summary>
+            To get cache. Possible combinations of keys in DataCache:
+            (DataType, DataId, DataKey); (DataType, DataId); (DataType, DataKey); (DataType, SearchInput); DataKey;
+            </summary>
+            <param name="cacheInfo"></param>
+            <typeparam name="T"></typeparam>
+            <returns type="T?"></returns>
         </member>
     </members>
 </doc>

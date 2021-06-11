@@ -20,6 +20,9 @@ namespace COSC2640A3.Bindings {
             ClassroomName = Regex.Replace(ClassroomName?.Trim() ?? string.Empty, SharedConstants.MultiSpace, SharedConstants.MonoSpace);
             TeacherName = Regex.Replace(TeacherName?.Trim() ?? string.Empty, SharedConstants.MultiSpace, SharedConstants.MonoSpace);
 
+            ClassroomName = ClassroomName?.ToLower();
+            TeacherName = TeacherName?.ToLower();
+
             return errors.ToArray();
         }
     }

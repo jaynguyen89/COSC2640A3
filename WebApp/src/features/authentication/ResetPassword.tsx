@@ -1,6 +1,6 @@
 import React from 'react';
 import {connect} from "react-redux";
-import {defaultPasswordReset, IPasswordReset, IResetPassword, verifyPasswordReset} from "./redux/interfaces";
+import {defaultPasswordReset, IPasswordReset, IResetPassword} from "./redux/interfaces";
 import ReCAPTCHA from "react-google-recaptcha";
 import {
     EMPTY_STATUS,
@@ -25,7 +25,6 @@ const mapActionsToProps = {
 const ResetPassword = (props: IResetPassword) => {
     const [statusMessage, setStatusMessage] = React.useState(EMPTY_STATUS);
     const [passwordReset, setPasswordReset] = React.useState(defaultPasswordReset);
-    const [shouldSendRequest, setShouldSendRequest] = React.useState(false);
 
     React.useEffect(() => {
         const storedGlobalMessage = sessionStorage.getItem('globalMessage');
@@ -57,12 +56,16 @@ const ResetPassword = (props: IResetPassword) => {
         if (field === 'passwordConfirm') setPasswordReset({ ...passwordReset, passwordConfirm: val } as IPasswordReset);
         if (field === 'recoveryToken') setPasswordReset({ ...passwordReset, recoveryToken: val } as IPasswordReset);
         if (field === 'recaptcha') setPasswordReset({ ...passwordReset, recaptchaToken: val } as IPasswordReset);
-        setShouldSendRequest(verifyPasswordReset(passwordReset));
     }
 
     React.useEffect(() => {
-        if (shouldSendRequest) props.invokePasswordResetRequest(passwordReset);
-    }, [shouldSendRequest]);
+        if (passwordReset.accountId.length !== 0 &&
+            passwordReset.password.length !== 0 &&
+            passwordReset.passwordConfirm.length !== 0 &&
+            passwordReset.recoveryToken.length !== 0 &&
+            passwordReset.recaptchaToken.length !== 0
+        ) props.invokePasswordResetRequest(passwordReset);
+    }, [passwordReset]);
 
     React.useEffect(() => {
         if (props.resetPassword.action === authenticationConstants.RESET_PASSWORD_REQUEST_FAILED)

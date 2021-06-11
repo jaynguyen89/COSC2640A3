@@ -118,7 +118,8 @@ namespace COSC2640A3.Controllers {
                 ReceiverEmail = account.EmailAddress,
                 Subject = $"{ nameof(COSC2640A3) } - Your Two-FA PIN",
                 Contents = new Dictionary<string, string> {
-                    { "TFA_CODE_PLACEHOLDER", twoFaPin }
+                    { "TFA_CODE_PLACEHOLDER", twoFaPin },
+                    { "USER_NAME_PLACEHOLDER", account.Username }
                 }
             });
 

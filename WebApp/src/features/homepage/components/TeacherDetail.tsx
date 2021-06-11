@@ -70,7 +70,7 @@ const TeacherDetail = (props: ITeacherComponent) => {
                            value={ teacherDetail.company }
                            onChange={ e => updateTeacherDetail('company', e.target.value) }
                     />
-                    <label htmlFor='company'>School Name</label>
+                    <label htmlFor='company'>Company Name</label>
                 </div>
             </div>
 

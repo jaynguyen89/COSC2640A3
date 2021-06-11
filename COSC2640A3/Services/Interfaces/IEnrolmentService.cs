@@ -50,6 +50,6 @@ namespace COSC2640A3.Services.Interfaces {
 
         Task<bool?> UpdateMultipleEnrolments(Enrolment[] enrolments);
         
-        EnrolmentExportVM[] GetEnrolmentDataForExportBy(string[] classroomIds);
+        Task<EnrolmentExportVM[]> GetEnrolmentDataForExportBy(string[] classroomIds);
     }
 }

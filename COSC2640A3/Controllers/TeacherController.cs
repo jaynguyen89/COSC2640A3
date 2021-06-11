@@ -129,7 +129,7 @@ namespace COSC2640A3.Controllers {
         public async Task<ActionResult> ExportClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportClassroomData) }: Service starts.");
 
-            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId);
+            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId, dataExport.ClassroomIds);
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
@@ -172,11 +172,11 @@ namespace COSC2640A3.Controllers {
         public async Task<ActionResult> ExportStudentsInClassroomData([FromHeader] string accountId,[FromBody] DataExport dataExport) {
             _logger.LogInformation($"{ nameof(TeacherController) }.{ nameof(ExportStudentsInClassroomData) }: Service starts.");
             
-            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId);
+            var isBelonged = await _classroomService.AreTheseClassroomsBelongedTo(accountId, dataExport.ClassroomIds);
             if (!isBelonged.HasValue) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
             if (!isBelonged.Value) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "You are not authorized for this request." } });
 
-            var exportedData = _enrolmentService.GetEnrolmentDataForExportBy(dataExport.ClassroomIds);
+            var exportedData = await _enrolmentService.GetEnrolmentDataForExportBy(dataExport.ClassroomIds);
             if (exportedData is null) return new JsonResult(new JsonResponse { Result = RequestResult.Failed, Messages = new [] { "An issue happened while processing your request." } });
 
             var exportedFile = new MemoryStream();

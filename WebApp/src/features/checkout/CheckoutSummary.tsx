@@ -107,7 +107,7 @@ const CheckoutSummary = (props: ICheckoutSummary) => {
         if (result === null) setStatusMessage({ messages: ['Failed to send request to server. Payment was not processed. Please try again.'], type: 'error' } as IStatusMessage);
         else if (result.result === 0) setStatusMessage({ messages: result.messages, type: 'error' } as IStatusMessage);
         else {
-            setStatusMessage({ messages: ['We have got your payment. Your invoice has been updated. Thank you!'], type: 'error' } as IStatusMessage);
+            setStatusMessage({ messages: ['We have got your payment. Your invoice has been updated. Thank you!'], type: 'success' } as IStatusMessage);
             setPayment(result.data as IPayment);
         }
     }

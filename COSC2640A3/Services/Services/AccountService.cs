@@ -10,20 +10,19 @@ using Helper;
 using Helper.Shared;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace COSC2640A3.Services.Services {
 
-    public sealed class AccountService : IAccountService {
+    public sealed class AccountService : ServiceBase, IAccountService {
         
         private readonly ILogger<AccountService> _logger;
-        private readonly MainDbContext _dbContext;
 
         public AccountService(
             ILogger<AccountService> logger,
             MainDbContext dbContext
-        ) {
+        ) : base(dbContext) {
             _logger = logger;
-            _dbContext = dbContext;
         }
 
         public async Task<KeyValuePair<bool?, string>> IsUsernameAndEmailAvailable(Registration registration) {
@@ -143,10 +142,19 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<Student> GetStudentByAccountId(string accountId) {
             try {
-                var student = await _dbContext.Students.SingleOrDefaultAsync(student => student.AccountId.Equals(accountId) && student.Account.EmailConfirmed);
+                // var cachedData = await GetCache<Student>(new DataCache { DataType = nameof(Student), DataId = accountId, DataKey = nameof(Account) });
+                // if (cachedData is not null) return cachedData;
+                
+                var student = await _dbContext.Students.SingleOrDefaultAsync(s => s.AccountId.Equals(accountId) && s.Account.EmailConfirmed);
                 if (student is null) throw new RowNotInTableException();
 
                 student.Account = await _dbContext.Accounts.FindAsync(accountId);
+
+                // _ = await SaveCache(new DataCache {
+                //     DataType = nameof(Student), DataKey = nameof(Account), DataId = accountId,
+                //     SerializedData = JsonConvert.SerializeObject(student, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects }),
+                //     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                // });
                 return student;
             }
             catch (ArgumentNullException e) {
@@ -165,10 +173,19 @@ namespace COSC2640A3.Services.Services {
 
         public async Task<Teacher> GetTeacherByAccountId(string accountId) {
             try {
-                var teacher = await _dbContext.Teachers.SingleOrDefaultAsync(teacher => teacher.AccountId.Equals(accountId) && teacher.Account.EmailConfirmed);
+                //var cachedData = await GetCache<Teacher>(new DataCache { DataType = nameof(Teacher), DataId = accountId, DataKey = nameof(Account) });
+                //if (cachedData is not null) return cachedData;
+                
+                var teacher = await _dbContext.Teachers.SingleOrDefaultAsync(t => t.AccountId.Equals(accountId) && t.Account.EmailConfirmed);
                 if (teacher is null) throw new RowNotInTableException();
 
                 teacher.Account = await _dbContext.Accounts.FindAsync(accountId);
+                
+                // _ = await SaveCache(new DataCache {
+                //     DataType = nameof(Teacher), DataId = accountId, DataKey = nameof(Account),
+                //     SerializedData = JsonConvert.SerializeObject(teacher, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects }),
+                //     Timestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
+                // });
                 return teacher;
             }
             catch (ArgumentNullException e) {

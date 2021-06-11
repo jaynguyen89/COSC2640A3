@@ -53,11 +53,11 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                     {
                         (
                             props.viewByStudent &&
-                            <li className="tab"><a href="#classroom">Classroom</a></li>
-                        ) || <li className="tab"><a href="#student">Student</a></li>
+                            <li className="tab"><a href={ `#classroom${ props.enrolment.id }` }>Classroom</a></li>
+                        ) || <li className="tab"><a href={ `#student${ props.enrolment.id }` }>Student</a></li>
                     }
-                    <li className="tab"><a href="#marks">Marks</a></li>
-                    <li className="tab"><a href="#invoice">Invoice</a></li>
+                    <li className="tab"><a href={ `#marks${ props.enrolment.id }` }>Marks</a></li>
+                    <li className="tab"><a href={ `#invoice${ props.enrolment.id }` }>Invoice</a></li>
                 </ul>
             </div>
 
@@ -65,7 +65,7 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                 {
                     (
                         props.viewByStudent &&
-                        <div id="classroom" className='row' style={{ marginBottom: 0 }}>
+                        <div id={ `classroom${ props.enrolment.id }` } className='row' style={{ marginBottom: 0 }}>
                             <div className='col s12'>
                                 <span>Class Name:</span>
                                 <span className='right'>{ props.enrolment.classroom.className }</span>
@@ -104,7 +104,7 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                             </div>
                         </div>
                     ) ||
-                    <div id="student" className='row' style={{ marginBottom: 0 }}>
+                    <div id={ `student${ props.enrolment.id }` } className='row' style={{ marginBottom: 0 }}>
                         <div className='col s12'>
                             <span>Student Name:</span>
                             <span className='right'>{ props.enrolment.student.preferredName }</span>
@@ -142,7 +142,7 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                     </div>
                 }
 
-                <div id="marks" className='row' style={{ marginBottom: 0 }}>
+                <div id={ `marks${ props.enrolment.id }` } className='row' style={{ marginBottom: 0 }}>
                     <div className='col s12 center-align'>
                         <span>Overall Mark:&nbsp;</span>
                         <span>{ (props.enrolment.marksDetail && props.enrolment.marksDetail.overallMarks) || 'N/A' }</span>
@@ -194,7 +194,7 @@ const EnrolmentInfo = (props: IEnrolmentInfo) => {
                     }
                 </div>
 
-                <div id="invoice" className='row' style={{ marginBottom: 0 }}>
+                <div id={ `invoice${ props.enrolment.id }` } className='row' style={{ marginBottom: 0 }}>
                     {
                         (
                             !props.enrolment.invoice.isPaid &&
