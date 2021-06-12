@@ -79,7 +79,11 @@ namespace COSC2640A3 {
             });
 
             services.AddLogging(options => {
-                options.AddAWSProvider(Configuration.GetAWSLoggingConfigSection());
+                options.AddAWSProvider(new AWSLoggerConfig {
+                    Region = "ap-southeast-2",
+                    LogGroup = "COSC2640A3Logs",
+                    Credentials = new BasicAWSCredentials("AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3")
+                });
                 options.SetMinimumLevel(LogLevel.Information);
             });
             
@@ -111,7 +115,11 @@ namespace COSC2640A3 {
             );
 
             var loggerConfig = Configuration.GetAWSLoggingConfigSection();
-            _ = loggerFactory.AddAWSProvider(loggerConfig);
+            _ = loggerFactory.AddAWSProvider(new AWSLoggerConfig {
+                Region = "ap-southeast-2",
+                LogGroup = "COSC2640A3Logs",
+                Credentials = new BasicAWSCredentials("AKIAJSENDXCAPZWGB6HQ", "HeGULGolRgnxwKIIm4K2d8E+sAoHVBukvR+5umU3")
+            });
             
             app.UseHttpsRedirection();
             app.UseRouting();

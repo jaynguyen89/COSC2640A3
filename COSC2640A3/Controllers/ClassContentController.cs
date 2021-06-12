@@ -315,18 +315,18 @@ namespace COSC2640A3.Controllers {
                                              .Select(task => task.Result)
                                              .ToArray();
 
-            var textractJobIds = uploadedFileIds
-                                 .Select(async fileId => await _textractService.StartTextDetectionJobForFile(fileId))
-                                 .Select(task => task.Result)
-                                 .ToArray();
-
-            var extractedTexts = textractJobIds
-                                 .Select(async jobId => await _textractService.GetExtractedTextsFromTextractJob(jobId))
-                                 .SelectMany(task => task.Result)
-                                 .ToArray();
-
-            if (extractedTexts.Length == 0)
-                extractedTexts = uploadedFileIds.Select(async fileId => await _textractService.DetectSimpleDocumentTexts(fileId))
+            // var textractJobIds = uploadedFileIds
+            //                      .Select(async fileId => await _textractService.StartTextDetectionJobForFile(fileId))
+            //                      .Select(task => task.Result)
+            //                      .ToArray();
+            //
+            // var extractedTexts = textractJobIds
+            //                      .Select(async jobId => await _textractService.GetExtractedTextsFromTextractJob(jobId))
+            //                      .SelectMany(task => task.Result)
+            //                      .ToArray();
+            //
+            // if (extractedTexts.Length == 0)
+            var extractedTexts = uploadedFileIds.Select(async fileId => await _textractService.DetectSimpleDocumentTexts(fileId))
                                                 .SelectMany(task => task.Result)
                                                 .ToArray();
 
