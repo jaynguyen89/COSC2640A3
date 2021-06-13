@@ -1,52 +1,53 @@
 ﻿using AmazonLibrary.Interfaces;
-using Helper.Shared;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using WinSCP;
+using Renci.SshNet;
 
 namespace AmazonLibrary.Services {
 
     public sealed class EmrService : IEmrService {
 
         private readonly ILogger<EmrService> _logger;
-        private readonly SessionOptions _sshOptions;
-
+        //private readonly SessionOptions _sshOptions;
+        private readonly ConnectionInfo _sshInfo;
+        
         public EmrService(ILogger<EmrService> logger, IOptions<AmazonOptions> options) {
             _logger = logger;
 
-            _sshOptions = new SessionOptions {
-                Protocol = Protocol.Sftp,
-                HostName = options.Value.EmrMasterNodeEndpointUrl,
-                UserName = options.Value.EmrMasterNodeEc2Username,
-                SshHostKeyFingerprint = options.Value.KeyFingerprint,
-                SshPrivateKeyPath = $@"{ SharedConstants.EmailTemplateFolderPath }AWSPrivateKey.ppk",
-            };
+            _sshInfo = new ConnectionInfo(
+                options.Value.EmrMasterNodeEndpointUrl,
+                options.Value.EmrMasterNodeEc2Username,
+                new PrivateKeyAuthenticationMethod(
+                    options.Value.EmrMasterNodeEc2Username,
+                    new PrivateKeyFile("/home/ubuntu/cosc2640a3/AWSPrivateKey.pem")
+                )
+            );
         }
         
         public bool ExecuteCommandMapper() {
             _logger.LogInformation($"{ nameof(EmrService) }.{ nameof(ExecuteCommandMapper) }: Service starts.");
-            using var session = new Session();
-            session.Open(_sshOptions);
 
-            if (!session.Opened) return false;
-            
-            var result = session.ExecuteCommand("/home/hadoop/dotnet/dotnet /home/hadoop/mapper/DataMapper.dll");
+            using var session = new SshClient(_sshInfo);
+            session.Connect();
 
-            session.Close();
-            return result.IsSuccess;
+            if (!session.IsConnected) return false;
+            var result = session.RunCommand("/home/hadoop/dotnet/dotnet /home/hadoop/mapper/DataMapper.dll");
+
+            session.Disconnect();
+            return true;
         }
 
         public bool ExecuteCommandReducer() {
             _logger.LogInformation($"{ nameof(EmrService) }.{ nameof(ExecuteCommandMapper) }: Service starts.");
-            using var session = new Session();
-            session.Open(_sshOptions);
-
-            if (!session.Opened) return false;
             
-            var result = session.ExecuteCommand("/home/hadoop/dotnet/dotnet /home/hadoop/reducer/DataReducer.dll");
+            using var session = new SshClient(_sshInfo);
+            session.Connect();
 
-            session.Close();
-            return result.IsSuccess;
+            if (!session.IsConnected) return false;
+            var result = session.RunCommand("/home/hadoop/dotnet/dotnet /home/hadoop/reducer/DataReducer.dll");
+
+            session.Disconnect();
+            return true;
         }
     }
 }

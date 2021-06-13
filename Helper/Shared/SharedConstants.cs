@@ -25,7 +25,7 @@ namespace Helper.Shared {
         public static readonly string EmailTemplateFolderPath =
             Path.GetDirectoryName(Directory.GetCurrentDirectory()) +
             //$"/AmazonLibrary/Templates/";
-            $"/cosc2640a3/AmazonLibrary/Templates/";
+            $"/ubuntu/cosc2640a3/templates/";
         
         public static readonly List<string> InvalidTokens = new() {
             "--", "_@", "-@", ".-", "-.", "._", "_.", "@_", "@-", "__", "..", "_-", "-_"

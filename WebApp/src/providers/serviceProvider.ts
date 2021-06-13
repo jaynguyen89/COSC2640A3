@@ -4,7 +4,7 @@ import { IAuthUser } from "../features/authentication/redux/interfaces";
 //axios.defaults.withCredentials = true; //include all cookies
 
 const LOCAL_ENDPOINT = 'https://localhost:5001/';
-const PRODUCTION_ENDPOINT = 'http://54.79.143.239/';
+const PRODUCTION_ENDPOINT = 'http://13.236.148.105/';
 
 export const sendRequestForResult = (
     action: string,
@@ -20,7 +20,7 @@ export const sendRequestForResult = (
         }
         : {};
 
-    const acceptHeaders = { 'Accept': 'application/json' };
+    const acceptHeaders = { 'Accept': 'application/json', "Access-Control-Allow-Origin": "*" };
     const contentHeaders = formData
         ? { 'Content-Type': 'multipart/form-data' }
         : { 'Content-Type': 'application/json' };

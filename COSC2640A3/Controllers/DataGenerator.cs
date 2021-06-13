@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using AmazonLibrary.Interfaces;
+using COSC2640A3.Attributes;
 using COSC2640A3.Bindings;
 using COSC2640A3.Models;
 using COSC2640A3.Services.Interfaces;
@@ -19,6 +20,7 @@ using static Helper.Shared.SharedConstants;
 
 namespace COSC2640A3.Controllers {
 
+    [AppActionFiler]
     [ApiController]
     [Route("data")]
     public sealed class DataGenerator : ControllerBase {

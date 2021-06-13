@@ -16,6 +16,7 @@ using static Helper.Shared.SharedEnums;
 
 namespace COSC2640A3.Controllers {
 
+    [AppActionFiler]
     [ApiController]
     [Route("authentication")]
     public sealed class AuthenticationController : AppController {

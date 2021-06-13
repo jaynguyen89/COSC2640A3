@@ -1,7 +1,6 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Amazon;
 using Amazon.Runtime;
 using AmazonLibrary;
 using AssistantLibrary;
@@ -20,7 +19,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 
-namespace COSC2640A3 {
+namespace COSC2640A3
+{
 
     public class Startup {
 

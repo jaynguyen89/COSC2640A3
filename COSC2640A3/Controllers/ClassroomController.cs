@@ -18,6 +18,7 @@ using static Helper.Shared.SharedEnums;
 
 namespace COSC2640A3.Controllers {
 
+    [AppActionFiler]
     [ApiController]
     [MainAuthorize]
     [TwoFaAuthorize]
