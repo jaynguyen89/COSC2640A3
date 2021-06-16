@@ -79,6 +79,7 @@ const ManageClassContent = (props: IManageClassContent) => {
     const [isUpdatingRichContent, setIsUpdatingRichContent] = React.useState(false);
     const [filesForImport, setFilesForImport] = React.useState(defaultContentImport);
     const [isImportingRichContent, setIsImportingRichContent] = React.useState(false);
+    const [spinnerLocation, setSpinnerLocation] = React.useState(-1);
 
     React.useEffect(() => {
         const storedGlobalMessage = sessionStorage.getItem('globalMessage');
@@ -250,6 +251,7 @@ const ManageClassContent = (props: IManageClassContent) => {
         const clone = _.cloneDeep(updatedFiles);
         clone.classroomId = classroom.id;
 
+        setSpinnerLocation(updatedFiles.fileType);
         props.invokeUpdateFilesRequest(props.authUser, clone);
         setFilesForUpdate(Array<IFile>());
         setUpdatedFiles(defaultUpdatedFiles);
@@ -265,6 +267,7 @@ const ManageClassContent = (props: IManageClassContent) => {
         const clone = _.cloneDeep(addedFiles);
         clone.classroomId = classroom.id;
 
+        setSpinnerLocation(addedFiles.fileType);
         props.invokeAddFilesRequest(props.authUser, clone);
         setAddedFiles(defaultAddedFiles);
     }
@@ -309,6 +312,7 @@ const ManageClassContent = (props: IManageClassContent) => {
             else {
                 props.invokeGetClassroomContentRequest(props.authUser, classroom.id);
                 setGlobalMessage({ messages: ['Files have been added to classroom successfully.'], type: 'success', closeAlert: () => setStatusMessage(EMPTY_STATUS) } as IStatusMessage);
+                setSpinnerLocation(-1);
             }
     }, [props.addFiles]);
 
@@ -324,6 +328,7 @@ const ManageClassContent = (props: IManageClassContent) => {
             else {
                 props.invokeGetClassroomContentRequest(props.authUser, classroom.id);
                 setGlobalMessage({ messages: ['Files have been added and/or removed successfully.'], type: 'success', closeAlert: () => setStatusMessage(EMPTY_STATUS) } as IStatusMessage);
+                setSpinnerLocation(-1);
             }
     }, [props.updateFiles]);
 
@@ -377,12 +382,7 @@ const ManageClassContent = (props: IManageClassContent) => {
             {
                 (
                     props.getClassroomDetail.action === classroomConstants.GET_CLASSROOM_DETAILS_REQUEST_SENT ||
-                    props.getContent.action === contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_SENT ||
-                    props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
-                    props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT ||
-                    props.addRichContent.action === contentConstants.ADD_RICH_CONTENT_REQUEST_SENT ||
-                    props.importRichContent.action === contentConstants.IMPORT_RICH_CONTENT_REQUEST_SENT ||
-                    props.updateRichContent.action === contentConstants.UPDATE_RICH_CONTENT_REQUEST_SENT
+                    props.getContent.action === contentConstants.GET_CLASSROOM_CONTENTS_REQUEST_SENT
                 ) && <Spinner />
             }
 
@@ -439,6 +439,13 @@ const ManageClassContent = (props: IManageClassContent) => {
                                             handleFilesInput={ handleAddingFiles }
                                             confirmAdding={ handleUploadBtnClicked }
                                         />
+                                    }
+
+                                    {
+                                        (
+                                            props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
+                                            props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT
+                                        ) && spinnerLocation === 0 && <Spinner />
                                     }
                                 </div>
                             }
@@ -514,6 +521,14 @@ const ManageClassContent = (props: IManageClassContent) => {
 
                                         {
                                             (
+                                                props.addRichContent.action === contentConstants.ADD_RICH_CONTENT_REQUEST_SENT ||
+                                                props.importRichContent.action === contentConstants.IMPORT_RICH_CONTENT_REQUEST_SENT ||
+                                                props.updateRichContent.action === contentConstants.UPDATE_RICH_CONTENT_REQUEST_SENT
+                                            ) && <Spinner />
+                                        }
+
+                                        {
+                                            (
                                                 !isImportingRichContent &&
                                                 <button className='btn waves-effect waves-light right' style={{ marginLeft: '1em' }}
                                                         onClick={ () => handleImportContentBtnClicked() }
@@ -576,6 +591,13 @@ const ManageClassContent = (props: IManageClassContent) => {
                                                 confirmAdding={ handleUploadBtnClicked }
                                             />
                                         }
+
+                                        {
+                                            (
+                                                props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
+                                                props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT
+                                            ) && spinnerLocation === 3 && <Spinner />
+                                        }
                                     </div>
                                 }
                             </div>
@@ -612,6 +634,13 @@ const ManageClassContent = (props: IManageClassContent) => {
                                                 confirmAdding={ handleUploadBtnClicked }
                                             />
                                         }
+
+                                        {
+                                            (
+                                                props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
+                                                props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT
+                                            ) && spinnerLocation === 2 && <Spinner />
+                                        }
                                     </div>
                                 }
                             </div>
@@ -646,6 +675,13 @@ const ManageClassContent = (props: IManageClassContent) => {
                                                     handleFilesInput={ handleAddingFiles }
                                                     confirmAdding={ handleUploadBtnClicked }
                                                 />
+                                            }
+
+                                            {
+                                                (
+                                                    props.addFiles.action === contentConstants.ADD_FILES_TO_CLASSROOM_REQUEST_SENT ||
+                                                    props.updateFiles.action === contentConstants.UPDATE_OR_REMOVE_FILES_REQUEST_SENT
+                                                ) && spinnerLocation === 1 && <Spinner />
                                             }
                                         </div>
                                     }

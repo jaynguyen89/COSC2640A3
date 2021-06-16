@@ -7,7 +7,7 @@ import Spinner from "../../shared/Spinner";
 import Alert from "../../shared/Alert";
 import {defaultMarks, IManageEnrolments, IUpdateMarks} from "./redux/interfaces";
 import {invokeGetEnrolmentsByClassroomRequest} from "../classroom/redux/actions";
-import {defaultMarkBreakdown, IEnrolment, IMarkBreakdown} from "../student/redux/interfaces";
+import {defaultMarkBreakdown, defaultMarkDetail, IEnrolment, IMarkBreakdown} from "../student/redux/interfaces";
 import {
     calculateOverallMarks,
     checkSession,
@@ -24,6 +24,7 @@ import EnrolmentInfo from "../student/EnrolmentInfo";
 import {invokeUnenrolFromClassroomRequest} from "../student/redux/actions";
 import {clearAuthUser} from "../authentication/redux/actions";
 import {invokeAddMarksToEnrolmentRequest} from "./redux/actions";
+import moment from "moment";
 
 const mapStateToProps = (state: any) => ({
     authUser: state.authenticationStore.authUser,
@@ -86,7 +87,7 @@ const ManageEnrolments = (props: IManageEnrolments) => {
     const handleUpdateMarksBtnClicked = (enrolmentId: string, markBreakdowns: Array<IMarkBreakdown>) => {
         setMarksToUpdate({
             enrolmentId: enrolmentId,
-            markBreakdowns: markBreakdowns || defaultMarks
+            markBreakdowns: markBreakdowns
         } as IUpdateMarks);
 
         M.Modal.getInstance(document.querySelector('.modal') as Element).open();
@@ -118,6 +119,7 @@ const ManageEnrolments = (props: IManageEnrolments) => {
         if (field === 'totalMarks') marks.totalMarks = Number(value);
         if (field === 'rewardedMarks') marks.rewardedMarks = Number(value);
         if (field === 'comment') marks.comment = value;
+        marks.markedOn = moment().format('yyyy-MM-DDTHH:mm:ss');
 
         clone[entryIndex] = marks;
         setMarksToUpdate({ ...marksToUpdate, markBreakdowns: clone });
@@ -147,6 +149,7 @@ const ManageEnrolments = (props: IManageEnrolments) => {
                 let enrolmentToUpdate = _.remove(clone, enrolment => enrolment.id === marksToUpdate.enrolmentId)[0];
 
                 if (enrolmentToUpdate) {
+                    enrolmentToUpdate.marksDetail = defaultMarkDetail;
                     enrolmentToUpdate.marksDetail.markBreakdowns = marksToUpdate.markBreakdowns;
                     enrolmentToUpdate.marksDetail.overallMarks = calculateOverallMarks(marksToUpdate.markBreakdowns);
                 }
@@ -154,7 +157,7 @@ const ManageEnrolments = (props: IManageEnrolments) => {
                 clone.splice(updatedEnrolmentIndex, 0, enrolmentToUpdate);
                 setEnrolments(clone);
 
-                setStatusMessage({ messages: [`The marks have been updated for enrolment by ${ enrolmentToUpdate.student.preferredName }.`], type: 'success' } as IStatusMessage);
+                setStatusMessage({ messages: [`The marks have been updated for enrolment by ${ enrolmentToUpdate?.student?.preferredName || 'student' }.`], type: 'success' } as IStatusMessage);
                 M.Modal.getInstance(document.querySelector('.modal') as Element).close();
             }
     }, [props.updateMarks]);
@@ -191,7 +194,7 @@ const ManageEnrolments = (props: IManageEnrolments) => {
                             <EnrolmentInfo
                                 enrolment={ enrolment }
                                 handleUnenrolBtn={ () => props.invokeUnenrolFromClassroomRequest(props.authUser, enrolment.id) }
-                                handleUpdateMarksBtn={ () => handleUpdateMarksBtnClicked(enrolment.id, enrolment.marksDetail.markBreakdowns) }
+                                handleUpdateMarksBtn={ () => handleUpdateMarksBtnClicked(enrolment.id, (enrolment.marksDetail && enrolment.marksDetail.markBreakdowns) || defaultMarks.markBreakdowns) }
                             />
                         </div>
                     )

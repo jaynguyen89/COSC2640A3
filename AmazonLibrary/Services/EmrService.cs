@@ -8,7 +8,6 @@ namespace AmazonLibrary.Services {
     public sealed class EmrService : IEmrService {
 
         private readonly ILogger<EmrService> _logger;
-        //private readonly SessionOptions _sshOptions;
         private readonly ConnectionInfo _sshInfo;
         
         public EmrService(ILogger<EmrService> logger, IOptions<AmazonOptions> options) {

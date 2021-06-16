@@ -43,6 +43,12 @@ interface IMarkDetail {
     isPassed: boolean | null
 }
 
+export const defaultMarkDetail: IMarkDetail = {
+    overallMarks: 0,
+    markBreakdowns: Array<IMarkBreakdown>(),
+    isPassed: false
+}
+
 export interface IMarkBreakdown {
     taskName: string,
     totalMarks: number,
